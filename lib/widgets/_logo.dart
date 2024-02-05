@@ -14,7 +14,7 @@ class Logo extends StatelessWidget {
       children: [
         Image.asset(
           ImageRoutes.pills,
-          scale: 2.2,
+          scale: 2,
         ),
         const SizedBox(
           width: 6,
@@ -31,7 +31,7 @@ class Logo extends StatelessWidget {
                 style: TextStyle(
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.bold,
-                    fontSize: 20),
+                    fontSize: 25),
               ),
             ],
           ),

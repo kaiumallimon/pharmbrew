@@ -1,25 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pharmbrew/routes/_image_routes.dart';
-import 'package:pharmbrew/widgets/_custom_password_field.dart';
 
-import '../../widgets/_custom_button_with_logo.dart';
-import '../../widgets/_custom_textField.dart';
-import '../../widgets/_logo.dart';
-import '../../widgets/_sideImage.dart';
-import '../../widgets/_spacer.dart';
-import '../../widgets/_terms_policy.dart';
+import '../../../routes/_image_routes.dart';
+import '../../../widgets/_custom_button_with_logo.dart';
+import '../../../widgets/_custom_password_field.dart';
+import '../../../widgets/_custom_textField.dart';
+import '../../../widgets/_logo.dart';
+import '../../../widgets/_remember_forgot_pass.dart';
+import '../../../widgets/_sideImage.dart';
+import '../../../widgets/_spacer.dart';
+import '../../../widgets/_terms_policy.dart';
 
-class CreateAccount1Ui extends StatelessWidget {
-  const CreateAccount1Ui({super.key});
+class WebLogin extends StatelessWidget {
+  const WebLogin({super.key});
 
   @override
   Widget build(BuildContext context) {
     double dWidth = MediaQuery.of(context).size.width;
     double dHeight = MediaQuery.of(context).size.height;
 
-    return SafeArea(
-        child: Container(
+    return Container(
       margin: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
       child: Column(
         children: [
@@ -31,6 +31,10 @@ class CreateAccount1Ui extends StatelessWidget {
               Row(
                 children: [
                   //left side of the page
+
+                  //right side of the page
+                  Expanded(child: SideImageCol(dHeight: dHeight)),
+
                   Expanded(
                       child: SizedBox(
                     height: dHeight - 45,
@@ -71,56 +75,72 @@ class CreateAccount1Ui extends StatelessWidget {
                             child: Container(
                           // color: Colors.red,
                           margin: const EdgeInsets.symmetric(vertical: 10),
-                          child: Column(
+                          child: const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text(
+                                Text(
                                   'Login to your pharmabrew account',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 22),
                                 ),
-                                const SizedBox(
+                                SizedBox(
                                   height: 40,
                                 ),
-                                const CustomTextField(
+                                CustomTextField(
                                   label: 'Enter your email',
                                   icon: CupertinoIcons.mail,
+                                  width: 350,
+                                  height: 60,
                                 ),
-                                const SizedBox(
+
+                                SizedBox(
                                   height: 10,
                                 ),
-                                const CustomPasswordField(
+                                CustomPasswordField(
+                                  width: 350,
+                                  height: 60,
                                     label: 'Enter your password',
                                     icon: CupertinoIcons.lock),
-                                const SizedBox(
+                                SizedBox(
                                   height: 10,
                                 ),
-                                const CustomButtonWithImageLogo(
+
+                                RememberAndForgotPassword(width: 350,),
+
+                                SizedBox(
+                                  height: 10,
+                                ),
+
+                                CustomButtonWithImageLogo(
                                   label: "Login",
                                   logo: '',
+                                  width: 350,
+                                  height: 50,
                                 ),
-                                const SizedBox(
+                                SizedBox(
                                   height: 20,
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    or_margin(),
-                                    Container(
-                                        width: 50,
-                                        alignment: Alignment.center,
-                                        child: const Text('Or')),
-                                    or_margin()
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                CustomButtonWithImageLogo(
-                                  label: "Continue with Google",
-                                  logo: ImageRoutes.google,
-                                )
+
+                                
+                                // Row(
+                                //   mainAxisAlignment: MainAxisAlignment.center,
+                                //   children: [
+                                //     or_margin(),
+                                //     Container(
+                                //         width: 50,
+                                //         alignment: Alignment.center,
+                                //         child: const Text('Or')),
+                                //     or_margin()
+                                //   ],
+                                // ),
+                                // const SizedBox(
+                                //   height: 20,
+                                // ),
+                                // CustomButtonWithImageLogo(
+                                //   label: "Continue with Google",
+                                //   logo: ImageRoutes.google,
+                                // )
                               ]),
                         )),
 
@@ -129,9 +149,6 @@ class CreateAccount1Ui extends StatelessWidget {
                       ]),
                     ),
                   )),
-
-                  //right side of the page
-                  Expanded(child: SideImageCol(dHeight: dHeight))
                 ],
               ),
 
@@ -140,7 +157,7 @@ class CreateAccount1Ui extends StatelessWidget {
           ),
         ],
       ),
-    ));
+    );
   }
 
   Container or_margin() {
@@ -157,3 +174,4 @@ class CreateAccount1Ui extends StatelessWidget {
     );
   }
 }
+

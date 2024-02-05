@@ -5,11 +5,13 @@ class CustomPasswordField extends StatefulWidget {
   const CustomPasswordField({
     Key? key,
     required this.label,
-    required this.icon,
+    required this.icon, required this.width, required this.height,
   }) : super(key: key);
 
   final String label;
   final IconData icon;
+  final double width;
+  final double height;
 
   @override
   _CustomTextFieldState createState() => _CustomTextFieldState();
@@ -21,8 +23,8 @@ class _CustomTextFieldState extends State<CustomPasswordField> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 350,
-      height: 60,
+      width: widget.width,
+      height: widget.height,
       child: TextField(
         obscureText: _obscureText,
         decoration: InputDecoration(

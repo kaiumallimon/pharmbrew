@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class Terms_Policy extends StatelessWidget {
@@ -7,17 +8,31 @@ class Terms_Policy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double dWidth = MediaQuery.of(context).size.width;
     return Container(
-      height: 100,
-      child: const Column(children: [
+      // color: Colors.red,
+      height: 120,
+      child:  Column(
+      mainAxisAlignment:MainAxisAlignment.center,
+      children: [
         //first row
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("By proceeding, you agree to the"),
+            (dWidth>600)?Text("By proceeding, you agree to the"):Text("By proceeding, you agree to the"),
             SizedBox(
               width: 5,
             ),
+            
+          ],
+        ),
+        SizedBox(
+          height: 10,
+        ),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
             Text(
               "Terms",
               style: TextStyle(
@@ -31,25 +46,15 @@ class Terms_Policy extends StatelessWidget {
             SizedBox(
               width: 5,
             ),
-            Text("Privacy Policies",style: TextStyle(
+            Text(
+              "Privacy Policies",
+              style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline),)
+                  decoration: TextDecoration.underline),
+            )
           ],
         ),
-        SizedBox(height: 10,),
-    
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Home"),
-            SizedBox(width: 10,),
-            Text("Help"),
-            SizedBox(width: 10,),Text("Terms"),
-            SizedBox(width: 10,),Text("Privacy"),
-            SizedBox(width: 10,)
-          ],
-        )
-    
+
         //second row
       ]),
     );

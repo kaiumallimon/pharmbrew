@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   blur: ^3.1.0
   lottie: ^3.0.0
+  scrollable_reorderable_navbar: ^0.0.2
 
 dev_dependencies:
   flutter_test:

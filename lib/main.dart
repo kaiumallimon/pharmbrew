@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pharmbrew/screens/classes/_dashboard.dart';
 import 'screens/classes/_login1.dart';
 
 void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: const Login1(),
+    home: const Dashboard(),
     theme: ThemeData(
       fontFamily: 'Poppins',
       colorScheme: const ColorScheme.light(

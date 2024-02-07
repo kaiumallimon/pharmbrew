@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../views/general/_dashboard_ui.dart';
+import 'package:pharmbrew/screens/views/general/_dashboard_ui.dart';
+import 'package:pharmbrew/screens/views/general/_login1_ui.dart';
 
-class Login1 extends StatelessWidget {
-  const Login1({super.key});
+class Dashboard extends StatelessWidget {
+  const Dashboard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +14,6 @@ class Login1 extends StatelessWidget {
       systemNavigationBarColor: Colors.white,
       systemNavigationBarIconBrightness: Brightness.dark
     ));
-    return Scaffold(
-      body: const DashboardUi(),
-      backgroundColor: Theme.of(context).colorScheme.surface,
-    );
+    return const DashboardUi();
   }
 }

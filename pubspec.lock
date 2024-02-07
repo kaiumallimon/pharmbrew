@@ -171,6 +171,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.7.4"
+  scrollable_reorderable_navbar:
+    dependency: "direct main"
+    description:
+      name: scrollable_reorderable_navbar
+      sha256: ebbe9812e24e64cb55081989ef599f2a27370f6a4cc20e997e17746c1338fa44
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   sky_engine:
     dependency: transitive
     description: flutter

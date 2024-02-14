@@ -5,7 +5,7 @@ import 'screens/classes/_login1.dart';
 void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: const Dashboard(),
+    home: const Login1(),
     theme: ThemeData(
       fontFamily: 'Poppins',
       colorScheme: const ColorScheme.light(

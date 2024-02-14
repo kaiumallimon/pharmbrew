@@ -5,13 +5,14 @@ class CustomPasswordField extends StatefulWidget {
   const CustomPasswordField({
     Key? key,
     required this.label,
-    required this.icon, required this.width, required this.height,
+    required this.icon, required this.width, required this.height, required this.controller,
   }) : super(key: key);
 
   final String label;
   final IconData icon;
   final double width;
   final double height;
+  final TextEditingController controller;
 
   @override
   _CustomTextFieldState createState() => _CustomTextFieldState();
@@ -26,6 +27,7 @@ class _CustomTextFieldState extends State<CustomPasswordField> {
       width: widget.width,
       height: widget.height,
       child: TextField(
+        controller: widget.controller,
         obscureText: _obscureText,
         decoration: InputDecoration(
           hintText: widget.label,

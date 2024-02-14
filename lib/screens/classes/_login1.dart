@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../views/general/_dashboard_ui.dart';
+import '../views/general/_login1_ui.dart';
 
 class Login1 extends StatelessWidget {
   const Login1({super.key});
@@ -14,7 +15,7 @@ class Login1 extends StatelessWidget {
       systemNavigationBarIconBrightness: Brightness.dark
     ));
     return Scaffold(
-      body: const DashboardUi(),
+      body: const Login1Ui(),
       backgroundColor: Theme.of(context).colorScheme.surface,
     );
   }

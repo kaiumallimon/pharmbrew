@@ -1,15 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
-    super.key, required this.label, required this.icon, required this.width, required this.height,
+    super.key,
+    required this.label,
+    required this.icon,
+    required this.width,
+    required this.height,
+    required this.controller,
   });
 
   final String label;
   final IconData icon;
   final double width;
   final double height;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +24,7 @@ class CustomTextField extends StatelessWidget {
       width: width,
       height: height,
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(
           hintText: label,
           hintStyle: TextStyle(color: Colors.grey.shade500),

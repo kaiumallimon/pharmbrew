@@ -4,8 +4,8 @@ import 'package:pharmbrew/screens/views/mobile/_login1_mobile.dart';
 import 'package:pharmbrew/screens/views/web/_login_web.dart';
 
 
-class CreateAccount1Ui extends StatelessWidget {
-  const CreateAccount1Ui({super.key});
+class Login1Ui extends StatelessWidget {
+  const Login1Ui({super.key});
 
   @override
   Widget build(BuildContext context) {

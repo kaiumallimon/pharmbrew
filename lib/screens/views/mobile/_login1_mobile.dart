@@ -1,18 +1,18 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:pharmbrew/widgets/_custom_button_with_logo.dart';
 import 'package:pharmbrew/widgets/_custom_password_field.dart';
 import 'package:pharmbrew/widgets/_custom_textField.dart';
+import 'package:pharmbrew/widgets/_located_at.dart';
 import 'package:pharmbrew/widgets/_logo.dart';
 import 'package:pharmbrew/widgets/_remember_forgot_pass.dart';
-import 'package:pharmbrew/widgets/_terms_policy.dart';
+
+import '../../../utils/_login_click.dart';
 
 class MobileLogin1 extends StatelessWidget {
-  const MobileLogin1({super.key});
+  MobileLogin1({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: [
         Container(
@@ -22,11 +22,28 @@ class MobileLogin1 extends StatelessWidget {
             children: [Logo()],
           ),
         ),
-        const Expanded(
+        const Column(
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                LocatedAt(),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+          ],
+        ),
+        Expanded(
+          flex: 7,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
@@ -37,45 +54,62 @@ class MobileLogin1 extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               Column(
                 children: [
                   CustomTextField(
-                      label: 'Enter your email address',
-                      icon: CupertinoIcons.mail,
-                      width: 300,
-                      height: 60),
-                  SizedBox(
+                    label: 'Enter your email address',
+                    icon: CupertinoIcons.mail,
+                    width: 300,
+                    height: 60,
+                    controller: _emailController,
+                  ),
+                  const SizedBox(
                     height: 10,
                   ),
                   CustomPasswordField(
-                      label: 'Enter your password',
-                      icon: CupertinoIcons.lock,
-                      width: 300,
-                      height: 60),
-                  SizedBox(
+                    label: 'Enter your password',
+                    icon: CupertinoIcons.lock,
+                    width: 300,
+                    height: 60,
+                    controller: _passwordController,
+                  ),
+                  const SizedBox(
                     height: 5,
                   ),
-                  RememberAndForgotPassword(width: 300),
+                  const RememberAndForgotPassword(width: 300),
                   CustomButtonWithImageLogo(
                     logo: "",
                     label: "Login",
                     width: 300,
                     height: 50,
+                    onClick: () {
+                      clickLogin(
+                          context,
+                          _emailController.text.toString().trim(),
+                          _passwordController.text.toString().trim());
+                    },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
-                  Forgot_Password(),
+                  const Forgot_Password(),
                   // SizedBox(height: 50,)
                 ],
               )
             ],
           ),
         ),
+        Expanded(
+            child: Container(
+          height: 100,
+        ))
       ],
     );
   }
+
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 }

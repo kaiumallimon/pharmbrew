@@ -7,13 +7,14 @@ import '../routes/_image_routes.dart';
 
 class CustomButtonWithImageLogo extends StatelessWidget {
   const CustomButtonWithImageLogo({
-    super.key, required this.logo, required this.label, required this.width, required this.height,
+    super.key, required this.logo, required this.label, required this.width, required this.height, required this.onClick,
   });
 
   final String logo;
   final String label;
   final double width;
   final double height;
+  final VoidCallback onClick;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,9 @@ class CustomButtonWithImageLogo extends StatelessWidget {
       height: height,
       width: width,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          onClick();
+        },
         style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
                 borderRadius:

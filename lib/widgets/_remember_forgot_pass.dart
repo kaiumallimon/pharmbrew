@@ -41,28 +41,54 @@ class RememberAndForgotPassword extends StatelessWidget {
   }
 }
 
-class Forgot_Password extends StatelessWidget {
-  const Forgot_Password({
-    super.key,
-  });
+
+
+class Forgot_Password extends StatefulWidget {
+  const Forgot_Password({Key? key}) : super(key: key);
+
+  @override
+  State<Forgot_Password> createState() => _Forgot_PasswordState();
+}
+
+class _Forgot_PasswordState extends State<Forgot_Password> {
+  bool _isHovering = false;
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Forgot password?',
-            style: TextStyle(
-              // fontWeight: FontWeight.bold,
-              // color: CupertinoColors.activeBlue,
-            )),
-
-            SizedBox(width: 5,),
-
-            Text('Reset', style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: CupertinoColors.activeBlue,
-            ))
+        const Text(
+          'Forgot password?',
+          style: TextStyle(
+            // fontWeight: FontWeight.bold,
+            // color: CupertinoColors.activeBlue,
+          ),
+        ),
+        SizedBox(width: 5),
+        MouseRegion(
+          onHover: (event) {
+            setState(() {
+              _isHovering = true;
+            });
+          },
+          onExit: (event) {
+            setState(() {
+              _isHovering = false;
+            });
+          },
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.ease,
+            child: Text(
+              'Reset',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: _isHovering ? Colors.blue.shade200 : CupertinoColors.activeBlue,
+              ),
+            ),
+          ),
+        )
       ],
     );
   }

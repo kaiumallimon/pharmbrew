@@ -39,6 +39,7 @@ dependencies:
   lottie: ^3.0.0
   scrollable_reorderable_navbar: ^0.0.2
   provider: ^6.1.1
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:

@@ -1,35 +1,65 @@
+import 'dart:html';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class RememberAndForgotPassword extends StatelessWidget {
+class RememberAndForgotPassword extends StatefulWidget {
   const RememberAndForgotPassword({
-    super.key,
+    Key? key,
     required this.width,
-  });
+  }) : super(key: key);
 
   final double width;
 
   @override
+  _RememberAndForgotPasswordState createState() =>
+      _RememberAndForgotPasswordState();
+}
+
+class _RememberAndForgotPasswordState
+    extends State<RememberAndForgotPassword> {
+  bool isChecked = false;
+  late SharedPreferences preferences;
+
+  @override
+  void initState() {
+    super.initState();
+    loadPreferences();
+  }
+
+  Future<void> loadPreferences() async {
+    preferences = await SharedPreferences.getInstance();
+    setState(() {
+      isChecked = preferences.getBool("remembered") ?? false;
+    });
+  }
+
+  Future<void> _updateSharedPreferences(bool value) async {
+    setState(() {
+      isChecked = value;
+    });
+    await preferences.setBool("remembered", isChecked);
+  }
+  @override
   Widget build(BuildContext context) {
-    double dWidth = MediaQuery.of(context).size.width;
-    double dHeight = MediaQuery.of(context).size.height;
     return Container(
       // color: Colors.red,
-      width: width,
+      width: widget.width,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
               Checkbox(
-                tristate: true,
-                value: false,
-                onChanged: (bool? value) {},
-                // onChanged: (bool? value) {
-                //   setState(() {
-                //     isChecked = value;
-                //   });
-                // },
+
+                value: isChecked,
+                onChanged: (bool? value) {
+                  setState(() {
+                    isChecked = value ?? false;
+                    _updateSharedPreferences(isChecked);
+                  });
+                },
               ),
               Text('Remember me')
             ],
@@ -40,7 +70,6 @@ class RememberAndForgotPassword extends StatelessWidget {
     );
   }
 }
-
 
 
 class Forgot_Password extends StatefulWidget {

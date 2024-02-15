@@ -1,20 +1,30 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
-    super.key, required this.label, required this.icon,
+    super.key,
+    required this.label,
+    required this.icon,
+    required this.width,
+    required this.height,
+    required this.controller,
   });
 
   final String label;
   final IconData icon;
+  final double width;
+  final double height;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 350,
-      height: 60,
+      width: width,
+      height: height,
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(
           hintText: label,
           hintStyle: TextStyle(color: Colors.grey.shade500),
@@ -23,7 +33,7 @@ class CustomTextField extends StatelessWidget {
               padding: const EdgeInsets.only(right: 15, left: 15),
               child: Icon(icon)),
           filled: true,
-          fillColor: Colors.grey.shade200,
+          fillColor: Colors.grey.shade50,
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(color: Colors.grey.shade200)),

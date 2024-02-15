@@ -1,29 +1,35 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../routes/_image_routes.dart';
 
 class CustomButtonWithImageLogo extends StatelessWidget {
   const CustomButtonWithImageLogo({
-    super.key, required this.logo, required this.label,
+    super.key, required this.logo, required this.label, required this.width, required this.height, required this.onClick,
   });
 
   final String logo;
   final String label;
+  final double width;
+  final double height;
+  final VoidCallback onClick;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 50,
-      width: 350,
+      height: height,
+      width: width,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          onClick();
+        },
         style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
                 borderRadius:
                     BorderRadius.circular(10)),
-            backgroundColor: Colors.grey.shade300),
+            backgroundColor: Theme.of(context).colorScheme.primary),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -35,7 +41,7 @@ class CustomButtonWithImageLogo extends StatelessWidget {
             ),
             Text(
               label,
-              style: const TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.white),
             )
           ],
         ),

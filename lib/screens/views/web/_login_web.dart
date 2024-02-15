@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pharmbrew/utils/_login_click.dart';
 import 'package:pharmbrew/widgets/_located_at.dart';
+import 'package:pharmbrew/widgets/_logo_location_overflow.dart';
 
 import '../../../routes/_image_routes.dart';
 import '../../../widgets/_custom_button_with_logo.dart';
@@ -20,6 +21,8 @@ class WebLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     double dWidth = MediaQuery.of(context).size.width;
     double dHeight = MediaQuery.of(context).size.height;
+
+
 
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
@@ -50,14 +53,11 @@ class WebLogin extends StatelessWidget {
                         child: Column(children: [
                           //first row
                           // ,
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Logo(),
-                              LocatedAt(),
-                            ],
+                          OverflowCheckRow(
+                            logo: Logo(), // Replace Logo() with your logo widget
+                            locatedAt: LocatedAt(), // Replace LocatedAt() with your locatedAt widget
                           ),
-        
+
                           //second row
                           Expanded(
                               child: Container(
@@ -159,6 +159,9 @@ class WebLogin extends StatelessWidget {
         ),
       ),
     );
+
+
+
   }
 
   Container or_margin() {

@@ -29,7 +29,7 @@ class CustomButtonWithImageLogo extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius:
                     BorderRadius.circular(10)),
-            backgroundColor: Colors.grey.shade300),
+            backgroundColor: Theme.of(context).colorScheme.primary),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -41,7 +41,7 @@ class CustomButtonWithImageLogo extends StatelessWidget {
             ),
             Text(
               label,
-              style: const TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.white),
             )
           ],
         ),

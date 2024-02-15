@@ -52,7 +52,7 @@ class _CustomTextFieldState extends State<CustomPasswordField> {
             ),
           ),
           filled: true,
-          fillColor: Colors.grey.shade200,
+          fillColor: Colors.grey.shade50,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(color: Colors.grey.shade200),

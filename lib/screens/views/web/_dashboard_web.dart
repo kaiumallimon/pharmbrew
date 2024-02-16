@@ -55,7 +55,7 @@ class _WebDashboardState extends State<WebDashboard> {
                     child: const Logo2(),
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 15,
                   ),
                   Expanded(
                     child: SingleChildScrollView(
@@ -64,6 +64,7 @@ class _WebDashboardState extends State<WebDashboard> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          SizedBox(height: 20,),
                           SidePanelButton(
                             label: 'Home',
                             icon: Icons.home,

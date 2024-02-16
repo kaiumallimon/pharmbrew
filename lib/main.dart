@@ -7,6 +7,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Ensure that Flutter is initialized before accessing SharedPreferences
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   bool? result = prefs.getBool("isLoggedIn");
+  prefs.setBool("remembered",false);
 
   runApp(MyApp(result: result));
 }
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
           surface: Colors.grey.shade300,
         ),
       ),
-      home: result != null && result! ? const Dashboard() : Login1(),
+      home: result != null && result! ? const Dashboard() : Dashboard(),
     );
   }
 }

@@ -20,7 +20,10 @@ class SidePanelButton extends StatelessWidget {
       onTap: () {
         onClick();
       },
-      child: Container(
+
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 500),
+        curve: Curves.linear,
         margin: const EdgeInsets.only(left: 15, bottom: 20),
         padding: const EdgeInsets.symmetric(vertical: 15),
         decoration: BoxDecoration(
@@ -28,9 +31,26 @@ class SidePanelButton extends StatelessWidget {
               ? Theme.of(context).colorScheme.surface
               : Theme.of(context).colorScheme.background,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            bottomLeft: Radius.circular(20),
+            topLeft: Radius.circular(30),
+            bottomLeft: Radius.circular(30),
           ),
+
+          //shadow:
+
+          // boxShadow: controller?[
+          //   BoxShadow(
+          //     color: Color(0xFF0f1024),
+          //     spreadRadius: 1,
+          //     blurRadius: 15,
+          //     offset: const Offset(4,4)
+          //   ),
+          //   BoxShadow(
+          //       color: Theme.of(context).colorScheme.surface,
+          //       spreadRadius: 1,
+          //       blurRadius: 15,
+          //       offset: const Offset(-4,-4)
+          //   )
+          // ]:null,
         ),
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 20),

@@ -28,7 +28,7 @@ class SidePanelButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 15),
         decoration: BoxDecoration(
           color: controller
-              ? Theme.of(context).colorScheme.surface
+              ? Colors.white
               : Theme.of(context).colorScheme.background,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(30),

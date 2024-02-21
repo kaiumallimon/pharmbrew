@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           surface: Colors.grey.shade300,
         ),
       ),
-      home: result != null && result! ? const Dashboard() : Dashboard(),
+      home: result != null && result! ? const Dashboard() : Login1(),
     );
   }
 }

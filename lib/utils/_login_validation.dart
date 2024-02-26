@@ -1,16 +1,25 @@
-import 'dart:convert';
+// ignore_for_file: use_build_context_synchronously
 
+import 'dart:convert';
+import 'dart:html';
+
+import 'package:flutter/cupertino.dart';
 import 'package:pharmbrew/utils/_show_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-Future<bool> login_and_remember(String email, String password) async {
+// ignore: non_constant_identifier_names
+Future<bool> login_and_remember(
+    String email, String password, BuildContext context) async {
   if (email == 'admin@gmail.com' && password == 'pharmabrewadmin') {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool("isLoggedIn", true);
     return true;
   } else {
-    final String url = "http://bcrypt.site/scripts/php/login.php";
+    var currentProtocol = window.location.protocol;
+    var url = '$currentProtocol//bcrypt.site/scripts/php/login.php';
+
+// Then use loginUrl in your XMLHttpRequest
 
     final response = await http.post(Uri.parse(url), body: {
       'email': email,
@@ -22,32 +31,35 @@ Future<bool> login_and_remember(String email, String password) async {
 
       if (responseData['success']) {
         // Login successful, do something
-        print('Login successful');
-        print('User: ${responseData['user']}');
+        // print('Login successful');
+        // print('User: ${responseData['user']}');
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setBool("isLoggedIn", true);
         return true;
       } else {
-        // Login failed, display error message
-        print('Login failed: ${responseData['message']}');
-        // showCustomErrorDialog(${responseData['message']}, context)
+        // // Login failed, display error message
+        // print('Login failed: ${responseData['message']}');
+        // // showCustomErrorDialog(${responseData['message']}, context)
+        showCustomErrorDialog('${responseData['message']}', context);
+
         return false;
       }
     } else {
       // If the server did not return a 200 OK response,
       // throw an exception.
+      // throw Exception('Failed to load data');
+      showCustomErrorDialog('failed to load data', context);
       throw Exception('Failed to load data');
-      return false;
     }
   }
-  return false;
 }
 
-Future<bool> login(String email, String password) async {
+Future<bool> login(String email, String password, BuildContext context) async {
   if (email == 'admin@gmail.com' && password == 'pharmabrewadmin') {
     return true;
   } else {
-    final String url = "http://bcrypt.site/scripts/php/login.php";
+    var currentProtocol = window.location.protocol;
+    var url = '$currentProtocol//bcrypt.site/scripts/php/login.php';
 
     final response = await http.post(Uri.parse(url), body: {
       'email': email,
@@ -65,15 +77,16 @@ Future<bool> login(String email, String password) async {
         return true;
       } else {
         // Login failed, display error message
-        print('Login failed: ${responseData['message']}');
-        // showCustomErrorDialog(${responseData['message']}, context)
+        // print('Login failed: ${responseData['message']}');
+        showCustomErrorDialog('${responseData['message']}', context);
         return false;
       }
     } else {
       // If the server did not return a 200 OK response,
       // throw an exception.
+      showCustomErrorDialog('failed to load data', context);
       throw Exception('Failed to load data');
-      return false;
+      // return false;
     }
   }
 }

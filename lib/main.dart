@@ -7,6 +7,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Ensure that Flutter is initialized before accessing SharedPreferences
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   bool? result = prefs.getBool("isLoggedIn");
+  prefs.setBool("remembered",false);
 
   runApp(MyApp(result: result));
 }

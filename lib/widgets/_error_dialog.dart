@@ -6,13 +6,14 @@ import 'package:lottie/lottie.dart';
 class ErrorDialog extends StatefulWidget {
   final String errorMessage;
 
-  ErrorDialog({required this.errorMessage});
+  const ErrorDialog({super.key, required this.errorMessage});
 
   @override
   _CustomDialogState createState() => _CustomDialogState();
 }
 
-class _CustomDialogState extends State<ErrorDialog> with TickerProviderStateMixin {
+class _CustomDialogState extends State<ErrorDialog>
+    with TickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -36,7 +37,7 @@ class _CustomDialogState extends State<ErrorDialog> with TickerProviderStateMixi
             SizedBox(
               width: 100,
               height: 100,
-              child:Lottie.asset(
+              child: Lottie.asset(
                 'assets/animations/error.json',
                 controller: _controller,
                 onLoaded: (composition) {
@@ -44,16 +45,15 @@ class _CustomDialogState extends State<ErrorDialog> with TickerProviderStateMixi
                 },
               ),
             ),
-
             const SizedBox(height: 10.0),
-
-            Padding(padding: EdgeInsets.all(10),
-            child: Text(
-              ''+widget.errorMessage,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-            ),),
-
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Text(
+                widget.errorMessage,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+              ),
+            ),
             const SizedBox(height: 10.0),
             ElevatedButton(
               onPressed: () {
@@ -62,26 +62,28 @@ class _CustomDialogState extends State<ErrorDialog> with TickerProviderStateMixi
               style: ElevatedButton.styleFrom(
                 backgroundColor: CupertinoColors.activeBlue,
               ),
-              child: Text('Continue',style: TextStyle(
-                  color: Colors.white
-              ),),
+              child: const Text(
+                'Continue',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),
       ),
-    ).frosted(
-        blur: 20,
-        borderRadius: BorderRadius.circular(10)
-    );
+    ).frosted(blur: 20, borderRadius: BorderRadius.circular(10));
   }
 
   AnimationController _createController() {
-    return AnimationController(vsync: this, duration: Duration(seconds: 2),);
+    return AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
   }
 
   void _playAnimationOnce() {
     _controller.forward().whenComplete(() {
-      _controller.dispose(); // Dispose the controller after animation completion
+      _controller
+          .dispose(); // Dispose the controller after animation completion
     });
   }
 

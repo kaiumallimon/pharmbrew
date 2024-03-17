@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SidePanelButton extends StatelessWidget {
@@ -20,9 +19,8 @@ class SidePanelButton extends StatelessWidget {
       onTap: () {
         onClick();
       },
-
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 500),
         curve: Curves.linear,
         margin: const EdgeInsets.only(left: 15, bottom: 20),
         padding: const EdgeInsets.symmetric(vertical: 15),
@@ -34,26 +32,9 @@ class SidePanelButton extends StatelessWidget {
             topLeft: Radius.circular(30),
             bottomLeft: Radius.circular(30),
           ),
-
-          //shadow:
-
-          // boxShadow: controller?[
-          //   BoxShadow(
-          //     color: Color(0xFF0f1024),
-          //     spreadRadius: 1,
-          //     blurRadius: 15,
-          //     offset: const Offset(4,4)
-          //   ),
-          //   BoxShadow(
-          //       color: Theme.of(context).colorScheme.surface,
-          //       spreadRadius: 1,
-          //       blurRadius: 15,
-          //       offset: const Offset(-4,-4)
-          //   )
-          // ]:null,
         ),
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20),
+          margin: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -63,7 +44,8 @@ class SidePanelButton extends StatelessWidget {
                 color: controller ? Colors.black : Colors.white,
                 size: 18,
               ),
-              SizedBox(width: 20), // Adjust the width according to your preference
+              const SizedBox(
+                  width: 20), // Adjust the width according to your preference
               Text(
                 label,
                 style: TextStyle(
@@ -77,5 +59,4 @@ class SidePanelButton extends StatelessWidget {
       ),
     );
   }
-
 }

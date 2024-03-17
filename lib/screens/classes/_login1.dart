@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../views/general/_dashboard_ui.dart';
 import '../views/general/_login1_ui.dart';
 
 class Login1 extends StatelessWidget {

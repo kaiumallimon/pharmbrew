@@ -41,6 +41,7 @@ dependencies:
   provider: ^6.1.1
   shared_preferences: ^2.2.2
   http: ^1.2.0
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -68,7 +69,7 @@ flutter:
   assets:
     - assets/images/logo/
     - assets/animations/
-    - assets/others/
+    # - assets/others/
     - assets/images/
   #   - images/a_dot_ham.jpeg
 

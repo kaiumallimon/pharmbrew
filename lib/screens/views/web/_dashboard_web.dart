@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pharmbrew/widgets/_dashboard_mainPanel.dart';
+import 'package:pharmbrew/widgets/_expandable_list.dart';
 import 'package:pharmbrew/widgets/_logout.dart';
 import '../../../widgets/_dashboard_sidepanel_button.dart';
 import '../../../widgets/_logo2.dart';
@@ -35,7 +36,6 @@ class _WebDashboardState extends State<WebDashboard> {
 
   ScrollController _scrollController = ScrollController();
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -59,19 +59,22 @@ class _WebDashboardState extends State<WebDashboard> {
                   ),
                   Expanded(
                     child: SingleChildScrollView(
-                      controller: _scrollController, // Add ScrollController here
+                      controller:
+                          _scrollController, // Add ScrollController here
                       scrollDirection: Axis.vertical,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
                           SidePanelButton(
                             label: 'Home',
                             icon: Icons.home,
                             controller: inFocus == 0,
-                            onClick: (){
+                            onClick: () {
                               setState(() {
-                                inFocus=0;
+                                inFocus = 0;
                               });
                             },
                           ),
@@ -185,6 +188,28 @@ class _WebDashboardState extends State<WebDashboard> {
                               });
                             },
                           ),
+                          MyExpandableWidgetLists(listItems: [
+                            SidePanelButton(
+                              label: 'Add employee',
+                              icon: CupertinoIcons.add,
+                              controller: inFocus == 1,
+                              onClick: () {
+                                setState(() {
+                                  inFocus = 1;
+                                });
+                              },
+                            ),
+                            SidePanelButton(
+                              label: 'Attendance',
+                              icon: Icons.person,
+                              controller: inFocus == 7,
+                              onClick: () {
+                                setState(() {
+                                  inFocus = 7;
+                                });
+                              },
+                            ),
+                          ], listTitle: 'Employee'),
                         ],
                       ),
                     ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pharmbrew/screens/views/general/_dashboard_ui.dart';
-import 'package:pharmbrew/screens/views/general/_login1_ui.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});

@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../routes/_image_routes.dart';
-import '_logo.dart';
 
 class LocatedAt extends StatelessWidget {
   const LocatedAt({super.key});

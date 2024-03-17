@@ -1,13 +1,13 @@
-import 'dart:math';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../routes/_image_routes.dart';
 
 class CustomButtonWithImageLogo extends StatelessWidget {
   const CustomButtonWithImageLogo({
-    super.key, required this.logo, required this.label, required this.width, required this.height, required this.onClick,
+    super.key,
+    required this.logo,
+    required this.label,
+    required this.width,
+    required this.height,
+    required this.onClick,
   });
 
   final String logo;
@@ -26,16 +26,17 @@ class CustomButtonWithImageLogo extends StatelessWidget {
           onClick();
         },
         style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             backgroundColor: Theme.of(context).colorScheme.primary),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if(logo.trim().isNotEmpty)
-              Image.asset(logo,scale: 2,)
-            ,
+            if (logo.trim().isNotEmpty)
+              Image.asset(
+                logo,
+                scale: 2,
+              ),
             const SizedBox(
               width: 10,
             ),

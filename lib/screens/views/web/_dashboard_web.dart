@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pharmbrew/widgets/_dashboard_mainPanel.dart';
-import 'package:pharmbrew/widgets/_expandable_list.dart';
 import 'package:pharmbrew/widgets/_logout.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../widgets/_dashboard_sidepanel_button.dart';
 import '../../../widgets/_logo2.dart';
 
@@ -25,16 +25,56 @@ class _WebDashboardState extends State<WebDashboard> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+    initData();
+  }
+
+  late String pp = ''; // Initialize pp with an empty string
+  late String name = '';
+  void initData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    userRole = prefs.getString('loggedInRole')!;
+    administrator = (userRole == 'Administrator' || userRole == 'HR');
+
+    final x = prefs.getString('loggedInUserProfilePic');
+    pp = x ?? ''; // Assign x to pp, if x is null assign an empty string
+
+    final nameLocal = prefs.getString('loggedInUserName');
+    name =
+        nameLocal ?? ''; // Assign x to pp, if x is null assign an empty string
+  }
+
   void switchPage(int index) {
     setState(() {
       inFocus = index;
     });
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    clearSharedPreferences();
+  }
+
+  Future<void> clearSharedPreferences() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.remove("loggedInUser");
+    preferences.remove("loggedInRole");
+    preferences.remove("loggedInUserName");
+    preferences.remove("loggedInUserProfilePic");
+  }
+
+  late String userRole;
+  late bool administrator;
+  // late String pp;
+
   bool isHovered = false;
   int inFocus = 0;
 
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +109,7 @@ class _WebDashboardState extends State<WebDashboard> {
                             height: 20,
                           ),
                           SidePanelButton(
+                            //admin home
                             label: 'Home',
                             icon: Icons.home,
                             controller: inFocus == 0,

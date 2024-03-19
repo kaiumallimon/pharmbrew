@@ -86,7 +86,7 @@ class MobileLogin1 extends StatelessWidget {
                     width: 300,
                     height: 50,
                     onClick: () {
-                      clickLogin(
+                      loginClicked(
                           context,
                           _emailController.text.toString().trim(),
                           _passwordController.text.toString().trim());

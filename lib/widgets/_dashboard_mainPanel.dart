@@ -19,30 +19,32 @@ class DashboardMainPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: inFocus == 0
-          ? const DashboardHome()
+          ? const DashboardHome(
+            
+            )
           : inFocus == 1
-          ? const AddEmployee()
-          : inFocus == 2
-          ? const EmployeesAll()
-          : inFocus == 3
-          ? const EditProfile()
-          : inFocus == 4
-          ? const Notifications()
-          : inFocus == 5
-          ? const RolesAndAccess()
-          : inFocus == 6
-          ? const SalaryManagement()
-          : inFocus == 7
-          ? const Attendance()
-          : inFocus == 8
-          ? const Events()
-          : inFocus == 9
-          ? const Analytics()
-          : inFocus == 10
-          ? const Queries()
-          : inFocus == 11
-          ? const Settings()
-          : Container(),
+              ? const AddEmployee()
+              : inFocus == 2
+                  ? const EmployeesAll()
+                  : inFocus == 3
+                      ? const EditProfile()
+                      : inFocus == 4
+                          ? const Notifications()
+                          : inFocus == 5
+                              ? const RolesAndAccess()
+                              : inFocus == 6
+                                  ? const SalaryManagement()
+                                  : inFocus == 7
+                                      ? const Attendance()
+                                      : inFocus == 8
+                                          ? const Events()
+                                          : inFocus == 9
+                                              ? const Analytics()
+                                              : inFocus == 10
+                                                  ? const Queries()
+                                                  : inFocus == 11
+                                                      ? const Settings()
+                                                      : Container(),
     );
   }
 }

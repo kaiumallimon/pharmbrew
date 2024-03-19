@@ -59,7 +59,7 @@ class _OverflowCheckRowState extends State<OverflowCheckRow> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _updateWidths();
     });
   }

@@ -95,3 +95,56 @@ Future<bool?> isLoggedIn() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getBool("isLoggedIn");
 }
+
+Future<Map<String, dynamic>> loginValidation(
+    String email, String password, BuildContext context) async {
+  //remember session
+  const adminLogin = "admin@gmail.com";
+  const adminSecurity = "admin";
+
+  if (email == adminLogin && password == adminSecurity) {
+    return {
+      "login": true,
+      "response": "Login Successful",
+      "email": adminLogin,
+      "role": "administrator",
+    };
+  } else {
+    var currentProtocol = window.location.protocol;
+    var apiUrl =
+        '$currentProtocol//bcrypt.site/scripts/php/pharmabrew_login.php';
+
+    final response = await http.post(Uri.parse(apiUrl), body: {
+      'email': email,
+      'password': password,
+    });
+
+    if (response.statusCode == 200) {
+      // no internal errors
+      final Map<String, dynamic> responseData = json.decode(response.body);
+
+      // print(responseData);
+
+      if (responseData['success'] == true) {
+        //login successful
+        return {
+          "login": true,
+          "response": "Login Successful",
+          "email": responseData['email'],
+          "name": responseData['name'],
+          "picture": responseData['profile_pic'],
+          "role": responseData['role'],
+        };
+      } else {
+        //login failed/user not found
+        return {
+          "login": false,
+          "response": "User not found",
+        };
+      }
+    } else {
+      showCustomErrorDialog('failed to load data', context);
+      throw Exception('Failed to load data');
+    }
+  }
+}

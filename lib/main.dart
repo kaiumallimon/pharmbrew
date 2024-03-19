@@ -10,7 +10,6 @@ void main() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   bool? result = prefs.getBool("isLoggedIn");
   prefs.setBool("remembered", false);
-
   runApp(MyApp(result: result));
 }
 

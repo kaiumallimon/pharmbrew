@@ -18,8 +18,7 @@ class _MyExpandableWidgetListsState extends State<MyExpandableWidgetLists> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(
+    return Column(
       children: [
         GestureDetector(
           onTap: () {
@@ -67,6 +66,6 @@ class _MyExpandableWidgetListsState extends State<MyExpandableWidgetLists> {
                 height: 0,
               ),
       ],
-    ));
+    );
   }
 }

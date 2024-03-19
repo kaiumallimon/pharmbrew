@@ -65,7 +65,7 @@ class _WebDashboardState extends State<WebDashboard> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           SidePanelButton(
@@ -188,28 +188,28 @@ class _WebDashboardState extends State<WebDashboard> {
                               });
                             },
                           ),
-                          MyExpandableWidgetLists(listItems: [
-                            SidePanelButton(
-                              label: 'Add employee',
-                              icon: CupertinoIcons.add,
-                              controller: inFocus == 1,
-                              onClick: () {
-                                setState(() {
-                                  inFocus = 1;
-                                });
-                              },
-                            ),
-                            SidePanelButton(
-                              label: 'Attendance',
-                              icon: Icons.person,
-                              controller: inFocus == 7,
-                              onClick: () {
-                                setState(() {
-                                  inFocus = 7;
-                                });
-                              },
-                            ),
-                          ], listTitle: 'Employee'),
+                          // MyExpandableWidgetLists(listItems: [
+                          //   SidePanelButton(
+                          //     label: 'Add employee',
+                          //     icon: CupertinoIcons.add,
+                          //     controller: inFocus == 1,
+                          //     onClick: () {
+                          //       setState(() {
+                          //         inFocus = 1;
+                          //       });
+                          //     },
+                          //   ),
+                          //   SidePanelButton(
+                          //     label: 'Attendance',
+                          //     icon: Icons.person,
+                          //     controller: inFocus == 7,
+                          //     onClick: () {
+                          //       setState(() {
+                          //         inFocus = 7;
+                          //       });
+                          //     },
+                          //   ),
+                          // ], listTitle: 'Employee'),
                         ],
                       ),
                     ),

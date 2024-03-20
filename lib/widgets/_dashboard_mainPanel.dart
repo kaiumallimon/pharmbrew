@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import '../screens/views/dash_ui/_add_employee.dart';
 import '../screens/views/dash_ui/_analytics.dart';
 import '../screens/views/dash_ui/_attendance.dart';
@@ -19,9 +19,7 @@ class DashboardMainPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: inFocus == 0
-          ? const DashboardHome(
-            
-            )
+          ? const DashboardHome()
           : inFocus == 1
               ? const AddEmployee()
               : inFocus == 2

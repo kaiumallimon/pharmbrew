@@ -66,27 +66,18 @@ Future<void> createUser(
 
     // Get response
     if (response.statusCode == 200) {
-      // final Map<String, dynamic> responseData =
-      //     json.decode(await response.stream.bytesToString());
-      // // return responseData.toString(); // or you can return any specific data from responseData
-      // print(responseData.toString());
-      // if (responseData['success'] == true) {
+      
       showCustomSuccessDialog('Account created successfully', context);
 
       sendEmail(email, "Regarding Pharmabrew Account",
           "Dear user,\nYour account has been created successfully. Now you can login to your account with these credentials: \n\nEmail: $email\nPassword: $password\n\nThank you for choosing Pharmabrew!");
-      // } else {
-      // showCustomErrorDialog('Failed to create account!', context);
-      // }
+      
     } else {
-      // print('Failed with status code: ${response.statusCode}');
       showCustomErrorDialog(
           'Failed with status code: ${response.statusCode}', context);
-      // Handle error cases
     }
   } catch (e) {
     print('Exception: $e');
     showCustomErrorDialog('Exception: $e', context);
-    // Handle exception cases
   }
 }

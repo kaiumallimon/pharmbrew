@@ -17,6 +17,7 @@ import 'package:pharmbrew/domain/_register.dart';
 import 'package:pharmbrew/widgets/_add_employee_text_boxes.dart';
 import 'package:pharmbrew/widgets/_successful_dialog.dart';
 
+import '../../../domain/usecases/_get_department_and_id.dart';
 import '../../../utils/_show_dialog.dart';
 
 class AddEmployee extends StatefulWidget {
@@ -48,9 +49,13 @@ class _AddEmployeeState extends State<AddEmployee> {
   final TextEditingController _countryController = TextEditingController();
   final TextEditingController _roleController = TextEditingController();
 
+  final List<String> departmentNames = getAllDesignations();
+
   bool verficationSent = false;
 
   XFile? _image;
+
+  String dropDownValue = "";
 
   EmailOTP myauth = EmailOTP();
   @override
@@ -260,10 +265,65 @@ class _AddEmployeeState extends State<AddEmployee> {
                 const SizedBox(
                   height: 10,
                 ),
-                AddEmployeeTextBoxes(
-                  controller: _departmentController,
-                  title: 'Department',
-                  hintText: 'Enter Department',
+                // AddEmployeeTextBoxes(
+                //   controller: _departmentController,
+                //   title: 'Department',
+                //   hintText: 'Enter Department',
+                // ),
+
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            RichText(
+                              text: const TextSpan(
+                                text: "Department",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: ' *',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 2.3,
+                          child: DropdownMenu<String>(
+                            initialSelection: departmentNames.first,
+                            onSelected: (String? value) {
+                              // This is called when the user selects an item.
+                              setState(() {
+                                dropDownValue = value!;
+                              });
+
+                              print(
+                                  "Selected: ${getDepartmentIdByDesignation(dropDownValue)}");
+                            },
+                            dropdownMenuEntries: departmentNames
+                                .map<DropdownMenuEntry<String>>((String value) {
+                              return DropdownMenuEntry<String>(
+                                  value: value, label: value);
+                            }).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 const SizedBox(
                   height: 10,
@@ -636,13 +696,9 @@ class _AddEmployeeState extends State<AddEmployee> {
                                 if (generatedOTP == verificationCode) {
                                   String password = generateRandomPassword();
 
-                                  int department_id = department == "HR"
-                                      ? 1000
-                                      : department == "Accounting"
-                                          ? 2000
-                                          : department == "IT"
-                                              ? 3000
-                                              : 0;
+                                  String? department_id =
+                                      getDepartmentIdByDesignation(
+                                          dropDownValue);
 
                                   createUser(
                                       "$fname $lname",

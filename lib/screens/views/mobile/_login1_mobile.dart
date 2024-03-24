@@ -9,7 +9,8 @@ import 'package:pharmbrew/widgets/_remember_forgot_pass.dart';
 import '../../../utils/_login_click.dart';
 
 class MobileLogin1 extends StatelessWidget {
-  MobileLogin1({super.key});
+  MobileLogin1({super.key, required this.country});
+  final String country;
 
   @override
   Widget build(BuildContext context) {
@@ -22,18 +23,20 @@ class MobileLogin1 extends StatelessWidget {
             children: [Logo()],
           ),
         ),
-        const Column(
+        Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                LocatedAt(),
+                LocatedAt(
+                  country: country,
+                ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
           ],

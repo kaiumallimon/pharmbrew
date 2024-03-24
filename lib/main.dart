@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pharmbrew/data/_ip_api.dart';
+import 'package:pharmbrew/domain/_get_location.dart';
 import 'package:pharmbrew/screens/classes/_dashboard.dart';
 import 'package:pharmbrew/screens/classes/_login1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,15 +15,25 @@ void main() async {
   prefs.setBool("remembered", false);
 
   bool isAdministrator = prefs.getString("loggedInRole") == 'HR' ? true : false;
-
-  runApp(MyApp(result: result, isAdministrator: isAdministrator));
+  String? country = await getCountry();
+  print(country);
+  runApp(MyApp(
+    result: result,
+    isAdministrator: isAdministrator,
+    country: country!,
+  ));
 }
 
 class MyApp extends StatelessWidget {
   final bool? result;
   final bool isAdministrator;
+  final String country;
 
-  const MyApp({Key? key, this.result, required this.isAdministrator})
+  const MyApp(
+      {Key? key,
+      this.result,
+      required this.isAdministrator,
+      required this.country})
       : super(key: key);
 
   @override
@@ -43,7 +55,9 @@ class MyApp extends StatelessWidget {
           ? Dashboard(
               isAdministrator: isAdministrator,
             )
-          : const Login1(),
+          : Login1(
+              country: country,
+            ),
     );
   }
 }

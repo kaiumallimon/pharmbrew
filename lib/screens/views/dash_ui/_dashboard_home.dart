@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:pharmbrew/data/_openweathermap.dart';
+import 'package:pharmbrew/domain/_get_location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardHome extends StatefulWidget {
@@ -16,6 +17,10 @@ class _DashboardHomeState extends State<DashboardHome> {
   final ScrollController _scrollController = ScrollController();
   final Duration _scrollDuration = const Duration(milliseconds: 500);
   FocusNode focusNode = FocusNode();
+
+  late String? country = "";
+  late String? region = "";
+  late String? weather = "";
 
   @override
   void initState() {
@@ -45,6 +50,16 @@ class _DashboardHomeState extends State<DashboardHome> {
 
       name = prefs.getString('loggedInUserName') ??
           ''; // Assign x to pp, if x is null assign an empty string
+    });
+
+    country = await getCountry();
+    region = await getRegion();
+    weather = await getWeather();
+
+    setState(() {
+      country = country;
+      region = region;
+      weather = "${weather?.split(".")[0]}°C";
     });
   }
 
@@ -79,24 +94,37 @@ class _DashboardHomeState extends State<DashboardHome> {
             children: [
               Container(
                 padding: const EdgeInsets.only(left: 20, right: 10),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "26°C",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    weather!.isNotEmpty
+                        ? Text(
+                            weather!,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        : const SizedBox(
+                            height: 10,
+                            width: 10,
+                            child: CircularProgressIndicator()),
+                    const SizedBox(
+                      height: 3,
                     ),
-                    Text(
-                      "Dhaka, Bangladesh",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    country!.isEmpty || region!.isEmpty
+                        ? const SizedBox(
+                            height: 10,
+                            width: 10,
+                            child: CircularProgressIndicator())
+                        : Text(
+                            "$region, $country",
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ],
                 ),
               ),
@@ -165,7 +193,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                 child: Row(
                   children: [
                     AnimatedContainer(
-                      duration: Duration(milliseconds: 500),
+                      duration: const Duration(milliseconds: 500),
                       curve: Curves.linear,
                       child: Icon(
                         CupertinoIcons.bell_fill,
@@ -250,7 +278,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                     ),
                     AnimatedContainer(
                       curve: Curves.linear,
-                      duration: Duration(milliseconds: 500),
+                      duration: const Duration(milliseconds: 500),
                       height: 200,
                       width: width * .31,
                       decoration: BoxDecoration(
@@ -284,7 +312,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                       ),
                     ),
                     AnimatedContainer(
-                      duration: Duration(milliseconds: 500),
+                      duration: const Duration(milliseconds: 500),
                       curve: Curves.linear,
                       height: 200,
                       width: width * .31,

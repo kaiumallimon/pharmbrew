@@ -5,7 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void logout(BuildContext context) async {
   Navigator.push(
-      context, MaterialPageRoute(builder: (context) => const Login1()));
+      context,
+      MaterialPageRoute(
+          builder: (context) => const Login1(
+                country: "",
+              )));
 
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   if (prefs.getKeys().contains("isLoggedIn")) {
@@ -15,7 +19,11 @@ void logout(BuildContext context) async {
 
 void logoutClicked(BuildContext context) async {
   Navigator.push(
-      context, MaterialPageRoute(builder: (context) => const Login1()));
+      context,
+      MaterialPageRoute(
+          builder: (context) => const Login1(
+                country: "",
+              )));
 
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   if (prefs.getKeys().contains("isLoggedIn")) {

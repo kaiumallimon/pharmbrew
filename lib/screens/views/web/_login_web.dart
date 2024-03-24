@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pharmbrew/data/_ip_api.dart';
 import 'package:pharmbrew/domain/_mailer.dart';
 import 'package:pharmbrew/utils/_insert_dummy.dart';
 import 'package:pharmbrew/utils/_login_click.dart';
@@ -16,7 +17,8 @@ import '../../../widgets/_spacer.dart';
 import '../../../widgets/_terms_policy.dart';
 
 class WebLogin extends StatelessWidget {
-  WebLogin({super.key});
+  WebLogin({super.key, required this.country});
+  final String country;
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +53,13 @@ class WebLogin extends StatelessWidget {
                         child: Column(children: [
                           //first row
                           // ,
-                          const OverflowCheckRow(
+                          OverflowCheckRow(
                             logo:
-                                Logo(), // Replace Logo() with your logo widget
+                                const Logo(), // Replace Logo() with your logo widget
                             locatedAt:
-                                LocatedAt(), // Replace LocatedAt() with your locatedAt widget
+                                LocatedAt(
+                                  country: country,
+                                ), // Replace LocatedAt() with your locatedAt widget
                           ),
 
                           //second row

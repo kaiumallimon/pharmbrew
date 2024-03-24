@@ -33,11 +33,11 @@ class _AddEmployeeState extends State<AddEmployee> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _verificationController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
-  final TextEditingController _designationController = TextEditingController();
+  // final TextEditingController _designationController = TextEditingController();
   final TextEditingController _baseSalaryController = TextEditingController();
-  final TextEditingController _paymentFrequencyController =
-      TextEditingController();
-  final TextEditingController _departmentController = TextEditingController();
+  // final TextEditingController _paymentFrequencyController =
+  //     TextEditingController();
+  // final TextEditingController _departmentController = TextEditingController();
   final TextEditingController _ratingController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _skillsController = TextEditingController();
@@ -238,14 +238,14 @@ class _AddEmployeeState extends State<AddEmployee> {
                   title: 'Date of Birth',
                   hintText: 'Year-Month-Day',
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                AddEmployeeTextBoxes(
-                  controller: _designationController,
-                  title: 'Designation',
-                  hintText: 'Enter Designation',
-                ),
+                // const SizedBox(
+                //   height: 10,
+                // ),
+                // AddEmployeeTextBoxes(
+                //   controller: _designationController,
+                //   title: 'Designation',
+                //   hintText: 'Enter Designation',
+                // ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -257,14 +257,14 @@ class _AddEmployeeState extends State<AddEmployee> {
                 const SizedBox(
                   height: 10,
                 ),
-                AddEmployeeTextBoxes(
-                  controller: _paymentFrequencyController,
-                  title: 'Payment Frequency',
-                  hintText: 'Enter Payment Frequency',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
+                // AddEmployeeTextBoxes(
+                //   controller: _paymentFrequencyController,
+                //   title: 'Payment Frequency',
+                //   hintText: 'Enter Payment Frequency',
+                // ),
+                // const SizedBox(
+                //   height: 10,
+                // ),
                 // AddEmployeeTextBoxes(
                 //   controller: _departmentController,
                 //   title: 'Department',
@@ -281,7 +281,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                           children: [
                             RichText(
                               text: const TextSpan(
-                                text: "Department",
+                                text: "Designation",
                                 style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.black,
@@ -636,16 +636,16 @@ class _AddEmployeeState extends State<AddEmployee> {
                                   .trim();
                               String dob =
                                   _dobController.text.toString().trim();
-                              String designation =
-                                  _designationController.text.toString().trim();
+                              // String designation =
+                              //     _designationController.text.toString().trim();
                               String baseSalary =
                                   _baseSalaryController.text.toString().trim();
-                              String paymentFrequency =
-                                  _paymentFrequencyController.text
-                                      .toString()
-                                      .trim();
-                              String department =
-                                  _departmentController.text.toString().trim();
+                              // String paymentFrequency =
+                              //     _paymentFrequencyController.text
+                              //         .toString()
+                              //         .trim();
+                              // String department =
+                              //     _departmentController.text.toString().trim();
                               String rating =
                                   _ratingController.text.toString().trim();
                               String phoneNumber =
@@ -672,12 +672,12 @@ class _AddEmployeeState extends State<AddEmployee> {
                                   _emailController.text.trim().isEmpty ||
                                   _verificationController.text.trim().isEmpty ||
                                   _dobController.text.trim().isEmpty ||
-                                  _designationController.text.trim().isEmpty ||
-                                  _baseSalaryController.text.trim().isEmpty ||
-                                  _paymentFrequencyController.text
-                                      .trim()
-                                      .isEmpty ||
-                                  _departmentController.text.trim().isEmpty ||
+                                  // _designationController.text.trim().isEmpty ||
+                                  // _baseSalaryController.text.trim().isEmpty ||
+                                  // _paymentFrequencyController.text
+                                  //     .trim()
+                                  //     .isEmpty ||
+                                  // _departmentController.text.trim().isEmpty ||
                                   _ratingController.text.trim().isEmpty ||
                                   _phoneNumberController.text.trim().isEmpty ||
                                   _skillsController.text.trim().isEmpty ||
@@ -696,7 +696,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                                 if (generatedOTP == verificationCode) {
                                   String password = generateRandomPassword();
 
-                                  String? department_id =
+                                  String? departmentId =
                                       getDepartmentIdByDesignation(
                                           dropDownValue);
 
@@ -704,12 +704,12 @@ class _AddEmployeeState extends State<AddEmployee> {
                                       "$fname $lname",
                                       email,
                                       dob,
-                                      designation,
+                                      dropDownValue,
                                       password,
                                       role,
                                       _image,
                                       rating,
-                                      department_id.toString(),
+                                      departmentId.toString(),
                                       skills,
                                       "$apartment, $building, $street, $city, $postalCode, $country",
                                       phoneNumber,

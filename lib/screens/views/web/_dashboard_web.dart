@@ -7,8 +7,8 @@ import '../../../widgets/_dashboard_sidepanel_button.dart';
 import '../../../widgets/_logo2.dart';
 
 class WebDashboard extends StatefulWidget {
-  const WebDashboard({Key? key}) : super(key: key);
-
+  WebDashboard({Key? key, required this.isAdministrator}) : super(key: key);
+  bool isAdministrator;
   @override
   State<WebDashboard> createState() => _WebDashboardState();
 }
@@ -17,13 +17,9 @@ class _WebDashboardState extends State<WebDashboard> {
   late String pp = ''; // Initialize pp with an empty string
   late String name = '';
   late String userRole;
-  late bool administrator = false; // Initialize administrator to false
 
   void initData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    userRole = prefs.getString('loggedInRole') ?? ''; // Initialize userRole
-    administrator = (userRole == 'Administrator' || userRole == 'HR');
 
     final x = prefs.getString('loggedInUserProfilePic');
     pp = x ?? ''; // Assign x to pp, if x is null assign an empty string
@@ -40,7 +36,7 @@ class _WebDashboardState extends State<WebDashboard> {
   void initState() {
     super.initState();
     initData();
-    administrator ? inFocus = 0 : inFocus = 12;
+    inFocus = widget.isAdministrator ? 0 : 12;
   }
 
   void switchPage(int index) {
@@ -102,7 +98,7 @@ class _WebDashboardState extends State<WebDashboard> {
                           ),
 
                           //administrator dashboard
-                          administrator
+                          widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Home',
                                   icon: Icons.home,
@@ -114,7 +110,7 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
-                          administrator
+                          widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Add employee',
                                   icon: CupertinoIcons.add,
@@ -126,7 +122,7 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
-                          administrator
+                          widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Employees',
                                   icon: CupertinoIcons.group_solid,
@@ -138,7 +134,7 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
-                          administrator
+                          widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Edit Profile',
                                   icon: Icons.edit,
@@ -150,7 +146,7 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
-                          administrator
+                          widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Notifications',
                                   icon: Icons.notifications,
@@ -162,7 +158,7 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
-                          administrator
+                          widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Access',
                                   icon: Icons.security,
@@ -174,7 +170,7 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
-                          administrator
+                          widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Finance',
                                   icon: CupertinoIcons.money_dollar_circle_fill,
@@ -186,7 +182,7 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
-                          administrator
+                          widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Attendance',
                                   icon: Icons.person,
@@ -198,7 +194,7 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
-                          administrator
+                          widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Events',
                                   icon: Icons.event,
@@ -210,7 +206,7 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
-                          administrator
+                          widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Analytics',
                                   icon: Icons.analytics,
@@ -222,7 +218,7 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
-                          administrator
+                          widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Queries',
                                   icon: Icons.inbox,
@@ -234,7 +230,7 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
-                          administrator
+                          widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Settings',
                                   icon: Icons.settings,
@@ -250,7 +246,7 @@ class _WebDashboardState extends State<WebDashboard> {
                           //employee dashboard
 
                           //employee home
-                          !administrator
+                          !widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Home',
                                   icon: Icons.home,
@@ -265,7 +261,7 @@ class _WebDashboardState extends State<WebDashboard> {
 
                           //employee edit profile request
 
-                          !administrator
+                          !widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Edit Profile',
                                   icon: Icons.edit,

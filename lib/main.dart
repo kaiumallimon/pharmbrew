@@ -5,25 +5,31 @@ import 'package:pharmbrew/screens/classes/_login1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
-  WidgetsFlutterBinding
-      .ensureInitialized(); // Ensure that Flutter is initialized before accessing SharedPreferences
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
   bool? result = prefs.getBool("isLoggedIn");
+
+  // Ensure 'remembered' key exists and set its value to false
   prefs.setBool("remembered", false);
-  runApp(MyApp(result: result));
+
+  bool isAdministrator = prefs.getString("loggedInRole") == 'HR' ? true : false;
+
+  runApp(MyApp(result: result, isAdministrator: isAdministrator));
 }
 
 class MyApp extends StatelessWidget {
   final bool? result;
+  final bool isAdministrator;
 
-  const MyApp({Key? key, this.result}) : super(key: key);
+  const MyApp({Key? key, this.result, required this.isAdministrator})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamilyFallback: const ["sans-serif", "monospace"],
+        fontFamilyFallback: ["sans-serif", "monospace"], // No need for 'const'
         fontFamily: GoogleFonts.poppins().fontFamily,
         colorScheme: ColorScheme.light(
           background: const Color(0xFF0D0F2F),
@@ -33,7 +39,11 @@ class MyApp extends StatelessWidget {
           surface: Colors.grey.shade300,
         ),
       ),
-      home: result != null && result! ? const Dashboard() : const Login1(),
+      home: result ?? false
+          ? Dashboard(
+              isAdministrator: isAdministrator,
+            )
+          : const Login1(),
     );
   }
 }

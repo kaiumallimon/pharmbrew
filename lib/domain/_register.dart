@@ -25,6 +25,21 @@ Future<void> createUser(
   var url = 'https://bcrypt.site/scripts/php/register.php';
 
   // Sample data to send to the API
+
+  print("Name: $name");
+  print("Email: $email");
+  print("Date of Birth: $dateOfBirth");
+  print("Designation: $designation");
+  print("Password: $password");
+  print("Role: $role");
+  print("Rating: $rating");
+  print("Department ID: $departmentId");
+  print("Skills: $skills");
+  print("Location: $location");
+  print("Phone: $phone");
+  print("Base Salary: $baseSalary");
+  print("Image File: ${imageFile!.name}");
+
   var data = {
     'name': name,
     'email': email,
@@ -49,35 +64,46 @@ Future<void> createUser(
     request.fields.addAll(data);
 
     // Add image file
-    if (imageFile != null) {
-      var stream = http.ByteStream(imageFile.openRead());
-      var length = await imageFile.length();
-      var multipartFile = http.MultipartFile(
-        'image',
-        stream,
-        length,
-        filename: 'image.jpg',
-      );
-      request.files.add(multipartFile);
-    }
+    var stream = http.ByteStream(imageFile.openRead());
+    var length = await imageFile.length();
+    var multipartFile = http.MultipartFile(
+      'image',
+      stream,
+      length,
+      filename: 'image.jpg',
+    );
+    request.files.add(multipartFile);
 
     // Send request
     var response = await request.send();
 
+// // Convert the response stream to a string
+//     var result = await response.stream.bytesToString();
+
+// // Now you can decode the string
+//     var decodedResult = json.decode(result);
+
+//     print(decodedResult);
+
     // Get response
     if (response.statusCode == 200) {
-      
+      // Map<String, dynamic> result = jsonDecode(finalResponse.body);
+
+      // if (result['success'] == true) {
       showCustomSuccessDialog('Account created successfully', context);
 
       sendEmail(email, "Regarding Pharmabrew Account",
           "Dear user,\nYour account has been created successfully. Now you can login to your account with these credentials: \n\nEmail: $email\nPassword: $password\n\nThank you for choosing Pharmabrew!");
-      
+      return;
+      // } else {
+      // showCustomErrorDialog(result['message'], context);
+      // }
     } else {
       showCustomErrorDialog(
           'Failed with status code: ${response.statusCode}', context);
     }
   } catch (e) {
-    print('Exception: $e');
+    // print('Exception: $e');
     showCustomErrorDialog('Exception: $e', context);
   }
 }

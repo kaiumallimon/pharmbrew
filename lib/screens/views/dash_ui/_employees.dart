@@ -5,6 +5,7 @@ import 'package:cool_dropdown/cool_dropdown.dart';
 import 'package:cool_dropdown/models/cool_dropdown_item.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pharmbrew/data/_fetch_employee.dart';
 
@@ -20,11 +21,12 @@ class EmployeesAll extends StatefulWidget {
 class _EmployeesAllState extends State<EmployeesAll> {
   final listDropdownController1 = DropdownController();
   final listDropdownController2 = DropdownController();
+  final TextEditingController searchController = TextEditingController();
 
   final List<String> list1 = <String>[
     'Default',
     'Salary',
-    'Age',
+    // 'Age',
     'Joining Date',
     'Rating',
   ];
@@ -47,6 +49,12 @@ class _EmployeesAllState extends State<EmployeesAll> {
   late String sortOrder = "";
   late Timer timer;
   late Future<List<dynamic>> employees;
+
+  @override
+  void dispose() {
+    super.dispose();
+    searchController.dispose();
+  }
 
   void initState() {
     super.initState();
@@ -85,9 +93,11 @@ class _EmployeesAllState extends State<EmployeesAll> {
       isValue1Changed = true;
       if (value == "Salary") {
         sortBy = "base_salary";
-      } else if (value == "Age") {
-        sortBy = "dateofbirth";
-      } else if (value == "Joining Date") {
+      }
+      // } else if (value == "Age") {
+      //   sortBy = "dateofbirth";
+      // }
+      else if (value == "Joining Date") {
         sortBy = "joiningdate";
       } else if (value == "Rating") {
         sortBy = "rating";
@@ -120,6 +130,31 @@ class _EmployeesAllState extends State<EmployeesAll> {
     );
   }
 
+  List<dynamic> filteredEmployees(List<dynamic> employees, String query) {
+    if (query.isEmpty) {
+      return employees;
+    }
+
+    return employees.where((employee) {
+      return employee['name'].toLowerCase().contains(query.toLowerCase()) ||
+          employee['role'].toLowerCase().contains(query.toLowerCase()) ||
+          employee['email'].toLowerCase().contains(query.toLowerCase()) ||
+          getLocation(employee['address'])
+              .toLowerCase()
+              .contains(query.toLowerCase()) ||
+          getPhoneNumber(employee['phone_numbers'])
+              .toLowerCase()
+              .contains(query.toLowerCase()) ||
+          calculateAge(employee['dateofbirth'])
+              .toString()
+              .contains(query.toLowerCase()) ||
+          employee['joiningdate'].toLowerCase().contains(query.toLowerCase()) ||
+          employee['rating'].toString().contains(query.toLowerCase()) ||
+          employee['base_salary'].toString().contains(query.toLowerCase()) ||
+          employee['leaves'].toString().contains(query.toLowerCase());
+    }).toList();
+  }
+
   // Replace the build method inside the _EmployeesAllState class with the following:
 
   @override
@@ -137,106 +172,56 @@ class _EmployeesAllState extends State<EmployeesAll> {
                 Container(
                   padding: const EdgeInsets.only(top: 20, bottom: 20),
                   color: Colors.white,
-                  child: Row(
-                    children: [
-                      const Text(
-                        'All Employees',
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(width: 30),
-                      GestureDetector(
-                        onTap: () {
-                          showSearchDialog(context);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                          decoration: BoxDecoration(
-                              color: Colors.grey.shade200,
-                              borderRadius: BorderRadius.circular(10)),
-                          width: MediaQuery.of(context).size.width / 6,
-                          child: Row(
-                            children: [
-                              Icon(Icons.search, color: Colors.grey.shade500),
-                              const SizedBox(width: 10),
-                              Text(
-                                'Search',
-                                style: TextStyle(color: Colors.grey.shade500),
-                              )
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
+                  child: const Text(
+                    'All Employees',
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
                 ),
-                // const SizedBox(height: 10),
-                // Container(
-                //   height: 55,
-                //   decoration: BoxDecoration(
-                //     color: Colors.white,
-                //     border: Border.all(color: Colors.grey.shade400, width: 2),
-                //     borderRadius: BorderRadius.circular(10),
-                //   ),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     children: [
-                //       Expanded(
-                //         child: Container(
-                //           padding: const EdgeInsets.only(left: 5),
-                //           child: TextField(
-                //             decoration: InputDecoration(
-                //               hintText: 'Search Employee',
-                //               hintStyle: TextStyle(color: Colors.grey.shade400),
-                //               border: InputBorder.none,
-                //               prefixIcon: const Icon(
-                //                 Icons.search,
-                //                 color: Colors.grey,
-                //               ),
-                //             ),
-                //           ),
-                //         ),
-                //       ),
-                //       const SizedBox(width: 10),
-                //       Container(
-                //         margin: const EdgeInsets.only(right: 5),
-                //         height: 42,
-                //         child: ElevatedButton(
-                //           style: ElevatedButton.styleFrom(
-                //             backgroundColor: CupertinoColors.activeBlue,
-                //             foregroundColor: Colors.white,
-                //             shape: RoundedRectangleBorder(
-                //               borderRadius: BorderRadius.circular(10),
-                //             ),
-                //           ),
-                //           onPressed: () {
-                //             // Implement search functionality
-                //           },
-                //           child: const Text('Search'),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
                 const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      width: 600,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: TextField(
+                        controller: searchController,
+                        onChanged: (value) {
+                          setState(() {});
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Search Employees',
+                          hintStyle: TextStyle(color: Colors.grey.shade500),
+                          prefixIcon:
+                              Icon(Icons.search, color: Colors.grey.shade500),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      height: 50,
+                    Container(
+                      height: 45,
+                      // height: 50,
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            backgroundColor: CupertinoColors.activeBlue,
+                                borderRadius: BorderRadius.circular(10)),
+                            backgroundColor: Theme.of(context).colorScheme.primary,
                             foregroundColor: Colors.white),
                         onPressed: () {
                           // Implement filter functionality
                           reload();
                         },
-                        icon: const Icon(Icons.loop),
+                        icon: const Icon(Icons.refresh),
                         label: const Text('Reload'),
                       ),
                     ),
@@ -283,33 +268,25 @@ class _EmployeesAllState extends State<EmployeesAll> {
                   future: employees,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No employees found.'));
+                      return Center(child: Text('No employees found.'));
                     } else {
+                      final List<dynamic> filteredList = filteredEmployees(
+                          snapshot.data!, searchController.text);
                       return SingleChildScrollView(
                         // scrollDirection: Axis.horizontal,
                         child: DataTable(
                           headingRowColor: MaterialStateColor.resolveWith(
-                              (states) => Colors.blue.shade300),
-                          headingTextStyle: GoogleFonts.poppins(
-                            fontSize: 16,
+                              (states) => Theme.of(context).colorScheme.primary),
+                          headingTextStyle: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                           dataRowMaxHeight: 120,
-                          border: TableBorder(
-                            horizontalInside: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 2,
-                            ),
-                            verticalInside: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 2,
-                            ),
-                          ),
+                          border: TableBorder.all(color: Colors.grey.shade300),
                           columns: const [
                             DataColumn(
                                 label: Text(
@@ -349,7 +326,7 @@ class _EmployeesAllState extends State<EmployeesAll> {
                                 label: Text('Action',
                                     textAlign: TextAlign.center)),
                           ],
-                          rows: snapshot.data!.map<DataRow>((employee) {
+                          rows: filteredList.map<DataRow>((employee) {
                             return DataRow(cells: [
                               DataCell(
                                 FutureBuilder<String>(

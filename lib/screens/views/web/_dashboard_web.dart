@@ -136,6 +136,18 @@ class _WebDashboardState extends State<WebDashboard> {
                               : const SizedBox.shrink(),
                           widget.isAdministrator
                               ? SidePanelButton(
+                            label: 'Products',
+                            icon: Icons.shopping_bag_outlined,
+                            controller: inFocus == 15,
+                            onClick: () {
+                              setState(() {
+                                inFocus = 15;
+                              });
+                            },
+                          )
+                              : const SizedBox.shrink(),
+                          widget.isAdministrator
+                              ? SidePanelButton(
                                   label: 'Edit Profile',
                                   icon: Icons.edit,
                                   controller: inFocus == 3,
@@ -292,13 +304,8 @@ class _WebDashboardState extends State<WebDashboard> {
   }
 
   Future<void> _handleRefresh() async {
-    // Perform your asynchronous operation here
-    // For example, fetch new data from a network source
     await Future.delayed(const Duration(seconds: 2)); // Simulating a delay
-
-    // After the asynchronous operation is complete, call setState to rebuild the UI
     setState(() {
-      // Update the UI or refresh data
     });
   }
 }

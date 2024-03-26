@@ -9,6 +9,7 @@ import '../screens/views/dash_ui/_dashboard_home.dart';
 import '../screens/views/dash_ui/_employees.dart';
 import '../screens/views/dash_ui/_events.dart';
 import '../screens/views/dash_ui/_notifications.dart';
+import '../screens/views/dash_ui/_products.dart';
 import '../screens/views/dash_ui/_profile.dart';
 import '../screens/views/dash_ui/_queries_message.dart';
 import '../screens/views/dash_ui/_roles.dart';
@@ -17,7 +18,9 @@ import '../screens/views/dash_ui/_settings.dart';
 
 class DashboardMainPanel extends StatelessWidget {
   DashboardMainPanel({super.key, required this.inFocus});
+
   int inFocus;
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -51,7 +54,10 @@ class DashboardMainPanel extends StatelessWidget {
                                                               ? const EmployeeEditProfile()
                                                               : inFocus == 14
                                                                   ? const SearchEmployee()
-                                                                  : Container(),
+                                                                  : inFocus ==
+                                                                          15
+                                                                      ? const Products()
+                                                                      : Container(),
     );
   }
 }

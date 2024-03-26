@@ -9,19 +9,23 @@ class LocatedAt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          "I'm Located in",
-          style: TextStyle(color: Colors.grey.shade500),
-        ),
+        Icon(Icons.location_on, color: Colors.grey.shade500, size: 20),
+        // space5w(),
         space5w(),
-        Image.asset(
-          ImageRoutes.bd_flag,
-          scale: 2,
-        ),
+        // Text(
+        //   "I'm Located in",
+        //   style: TextStyle(color: Colors.grey.shade500),
+        // ),
+        // space5w(),
+        // Image.asset(
+        //   ImageRoutes.bd_flag,
+        //   scale: 2,
+        // ),
         space5w(),
         Text(
-          country,
+          "${country=="BD"?"Bangladesh":"${country}"}",
           style: const TextStyle(fontWeight: FontWeight.bold),
         )
       ],

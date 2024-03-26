@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 
-Future<void> createUser(
+Future<bool> createUser(
     String name,
     String email,
     String dateOfBirth,
@@ -94,16 +94,18 @@ Future<void> createUser(
 
       sendEmail(email, "Regarding Pharmabrew Account",
           "Dear user,\nYour account has been created successfully. Now you can login to your account with these credentials: \n\nEmail: $email\nPassword: $password\n\nThank you for choosing Pharmabrew!");
-      return;
+      return true;
       // } else {
       // showCustomErrorDialog(result['message'], context);
       // }
     } else {
       showCustomErrorDialog(
           'Failed with status code: ${response.statusCode}', context);
+      return false;
     }
   } catch (e) {
     // print('Exception: $e');
     showCustomErrorDialog('Exception: $e', context);
+    return false;
   }
 }

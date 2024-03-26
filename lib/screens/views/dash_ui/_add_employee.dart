@@ -33,8 +33,10 @@ class _AddEmployeeState extends State<AddEmployee> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _verificationController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
+
   // final TextEditingController _designationController = TextEditingController();
   final TextEditingController _baseSalaryController = TextEditingController();
+
   // final TextEditingController _paymentFrequencyController =
   //     TextEditingController();
   // final TextEditingController _departmentController = TextEditingController();
@@ -58,6 +60,7 @@ class _AddEmployeeState extends State<AddEmployee> {
   String dropDownValue = "";
 
   EmailOTP myauth = EmailOTP();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -700,7 +703,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                                       getDepartmentIdByDesignation(
                                           dropDownValue);
 
-                                  createUser(
+                                  bool response = await createUser(
                                       "$fname $lname",
                                       email,
                                       dob,
@@ -715,6 +718,27 @@ class _AddEmployeeState extends State<AddEmployee> {
                                       phoneNumber,
                                       baseSalary,
                                       context);
+
+
+                                  if(response){
+                                    //clear all the controllers
+                                    _fnameController.clear();
+                                    _lnameController.clear();
+                                    _emailController.clear();
+                                    _verificationController.clear();
+                                    _dobController.clear();
+                                    _baseSalaryController.clear();
+                                    _ratingController.clear();
+                                    _phoneNumberController.clear();
+                                    _skillsController.clear();
+                                    _apartmentController.clear();
+                                    _buildingController.clear();
+                                    _streetController.clear();
+                                    _cityController.clear();
+                                    _postalCodeController.clear();
+                                    _countryController.clear();
+                                    _roleController.clear();
+                                  }
                                 } else {
                                   showCustomErrorDialog(
                                       "Invalid OTP!", context);

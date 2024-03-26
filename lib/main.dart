@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pharmbrew/data/_ip_api.dart';
 import 'package:pharmbrew/domain/_get_location.dart';
 import 'package:pharmbrew/screens/classes/_dashboard.dart';
 import 'package:pharmbrew/screens/classes/_login1.dart';
@@ -16,7 +15,7 @@ void main() async {
 
   bool isAdministrator = prefs.getString("loggedInRole") == 'HR' ? true : false;
   String? country = await getCountry();
-  print(country);
+  // print(country);
   runApp(MyApp(
     result: result,
     isAdministrator: isAdministrator,

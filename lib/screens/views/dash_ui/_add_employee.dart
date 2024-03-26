@@ -8,6 +8,7 @@ import 'package:email_otp/email_otp.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
@@ -28,11 +29,11 @@ class AddEmployee extends StatefulWidget {
 }
 
 class _AddEmployeeState extends State<AddEmployee> {
-  final TextEditingController _fnameController = TextEditingController();
-  final TextEditingController _lnameController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _verificationController = TextEditingController();
-  final TextEditingController _dobController = TextEditingController();
+
+  // final TextEditingController _dobController = TextEditingController();
 
   // final TextEditingController _designationController = TextEditingController();
   final TextEditingController _baseSalaryController = TextEditingController();
@@ -49,17 +50,33 @@ class _AddEmployeeState extends State<AddEmployee> {
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _postalCodeController = TextEditingController();
   final TextEditingController _countryController = TextEditingController();
-  final TextEditingController _roleController = TextEditingController();
+
+  // final TextEditingController _roleController = TextEditingController();
 
   final List<String> departmentNames = getAllDesignations();
+  final List<String> roles = ["Employee", "HR"];
 
   bool verficationSent = false;
 
   XFile? _image;
 
   String dropDownValue = "";
+  String dropDownValueRole = "";
 
   EmailOTP myauth = EmailOTP();
+
+  DateTime birthDate = DateTime.now();
+  bool selected = false;
+
+  Future<DateTime?> _selectDate(BuildContext context, DateTime dateTime) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: dateTime,
+      firstDate: DateTime(1920, 1),
+      lastDate: DateTime.now(),
+    );
+    return picked;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,18 +102,11 @@ class _AddEmployeeState extends State<AddEmployee> {
             child: Column(
               children: [
                 AddEmployeeTextBoxes(
-                  controller: _fnameController,
-                  title: 'First Name',
-                  hintText: 'Enter First Name',
+                  controller: _nameController,
+                  title: 'Name',
+                  hintText: 'Enter Employee Name',
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                AddEmployeeTextBoxes(
-                  controller: _lnameController,
-                  title: 'Last Name',
-                  hintText: 'Enter last Name',
-                ),
+
                 const SizedBox(
                   height: 10,
                 ),
@@ -128,16 +138,19 @@ class _AddEmployeeState extends State<AddEmployee> {
                         ),
                         Row(
                           children: [
-                            SizedBox(
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
                               width: MediaQuery.of(context).size.width / 2.3,
                               child: TextField(
                                 controller: _emailController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.grey, width: 2.0),
+                                    enabledBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: OutlineInputBorder(
+                                    focusedBorder: const OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
@@ -148,11 +161,16 @@ class _AddEmployeeState extends State<AddEmployee> {
                             const SizedBox(
                               width: 10,
                             ),
-                            SizedBox(
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
                               height: 55,
                               child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blue,
+                                      backgroundColor:
+                                          Theme.of(context).colorScheme.primary,
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(10))),
@@ -228,18 +246,138 @@ class _AddEmployeeState extends State<AddEmployee> {
                 const SizedBox(
                   height: 10,
                 ),
-                AddEmployeeTextBoxes(
-                  controller: _roleController,
-                  title: 'Login Role',
-                  hintText: 'Enter Role',
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            RichText(
+                              text: const TextSpan(
+                                text: "Role",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: ' *',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          width: MediaQuery.of(context).size.width / 2.3,
+                          child: DropdownMenu<String>(
+                            width: MediaQuery.of(context).size.width / 2.3,
+                            inputDecorationTheme: InputDecorationTheme(
+                                enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                ),
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.blue, width: 2.0),
+                                ),
+                                hintStyle: const TextStyle(color: Colors.grey)),
+                            initialSelection: roles.first,
+                            onSelected: (String? value) {
+                              setState(() {
+                                dropDownValueRole = value!;
+                              });
+
+                              print("Selected Role: $dropDownValueRole");
+                            },
+                            dropdownMenuEntries: roles
+                                .map<DropdownMenuEntry<String>>((String value) {
+                              return DropdownMenuEntry<String>(
+                                  value: value, label: value);
+                            }).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                AddEmployeeTextBoxes(
-                  controller: _dobController,
-                  title: 'Date of Birth',
-                  hintText: 'Year-Month-Day',
+
+                Column(
+                  children: [
+                    Row(children: [
+                      RichText(
+                          text: TextSpan(
+                        text: "Date of Birth",
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: ' *',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold)),
+                        ],
+                      ))
+                    ]),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2.3,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              DateTime? pickedDate =
+                                  await _selectDate(context, birthDate);
+                              if (pickedDate != null) {
+                                setState(() {
+                                  birthDate = pickedDate;
+                                  selected = true;
+                                });
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey.shade300,
+                              foregroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                side: BorderSide(
+                                  color: Colors.grey.shade300,
+                                  width: 1.5,
+                                ),
+                              ),
+                            ),
+                            child: !selected
+                                ? Text(
+                                    'Enter Date of Birth',
+                                    style:
+                                        TextStyle(color: Colors.grey.shade700),
+                                  )
+                                : Text("${birthDate.toLocal()}".split(' ')[0]),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 // const SizedBox(
                 //   height: 10,
@@ -304,9 +442,23 @@ class _AddEmployeeState extends State<AddEmployee> {
                         const SizedBox(
                           height: 10,
                         ),
-                        SizedBox(
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
                           width: MediaQuery.of(context).size.width / 2.3,
                           child: DropdownMenu<String>(
+                            width: MediaQuery.of(context).size.width / 2.3,
+                            inputDecorationTheme: InputDecorationTheme(
+                                enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                ),
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.blue, width: 2.0),
+                                ),
+                                hintStyle: const TextStyle(color: Colors.grey)),
                             initialSelection: departmentNames.first,
                             onSelected: (String? value) {
                               // This is called when the user selects an item.
@@ -383,16 +535,19 @@ class _AddEmployeeState extends State<AddEmployee> {
                             const SizedBox(
                               height: 10,
                             ),
-                            SizedBox(
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
                               width: MediaQuery.of(context).size.width / 3,
                               child: TextField(
                                 controller: _apartmentController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.grey, width: 2.0),
+                                    enabledBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: OutlineInputBorder(
+                                    focusedBorder: const OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
@@ -416,16 +571,19 @@ class _AddEmployeeState extends State<AddEmployee> {
                             const SizedBox(
                               height: 10,
                             ),
-                            SizedBox(
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
                               width: MediaQuery.of(context).size.width / 3,
                               child: TextField(
                                 controller: _buildingController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.grey, width: 2.0),
+                                    enabledBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: OutlineInputBorder(
+                                    focusedBorder: const OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
@@ -453,16 +611,19 @@ class _AddEmployeeState extends State<AddEmployee> {
                             const SizedBox(
                               height: 10,
                             ),
-                            SizedBox(
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
                               width: MediaQuery.of(context).size.width / 3,
                               child: TextField(
                                 controller: _streetController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.grey, width: 2.0),
+                                    enabledBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: OutlineInputBorder(
+                                    focusedBorder: const OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
@@ -486,16 +647,19 @@ class _AddEmployeeState extends State<AddEmployee> {
                             const SizedBox(
                               height: 10,
                             ),
-                            SizedBox(
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
                               width: MediaQuery.of(context).size.width / 3,
                               child: TextField(
                                 controller: _cityController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.grey, width: 2.0),
+                                    enabledBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: OutlineInputBorder(
+                                    focusedBorder: const OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
@@ -523,16 +687,19 @@ class _AddEmployeeState extends State<AddEmployee> {
                             const SizedBox(
                               height: 10,
                             ),
-                            SizedBox(
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
                               width: MediaQuery.of(context).size.width / 3,
                               child: TextField(
                                 controller: _postalCodeController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.grey, width: 2.0),
+                                    enabledBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: OutlineInputBorder(
+                                    focusedBorder: const OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
@@ -556,16 +723,19 @@ class _AddEmployeeState extends State<AddEmployee> {
                             const SizedBox(
                               height: 10,
                             ),
-                            SizedBox(
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
                               width: MediaQuery.of(context).size.width / 3,
                               child: TextField(
                                 controller: _countryController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.grey, width: 2.0),
+                                    enabledBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: OutlineInputBorder(
+                                    focusedBorder: const OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
@@ -627,18 +797,15 @@ class _AddEmployeeState extends State<AddEmployee> {
                       child: ElevatedButton(
                           onPressed: () async {
                             try {
-                              String fname =
-                                  _fnameController.text.toString().trim();
-                              String lname =
-                                  _lnameController.text.toString().trim();
+                              String name =
+                                  _nameController.text.toString().trim();
                               String email =
                                   _emailController.text.toString().trim();
                               String verificationCode = _verificationController
                                   .text
                                   .toString()
                                   .trim();
-                              String dob =
-                                  _dobController.text.toString().trim();
+                              String dob = birthDate.toString();
                               // String designation =
                               //     _designationController.text.toString().trim();
                               String baseSalary =
@@ -667,30 +834,38 @@ class _AddEmployeeState extends State<AddEmployee> {
                                   _postalCodeController.text.toString().trim();
                               String country =
                                   _countryController.text.toString().trim();
-                              String role =
-                                  _roleController.text.toString().trim();
+                              // String role =
+                              //     _roleController.text.toString().trim();
 
-                              if (_fnameController.text.trim().isEmpty ||
-                                  _lnameController.text.trim().isEmpty ||
-                                  _emailController.text.trim().isEmpty ||
-                                  _verificationController.text.trim().isEmpty ||
-                                  _dobController.text.trim().isEmpty ||
-                                  // _designationController.text.trim().isEmpty ||
-                                  // _baseSalaryController.text.trim().isEmpty ||
-                                  // _paymentFrequencyController.text
-                                  //     .trim()
-                                  //     .isEmpty ||
-                                  // _departmentController.text.trim().isEmpty ||
-                                  _ratingController.text.trim().isEmpty ||
-                                  _phoneNumberController.text.trim().isEmpty ||
-                                  _skillsController.text.trim().isEmpty ||
-                                  _apartmentController.text.trim().isEmpty ||
-                                  _buildingController.text.trim().isEmpty ||
-                                  _streetController.text.trim().isEmpty ||
-                                  _cityController.text.trim().isEmpty ||
-                                  _postalCodeController.text.trim().isEmpty ||
-                                  _countryController.text.trim().isEmpty ||
-                                  _roleController.text.trim().isEmpty) {
+                              if (_nameController.text.trim().isEmpty ||
+                                      _emailController.text.trim().isEmpty ||
+                                      _verificationController.text
+                                          .trim()
+                                          .isEmpty ||
+                                      // _dobController.text.trim().isEmpty ||
+                                      // _designationController.text.trim().isEmpty ||
+                                      // _baseSalaryController.text.trim().isEmpty ||
+                                      // _paymentFrequencyController.text
+                                      //     .trim()
+                                      //     .isEmpty ||
+                                      // _departmentController.text.trim().isEmpty ||
+                                      _ratingController.text.trim().isEmpty ||
+                                      _phoneNumberController.text
+                                          .trim()
+                                          .isEmpty ||
+                                      _skillsController.text.trim().isEmpty ||
+                                      _apartmentController.text
+                                          .trim()
+                                          .isEmpty ||
+                                      _buildingController.text.trim().isEmpty ||
+                                      _streetController.text.trim().isEmpty ||
+                                      _cityController.text.trim().isEmpty ||
+                                      _postalCodeController.text
+                                          .trim()
+                                          .isEmpty ||
+                                      _countryController.text.trim().isEmpty
+                                  // _roleController.text.trim().isEmpty
+                                  ) {
                                 // At least one field is empty
                                 showCustomErrorDialog(
                                     "Pleas fill all the fields!", context);
@@ -704,12 +879,12 @@ class _AddEmployeeState extends State<AddEmployee> {
                                           dropDownValue);
 
                                   bool response = await createUser(
-                                      "$fname $lname",
+                                      "$name",
                                       email,
                                       dob,
                                       dropDownValue,
                                       password,
-                                      role,
+                                      dropDownValueRole,
                                       _image,
                                       rating,
                                       departmentId.toString(),
@@ -719,14 +894,12 @@ class _AddEmployeeState extends State<AddEmployee> {
                                       baseSalary,
                                       context);
 
-
-                                  if(response){
+                                  if (response) {
                                     //clear all the controllers
-                                    _fnameController.clear();
-                                    _lnameController.clear();
+                                    _nameController.clear();
                                     _emailController.clear();
                                     _verificationController.clear();
-                                    _dobController.clear();
+                                    selected = false;
                                     _baseSalaryController.clear();
                                     _ratingController.clear();
                                     _phoneNumberController.clear();
@@ -737,7 +910,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                                     _cityController.clear();
                                     _postalCodeController.clear();
                                     _countryController.clear();
-                                    _roleController.clear();
+                                    // _roleController.clear();
                                   }
                                 } else {
                                   showCustomErrorDialog(
@@ -749,7 +922,8 @@ class _AddEmployeeState extends State<AddEmployee> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: CupertinoColors.activeBlue,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10))),
                           child: const Text('Register Employee',

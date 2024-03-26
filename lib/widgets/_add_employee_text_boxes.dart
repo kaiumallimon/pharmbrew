@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AddEmployeeTextBoxes extends StatelessWidget {
@@ -36,13 +37,17 @@ class AddEmployeeTextBoxes extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            SizedBox(
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(5),
+              ),
               width: MediaQuery.of(context).size.width / 2.3,
               child: TextField(
                 controller: controller,
                 decoration: InputDecoration(
                     enabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 2.0),
+                      borderSide: BorderSide.none,
                     ),
                     focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.blue, width: 2.0),

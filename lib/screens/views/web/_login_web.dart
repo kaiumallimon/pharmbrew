@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pharmbrew/data/_ip_api.dart';
+import 'package:pharmbrew/domain/_mailer.dart';
+import 'package:pharmbrew/utils/_insert_dummy.dart';
 import 'package:pharmbrew/utils/_login_click.dart';
 import 'package:pharmbrew/widgets/_located_at.dart';
 import 'package:pharmbrew/widgets/_logo_location_overflow.dart';
 
-import '../../../routes/_image_routes.dart';
 import '../../../widgets/_custom_button_with_logo.dart';
 import '../../../widgets/_custom_password_field.dart';
 import '../../../widgets/_custom_textField.dart';
@@ -15,47 +17,49 @@ import '../../../widgets/_spacer.dart';
 import '../../../widgets/_terms_policy.dart';
 
 class WebLogin extends StatelessWidget {
-  WebLogin({super.key});
+  WebLogin({super.key, required this.country});
+  final String country;
 
   @override
   Widget build(BuildContext context) {
-    double dWidth = MediaQuery.of(context).size.width;
     double dHeight = MediaQuery.of(context).size.height;
-
-
 
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
       child: InteractiveViewer(
         minScale: 0.1,
-          maxScale: 4.0,
+        maxScale: 4.0,
         child: Column(
           children: [
             Expanded(
               child: Column(children: [
                 //margin at the top
                 pageTopSpace(),
-        
+
                 Row(
                   children: [
                     //left side of the page
-        
+
                     //right side of the page
                     Expanded(child: SideImageCol(dHeight: dHeight)),
-        
+
                     Expanded(
                         child: SizedBox(
                       height: dHeight - 45,
                       // color: Colors.red,
-        
+
                       child: Container(
                         margin: const EdgeInsets.only(right: 10),
                         child: Column(children: [
                           //first row
                           // ,
                           OverflowCheckRow(
-                            logo: Logo(), // Replace Logo() with your logo widget
-                            locatedAt: LocatedAt(), // Replace LocatedAt() with your locatedAt widget
+                            logo:
+                                const Logo(), // Replace Logo() with your logo widget
+                            locatedAt:
+                                LocatedAt(
+                                  country: country,
+                                ), // Replace LocatedAt() with your locatedAt widget
                           ),
 
                           //second row
@@ -82,7 +86,7 @@ class WebLogin extends StatelessWidget {
                                     height: 60,
                                     controller: _emailController,
                                   ),
-        
+
                                   const SizedBox(
                                     height: 10,
                                   ),
@@ -95,24 +99,26 @@ class WebLogin extends StatelessWidget {
                                   const SizedBox(
                                     height: 10,
                                   ),
-        
+
                                   const RememberAndForgotPassword(
                                     width: 350,
                                   ),
-        
+
                                   const SizedBox(
                                     height: 10,
                                   ),
-        
+
                                   CustomButtonWithImageLogo(
                                     label: "Login",
                                     logo: '',
                                     width: 350,
                                     height: 50,
-                                    onClick: () {
-                                      clickLogin(
+                                    onClick: () async {
+                                      loginClicked(
                                           context,
-                                          _emailController.text.toString().trim(),
+                                          _emailController.text
+                                              .toString()
+                                              .trim(),
                                           _passwordController.text
                                               .toString()
                                               .trim());
@@ -121,8 +127,8 @@ class WebLogin extends StatelessWidget {
                                   const SizedBox(
                                     height: 20,
                                   ),
-        
-                                  Forgot_Password()
+
+                                  const Forgot_Password()
                                   // Row(
                                   //   mainAxisAlignment: MainAxisAlignment.center,
                                   //   children: [
@@ -143,7 +149,7 @@ class WebLogin extends StatelessWidget {
                                   // )
                                 ]),
                           )),
-        
+
                           //last row
                           const Terms_Policy()
                         ]),
@@ -151,7 +157,7 @@ class WebLogin extends StatelessWidget {
                     )),
                   ],
                 ),
-        
+
                 //rightS
               ]),
             ),
@@ -159,9 +165,6 @@ class WebLogin extends StatelessWidget {
         ),
       ),
     );
-
-
-
   }
 
   Container or_margin() {
@@ -178,6 +181,6 @@ class WebLogin extends StatelessWidget {
     );
   }
 
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 }

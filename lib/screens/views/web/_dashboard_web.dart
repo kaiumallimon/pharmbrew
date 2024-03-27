@@ -2,26 +2,41 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pharmbrew/widgets/_dashboard_mainPanel.dart';
 import 'package:pharmbrew/widgets/_logout.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../widgets/_dashboard_sidepanel_button.dart';
 import '../../../widgets/_logo2.dart';
 
 class WebDashboard extends StatefulWidget {
-  const WebDashboard({super.key});
-
+  WebDashboard({Key? key, required this.isAdministrator}) : super(key: key);
+  bool isAdministrator;
   @override
   State<WebDashboard> createState() => _WebDashboardState();
 }
 
 class _WebDashboardState extends State<WebDashboard> {
-  Future<void> _handleRefresh() async {
-    // Perform your asynchronous operation here
-    // For example, fetch new data from a network source
-    await Future.delayed(const Duration(seconds: 2)); // Simulating a delay
+  late String pp = ''; // Initialize pp with an empty string
+  late String name = '';
+  late String userRole;
 
-    // After the asynchronous operation is complete, call setState to rebuild the UI
-    setState(() {
-      // Update the UI or refresh data
-    });
+  void initData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final x = prefs.getString('loggedInUserProfilePic');
+    pp = x ?? ''; // Assign x to pp, if x is null assign an empty string
+
+    final nameLocal = prefs.getString('loggedInUserName');
+    name = nameLocal ??
+        ''; // Assign nameLocal to name, if nameLocal is null assign an empty string
+
+    setState(
+        () {}); // Update the state after retrieving data from SharedPreferences
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initData();
+    inFocus = widget.isAdministrator ? 0 : 12;
   }
 
   void switchPage(int index) {
@@ -30,11 +45,24 @@ class _WebDashboardState extends State<WebDashboard> {
     });
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    clearSharedPreferences();
+  }
+
+  Future<void> clearSharedPreferences() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.remove("loggedInUser");
+    preferences.remove("loggedInRole");
+    preferences.remove("loggedInUserName");
+    preferences.remove("loggedInUserProfilePic");
+  }
+
   bool isHovered = false;
   int inFocus = 0;
 
-  ScrollController _scrollController = ScrollController();
-
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -59,132 +87,204 @@ class _WebDashboardState extends State<WebDashboard> {
                   ),
                   Expanded(
                     child: SingleChildScrollView(
-                      controller: _scrollController, // Add ScrollController here
+                      controller:
+                          _scrollController, // Add ScrollController here
                       scrollDirection: Axis.vertical,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: 20,),
-                          SidePanelButton(
-                            label: 'Home',
-                            icon: Icons.home,
-                            controller: inFocus == 0,
-                            onClick: (){
-                              setState(() {
-                                inFocus=0;
-                              });
-                            },
+                          const SizedBox(
+                            height: 20,
                           ),
-                          SidePanelButton(
-                            label: 'Add employee',
-                            icon: CupertinoIcons.add,
-                            controller: inFocus == 1,
+
+                          //administrator dashboard
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Home',
+                                  icon: Icons.home,
+                                  controller: inFocus == 0,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 0;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Add employee',
+                                  icon: CupertinoIcons.add,
+                                  controller: inFocus == 1,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 1;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Employees',
+                                  icon: CupertinoIcons.group_solid,
+                                  controller: inFocus == 2,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 2;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                            label: 'Products',
+                            icon: Icons.shopping_bag_outlined,
+                            controller: inFocus == 15,
                             onClick: () {
                               setState(() {
-                                inFocus = 1;
+                                inFocus = 15;
                               });
                             },
-                          ),
-                          SidePanelButton(
-                            label: 'Employees',
-                            icon: CupertinoIcons.group_solid,
-                            controller: inFocus == 2,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 2;
-                              });
-                            },
-                          ),
-                          SidePanelButton(
-                            label: 'Edit Profile',
-                            icon: Icons.edit,
-                            controller: inFocus == 3,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 3;
-                              });
-                            },
-                          ),
-                          SidePanelButton(
-                            label: 'Notifications',
-                            icon: Icons.notifications,
-                            controller: inFocus == 4,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 4;
-                              });
-                            },
-                          ),
-                          SidePanelButton(
-                            label: 'Access',
-                            icon: Icons.security,
-                            controller: inFocus == 5,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 5;
-                              });
-                            },
-                          ),
-                          SidePanelButton(
-                            label: 'Finance',
-                            icon: CupertinoIcons.money_dollar_circle_fill,
-                            controller: inFocus == 6,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 6;
-                              });
-                            },
-                          ),
-                          SidePanelButton(
-                            label: 'Attendance',
-                            icon: Icons.person,
-                            controller: inFocus == 7,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 7;
-                              });
-                            },
-                          ),
-                          SidePanelButton(
-                            label: 'Events',
-                            icon: Icons.event,
-                            controller: inFocus == 8,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 8;
-                              });
-                            },
-                          ),
-                          SidePanelButton(
-                            label: 'Analytics',
-                            icon: Icons.analytics,
-                            controller: inFocus == 9,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 9;
-                              });
-                            },
-                          ),
-                          SidePanelButton(
-                            label: 'Queries',
-                            icon: Icons.inbox,
-                            controller: inFocus == 10,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 10;
-                              });
-                            },
-                          ),
-                          SidePanelButton(
-                            label: 'Settings',
-                            icon: Icons.settings,
-                            controller: inFocus == 11,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 11;
-                              });
-                            },
-                          ),
+                          )
+                              : const SizedBox.shrink(),
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Edit Profile',
+                                  icon: Icons.edit,
+                                  controller: inFocus == 3,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 3;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Notifications',
+                                  icon: Icons.notifications,
+                                  controller: inFocus == 4,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 4;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Access',
+                                  icon: Icons.security,
+                                  controller: inFocus == 5,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 5;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Finance',
+                                  icon: CupertinoIcons.money_dollar_circle_fill,
+                                  controller: inFocus == 6,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 6;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Attendance',
+                                  icon: Icons.person,
+                                  controller: inFocus == 7,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 7;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Events',
+                                  icon: Icons.event,
+                                  controller: inFocus == 8,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 8;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Analytics',
+                                  icon: Icons.analytics,
+                                  controller: inFocus == 9,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 9;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Queries',
+                                  icon: Icons.inbox,
+                                  controller: inFocus == 10,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 10;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Settings',
+                                  icon: Icons.settings,
+                                  controller: inFocus == 11,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 11;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+
+                          //employee dashboard
+
+                          //employee home
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Home',
+                                  icon: Icons.home,
+                                  controller: inFocus == 12,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 12;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+
+                          //employee edit profile request
+
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Edit Profile',
+                                  icon: Icons.edit,
+                                  controller: inFocus == 13,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 13;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
                         ],
                       ),
                     ),
@@ -201,5 +301,11 @@ class _WebDashboardState extends State<WebDashboard> {
         ),
       ),
     );
+  }
+
+  Future<void> _handleRefresh() async {
+    await Future.delayed(const Duration(seconds: 2)); // Simulating a delay
+    setState(() {
+    });
   }
 }

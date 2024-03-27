@@ -1,29 +1,32 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../routes/_image_routes.dart';
-import '_logo.dart';
 
 class LocatedAt extends StatelessWidget {
-  const LocatedAt({super.key});
+  const LocatedAt({super.key, required this.country});
+  final String country;
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        Icon(Icons.location_on, color: Colors.grey.shade500, size: 20),
+        // space5w(),
+        space5w(),
+        // Text(
+        //   "I'm Located in",
+        //   style: TextStyle(color: Colors.grey.shade500),
+        // ),
+        // space5w(),
+        // Image.asset(
+        //   ImageRoutes.bd_flag,
+        //   scale: 2,
+        // ),
+        space5w(),
         Text(
-          "I'm Located in",
-          style: TextStyle(color: Colors.grey.shade500),
-        ),
-        space5w(),
-        Image.asset(
-          ImageRoutes.bd_flag,
-          scale: 2,
-        ),
-        space5w(),
-        const Text(
-          "Bangladesh",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          "${country=="BD"?"Bangladesh":"${country}"}",
+          style: const TextStyle(fontWeight: FontWeight.bold),
         )
       ],
     );

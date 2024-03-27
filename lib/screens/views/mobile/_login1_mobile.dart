@@ -9,7 +9,8 @@ import 'package:pharmbrew/widgets/_remember_forgot_pass.dart';
 import '../../../utils/_login_click.dart';
 
 class MobileLogin1 extends StatelessWidget {
-  MobileLogin1({super.key});
+  MobileLogin1({super.key, required this.country});
+  final String country;
 
   @override
   Widget build(BuildContext context) {
@@ -22,18 +23,20 @@ class MobileLogin1 extends StatelessWidget {
             children: [Logo()],
           ),
         ),
-        const Column(
+        Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                LocatedAt(),
+                LocatedAt(
+                  country: country,
+                ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
           ],
@@ -86,7 +89,7 @@ class MobileLogin1 extends StatelessWidget {
                     width: 300,
                     height: 50,
                     onClick: () {
-                      clickLogin(
+                      loginClicked(
                           context,
                           _emailController.text.toString().trim(),
                           _passwordController.text.toString().trim());
@@ -110,6 +113,6 @@ class MobileLogin1 extends StatelessWidget {
     );
   }
 
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 }

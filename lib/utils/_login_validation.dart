@@ -119,13 +119,9 @@ Future<Map<String, dynamic>> loginValidation(
     });
 
     if (response.statusCode == 200) {
-      // no internal errors
       final Map<String, dynamic> responseData = json.decode(response.body);
-      // print(responseData['role']);
-      // print(responseData);
 
       if (responseData['success'] == true) {
-        //login successful
         return {
           "login": true,
           "response": "Login Successful",

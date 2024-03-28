@@ -146,18 +146,34 @@ class _WebDashboardState extends State<WebDashboard> {
                             },
                           )
                               : const SizedBox.shrink(),
+                          // widget.isAdministrator
+                          //     ? SidePanelButton(
+                          //         label: 'Edit Profile',
+                          //         icon: Icons.edit,
+                          //         controller: inFocus == 3,
+                          //         onClick: () {
+                          //           setState(() {
+                          //             inFocus = 3;
+                          //           });
+                          //         },
+                          //       )
+                          //     : const SizedBox.shrink(),
+
                           widget.isAdministrator
                               ? SidePanelButton(
-                                  label: 'Edit Profile',
-                                  icon: Icons.edit,
-                                  controller: inFocus == 3,
-                                  onClick: () {
-                                    setState(() {
-                                      inFocus = 3;
-                                    });
-                                  },
-                                )
+                            label: 'Access',
+                            icon: Icons.security,
+                            controller: inFocus == 5,
+                            onClick: () {
+                              setState(() {
+                                inFocus = 5;
+                              });
+                            },
+                          )
                               : const SizedBox.shrink(),
+
+
+
                           widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Notifications',
@@ -170,18 +186,7 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
-                          widget.isAdministrator
-                              ? SidePanelButton(
-                                  label: 'Access',
-                                  icon: Icons.security,
-                                  controller: inFocus == 5,
-                                  onClick: () {
-                                    setState(() {
-                                      inFocus = 5;
-                                    });
-                                  },
-                                )
-                              : const SizedBox.shrink(),
+
                           widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Finance',
@@ -284,6 +289,21 @@ class _WebDashboardState extends State<WebDashboard> {
                                     });
                                   },
                                 )
+                              : const SizedBox.shrink(),
+
+
+
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                            label: 'Orders',
+                            icon: Icons.shopping_cart_outlined,
+                            controller: inFocus == 16,
+                            onClick: () {
+                              setState(() {
+                                inFocus = 16;
+                              });
+                            },
+                          )
                               : const SizedBox.shrink(),
                         ],
                       ),

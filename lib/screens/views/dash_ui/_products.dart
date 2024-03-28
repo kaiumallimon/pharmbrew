@@ -67,7 +67,6 @@ class _ProductsState extends State<Products> {
       });
     } catch (error) {
       print("Error fetching products: $error");
-      // Handle error if needed
       setState(() {
         isLoading = false; // Set loading state to false in case of error too
       });

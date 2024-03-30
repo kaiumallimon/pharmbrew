@@ -23,8 +23,7 @@ class Dummy {
     });
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = json.decode(response.body);
-      print(responseData);
+      json.decode(response.body);
       // return responseData;
     } else {
       // return {"success": false, "response": "Failed to insert data"};

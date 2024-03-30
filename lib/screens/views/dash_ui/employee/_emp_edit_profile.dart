@@ -10,12 +10,10 @@ class EmployeeEditProfile extends StatefulWidget {
 class _AddEmployeeState extends State<EmployeeEditProfile> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text(
-          'Employee Edit Profile Page',
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-        ),
+    return const Center(
+      child: Text(
+        'Employee Edit Profile Page',
+        style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
       ),
     );
   }

@@ -11,9 +11,7 @@ Future<void> sendEmail(String to, String subject, String text) async {
 
   if (response.statusCode == 200) {
     // Email sent successfully
-    print('Email sent successfully!');
   } else {
     // Failed to send email
-    print('Failed to send email');
   }
 }

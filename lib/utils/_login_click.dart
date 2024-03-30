@@ -46,8 +46,6 @@ Future<void> loginClicked(
     preferences.setString("loggedInUserName", responseData['name']);
     preferences.setString("loggedInUserProfilePic", responseData['picture']);
 
-    print("Role: ${responseData['role']}");
-    print("isAdministrator: ${responseData['role'].toString().trim() == 'HR'}");
 
     if (isRemembered) {
       preferences.setBool("isLoggedIn", true);

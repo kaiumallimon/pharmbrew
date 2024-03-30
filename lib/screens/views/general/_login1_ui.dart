@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:pharmbrew/screens/views/mobile/_login1_mobile.dart';
 import 'package:pharmbrew/screens/views/web/_login_web.dart';
 
-import '../web/_login_web2.dart';
 
 
 class Login1Ui extends StatelessWidget {

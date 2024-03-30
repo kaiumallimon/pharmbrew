@@ -2,11 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:cool_dropdown/cool_dropdown.dart';
-import 'package:cool_dropdown/models/cool_dropdown_item.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:pharmbrew/data/_fetch_employee.dart';
 
 import '../../../domain/_update_role.dart';
@@ -33,6 +29,7 @@ class _EmployeesAllState extends State<RolesAndAccess> {
     searchController.dispose();
   }
 
+  @override
   void initState() {
     super.initState();
 
@@ -53,7 +50,7 @@ class _EmployeesAllState extends State<RolesAndAccess> {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return SearchEmployee(); // Assuming SearchEmployee is a StatelessWidget
+        return const SearchEmployee(); // Assuming SearchEmployee is a StatelessWidget
       },
     );
   }
@@ -76,7 +73,6 @@ class _EmployeesAllState extends State<RolesAndAccess> {
 
   @override
   Widget build(BuildContext context) {
-    String? newlySelectedRole;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -127,7 +123,7 @@ class _EmployeesAllState extends State<RolesAndAccess> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
+                    SizedBox(
                       height: 45,
                       // height: 50,
                       child: ElevatedButton.icon(
@@ -152,11 +148,11 @@ class _EmployeesAllState extends State<RolesAndAccess> {
                   future: employees,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(child: Text('No employees found.'));
+                      return const Center(child: Text('No employees found.'));
                     } else {
                       final List<dynamic> filteredList = filteredEmployees(
                           snapshot.data!, searchController.text);
@@ -165,7 +161,7 @@ class _EmployeesAllState extends State<RolesAndAccess> {
                           headingRowColor: MaterialStateColor.resolveWith(
                               (states) =>
                                   Theme.of(context).colorScheme.primary),
-                          headingTextStyle: TextStyle(
+                          headingTextStyle: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -236,7 +232,6 @@ class _EmployeesAllState extends State<RolesAndAccess> {
                                             employee['role'],
                                         onChanged: (String? value) {
                                           setState(() {
-                                            newlySelectedRole = value;
                                             employee['role'] = value;
 
                                           });
@@ -254,7 +249,6 @@ class _EmployeesAllState extends State<RolesAndAccess> {
                                           updateEmployeeRole(employee['userId'], value!);
 
                                           setState(() {
-                                            newlySelectedRole = value;
                                             employee['role'] = value;
                                           });
                                         },
@@ -284,7 +278,7 @@ class _EmployeesAllState extends State<RolesAndAccess> {
     }
     // print(image); // Debugging purposes (optional)
     String imageUrl =
-        "https://bcrypt.site/uploads/images/profile/picture/${image}";
+        "https://bcrypt.site/uploads/images/profile/picture/$image";
     // print(imageUrl); // Debugging purposes (optional)
     // Simulate delay to mimic network request
     await Future.delayed(const Duration(seconds: 1));

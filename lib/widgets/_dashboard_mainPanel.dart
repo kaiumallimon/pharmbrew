@@ -11,7 +11,6 @@ import '../screens/views/dash_ui/_events.dart';
 import '../screens/views/dash_ui/_notifications.dart';
 import '../screens/views/dash_ui/_orders.dart';
 import '../screens/views/dash_ui/_products.dart';
-import '../screens/views/dash_ui/_profile.dart';
 import '../screens/views/dash_ui/_queries_message.dart';
 import '../screens/views/dash_ui/_roles.dart';
 import '../screens/views/dash_ui/_salary_management.dart';
@@ -58,7 +57,7 @@ class DashboardMainPanel extends StatelessWidget {
                                                                   : inFocus ==
                                                                           15
                                                                       ? const Products() :
-                                                                      inFocus == 16 ? Orders()
+                                                                      inFocus == 16 ? const Orders()
                                                                       : Container(),
     );
   }

@@ -1,22 +1,13 @@
 import 'dart:async';
-import 'dart:html' as html;
-import 'dart:html';
-import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 import 'package:email_otp/email_otp.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server.dart';
 import 'package:pharmbrew/domain/_generate_password.dart';
 import 'package:pharmbrew/domain/_mailer.dart';
 import 'package:pharmbrew/domain/_register.dart';
 import 'package:pharmbrew/widgets/_add_employee_text_boxes.dart';
-import 'package:pharmbrew/widgets/_successful_dialog.dart';
 
 import '../../../domain/usecases/_get_department_and_id.dart';
 import '../../../utils/_show_dialog.dart';
@@ -147,10 +138,10 @@ class _AddEmployeeState extends State<AddEmployee> {
                               child: TextField(
                                 controller: _emailController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: const OutlineInputBorder(
+                                    enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: const OutlineInputBorder(
+                                    focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
@@ -284,22 +275,21 @@ class _AddEmployeeState extends State<AddEmployee> {
                           width: MediaQuery.of(context).size.width / 2.3,
                           child: DropdownMenu<String>(
                             width: MediaQuery.of(context).size.width / 2.3,
-                            inputDecorationTheme: InputDecorationTheme(
-                                enabledBorder: const OutlineInputBorder(
+                            inputDecorationTheme: const InputDecorationTheme(
+                                enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide.none,
                                 ),
-                                focusedBorder: const OutlineInputBorder(
+                                focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.blue, width: 2.0),
                                 ),
-                                hintStyle: const TextStyle(color: Colors.grey)),
+                                hintStyle: TextStyle(color: Colors.grey)),
                             initialSelection: roles.first,
                             onSelected: (String? value) {
                               setState(() {
                                 dropDownValueRole = value!;
                               });
 
-                              print("Selected Role: $dropDownValueRole");
                             },
                             dropdownMenuEntries: roles
                                 .map<DropdownMenuEntry<String>>((String value) {
@@ -320,7 +310,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                   children: [
                     Row(children: [
                       RichText(
-                          text: TextSpan(
+                          text: const TextSpan(
                         text: "Date of Birth",
                         style: TextStyle(
                             fontSize: 16,
@@ -341,7 +331,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                     ),
                     Row(
                       children: [
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width / 2.3,
                           height: 50,
                           child: ElevatedButton(
@@ -450,15 +440,15 @@ class _AddEmployeeState extends State<AddEmployee> {
                           width: MediaQuery.of(context).size.width / 2.3,
                           child: DropdownMenu<String>(
                             width: MediaQuery.of(context).size.width / 2.3,
-                            inputDecorationTheme: InputDecorationTheme(
-                                enabledBorder: const OutlineInputBorder(
+                            inputDecorationTheme: const InputDecorationTheme(
+                                enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide.none,
                                 ),
-                                focusedBorder: const OutlineInputBorder(
+                                focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.blue, width: 2.0),
                                 ),
-                                hintStyle: const TextStyle(color: Colors.grey)),
+                                hintStyle: TextStyle(color: Colors.grey)),
                             initialSelection: departmentNames.first,
                             onSelected: (String? value) {
                               // This is called when the user selects an item.
@@ -466,8 +456,6 @@ class _AddEmployeeState extends State<AddEmployee> {
                                 dropDownValue = value!;
                               });
 
-                              print(
-                                  "Selected: ${getDepartmentIdByDesignation(dropDownValue)}");
                             },
                             dropdownMenuEntries: departmentNames
                                 .map<DropdownMenuEntry<String>>((String value) {
@@ -544,10 +532,10 @@ class _AddEmployeeState extends State<AddEmployee> {
                               child: TextField(
                                 controller: _apartmentController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: const OutlineInputBorder(
+                                    enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: const OutlineInputBorder(
+                                    focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
@@ -580,10 +568,10 @@ class _AddEmployeeState extends State<AddEmployee> {
                               child: TextField(
                                 controller: _buildingController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: const OutlineInputBorder(
+                                    enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: const OutlineInputBorder(
+                                    focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
@@ -620,10 +608,10 @@ class _AddEmployeeState extends State<AddEmployee> {
                               child: TextField(
                                 controller: _streetController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: const OutlineInputBorder(
+                                    enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: const OutlineInputBorder(
+                                    focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
@@ -656,10 +644,10 @@ class _AddEmployeeState extends State<AddEmployee> {
                               child: TextField(
                                 controller: _cityController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: const OutlineInputBorder(
+                                    enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: const OutlineInputBorder(
+                                    focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
@@ -696,10 +684,10 @@ class _AddEmployeeState extends State<AddEmployee> {
                               child: TextField(
                                 controller: _postalCodeController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: const OutlineInputBorder(
+                                    enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: const OutlineInputBorder(
+                                    focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
@@ -732,10 +720,10 @@ class _AddEmployeeState extends State<AddEmployee> {
                               child: TextField(
                                 controller: _countryController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: const OutlineInputBorder(
+                                    enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: const OutlineInputBorder(
+                                    focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
@@ -879,7 +867,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                                           dropDownValue);
 
                                   bool response = await createUser(
-                                      "$name",
+                                      name,
                                       email,
                                       dob,
                                       dropDownValue,
@@ -917,8 +905,8 @@ class _AddEmployeeState extends State<AddEmployee> {
                                       "Invalid OTP!", context);
                                 }
                               }
+                            // ignore: empty_catches
                             } catch (e) {
-                              print(e);
                             }
                           },
                           style: ElevatedButton.styleFrom(

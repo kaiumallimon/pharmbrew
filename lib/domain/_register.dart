@@ -4,7 +4,6 @@ import '../utils/_show_dialog.dart';
 import '../widgets/_successful_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 
 Future<bool> createUser(
@@ -26,19 +25,6 @@ Future<bool> createUser(
 
   // Sample data to send to the API
 
-  print("Name: $name");
-  print("Email: $email");
-  print("Date of Birth: $dateOfBirth");
-  print("Designation: $designation");
-  print("Password: $password");
-  print("Role: $role");
-  print("Rating: $rating");
-  print("Department ID: $departmentId");
-  print("Skills: $skills");
-  print("Location: $location");
-  print("Phone: $phone");
-  print("Base Salary: $baseSalary");
-  print("Image File: ${imageFile!.name}");
 
   var data = {
     'name': name,
@@ -64,8 +50,8 @@ Future<bool> createUser(
     request.fields.addAll(data);
 
     // Add image file
-    var stream = http.ByteStream(imageFile.openRead());
-    var length = await imageFile.length();
+    var stream = http.ByteStream(imageFile!.openRead());
+    var length = await imageFile!.length();
     var multipartFile = http.MultipartFile(
       'image',
       stream,

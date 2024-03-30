@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamilyFallback: ["sans-serif", "monospace"], // No need for 'const'
+        fontFamilyFallback: const ["sans-serif", "monospace"], // No need for 'const'
         fontFamily: GoogleFonts.poppins().fontFamily,
         colorScheme: ColorScheme.light(
           background: const Color(0xFF0D0F2F),

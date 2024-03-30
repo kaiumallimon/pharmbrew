@@ -70,8 +70,6 @@ Future<bool> login(String email, String password, BuildContext context) async {
 
       if (responseData['success']) {
         // Login successful, do something
-        print('Login successful');
-        print('User: ${responseData['user']}');
 
         return true;
       } else {

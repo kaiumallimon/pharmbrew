@@ -10,12 +10,10 @@ class EmployeeHome extends StatefulWidget {
 class _AddEmployeeState extends State<EmployeeHome> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text(
-          'Employee Home Page',
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-        ),
+    return const Center(
+      child: Text(
+        'Employee Home Page',
+        style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
       ),
     );
   }

@@ -1,8 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pharmbrew/data/_ip_api.dart';
-import 'package:pharmbrew/domain/_mailer.dart';
-import 'package:pharmbrew/utils/_insert_dummy.dart';
 import 'package:pharmbrew/utils/_login_click.dart';
 import 'package:pharmbrew/widgets/_located_at.dart';
 import 'package:pharmbrew/widgets/_logo_location_overflow.dart';

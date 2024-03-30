@@ -32,7 +32,7 @@ class _AddProductFieldsState extends State<AddProductFields> {
         controller: widget.controller,
         textAlign: widget.readOnly? TextAlign.center: TextAlign.start,
         decoration: InputDecoration(
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
             color: Colors.black,
           ),
           labelText: widget.labelText,

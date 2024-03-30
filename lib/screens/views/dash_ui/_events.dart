@@ -10,14 +10,12 @@ class Events extends StatefulWidget {
 class _AddEmployeeState extends State<Events> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text('Events Page',
-          style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold
-          ),),
-      ),
+    return const Center(
+      child: Text('Events Page',
+        style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold
+        ),),
     );
   }
 }

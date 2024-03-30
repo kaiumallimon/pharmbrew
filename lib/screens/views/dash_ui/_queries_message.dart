@@ -10,14 +10,12 @@ class Queries extends StatefulWidget {
 class _AddEmployeeState extends State<Queries> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text('Mails/Messages Page',
-          style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold
-          ),),
-      ),
+    return const Center(
+      child: Text('Mails/Messages Page',
+        style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold
+        ),),
     );
   }
 }

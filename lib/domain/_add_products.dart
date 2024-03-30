@@ -10,16 +10,9 @@ Future<bool?> addProduct({
   required String unitPerStrips,
 }) async {
 
-  print('productName: $productName');
-  print('variant: $variant');
-  print('productionDate: $productionDate');
-  print('unitPrice: $unitPrice');
-  print('expDate: $expDate');
-  print('quantity: $quantity');
-  print('unitPerStrips: $unitPerStrips');
 
 
-  final String url =
+  const String url =
       'https://bcrypt.site/scripts/php/add_products.php'; // Replace with your PHP script URL
 
   final response = await http.post(Uri.parse(url), body: {
@@ -36,7 +29,6 @@ Future<bool?> addProduct({
     // print('Product added successfully');
     return true;
   } else {
-    print('Failed to add product: ${response.reasonPhrase}');
     return false;
   }
 }

@@ -19,7 +19,7 @@ class _SideImageColState extends State<SideImageCol> {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       margin: const EdgeInsets.only(left: 60, right: 40, bottom: 20, top: 10),
       // color: Colors.red,
       height: widget.dHeight - 75,

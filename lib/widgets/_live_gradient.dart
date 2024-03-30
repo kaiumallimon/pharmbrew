@@ -19,10 +19,10 @@ class _MyWidgetState extends State<CustomLiveGradient> {
     // Colors.red,
     // Colors.teal,
     // CupertinoColors.activeBlue
-    Color(0xFFed1c24),
-    Color(0xFF00aeef),
-    Color(0xFFf7a5cb),
-    Color(0xFFfbd49),
+    const Color(0xFFed1c24),
+    const Color(0xFF00aeef),
+    const Color(0xFFf7a5cb),
+    const Color(0x0fffbd49),
 
 
     
@@ -36,7 +36,7 @@ class _MyWidgetState extends State<CustomLiveGradient> {
     super.initState();
 
     // Start a timer to update the gradient color every 2 seconds
-    Timer.periodic(Duration(microseconds: 300), (timer) {
+    Timer.periodic(const Duration(microseconds: 300), (timer) {
       setState(() {
         currentColorIndex = (currentColorIndex + 1) % colors.length;
       });
@@ -46,7 +46,7 @@ class _MyWidgetState extends State<CustomLiveGradient> {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,

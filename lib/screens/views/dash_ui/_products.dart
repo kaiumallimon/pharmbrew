@@ -1,13 +1,10 @@
 import 'dart:html';
 import 'dart:typed_data';
-import 'package:flutter/cupertino.dart';
 import 'package:pharmbrew/domain/_add_products.dart';
 import 'package:pharmbrew/utils/_show_dialog.dart';
 import 'package:pharmbrew/widgets/_add_product_fields.dart';
 import 'package:pharmbrew/widgets/_successful_dialog.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xcel;
-import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 
 import '../../../domain/_fetch_products.dart';
@@ -47,7 +44,6 @@ class _ProductsState extends State<Products> {
       allProductsList.clear();
 
       List<dynamic> productsList = await fetchProducts();
-      print(productsList);
 
       setState(() {
         for (var product in productsList) {
@@ -66,7 +62,6 @@ class _ProductsState extends State<Products> {
         isLoading = false; // Set loading state to false after data is fetched
       });
     } catch (error) {
-      print("Error fetching products: $error");
       setState(() {
         isLoading = false; // Set loading state to false in case of error too
       });
@@ -155,7 +150,7 @@ class _ProductsState extends State<Products> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: isLoading
-          ? Center(
+          ? const Center(
               child:
                   CircularProgressIndicator()) // Show loading indicator if data is loading
           : Container(
@@ -165,12 +160,12 @@ class _ProductsState extends State<Products> {
                 child: ListView(
                   children: [
                     //header
-                    Text(
+                    const Text(
                       'Products',
                       style:
                           TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     Row(
                       children: [
                         Container(
@@ -183,7 +178,7 @@ class _ProductsState extends State<Products> {
                             onChanged: (value) {
                               filterData(value);
                             },
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: 'Search Products',
                               prefixIcon: Icon(Icons.search),
                               border: InputBorder.none,
@@ -196,7 +191,7 @@ class _ProductsState extends State<Products> {
                     Row(
                       children: [
                         // reload button
-                        Container(
+                        SizedBox(
                           height: 45,
                           child: ElevatedButton(
                               onPressed: () {
@@ -211,19 +206,19 @@ class _ProductsState extends State<Products> {
                                     color:
                                         Theme.of(context).colorScheme.primary),
                               ),
-                              child: Row(
+                              child: const Row(
                                 children: [
-                                  const Icon(Icons.refresh),
-                                  const SizedBox(width: 5),
+                                  Icon(Icons.refresh),
+                                  SizedBox(width: 5),
                                   Text('Refresh'),
                                 ],
                               )),
                         ),
 
-                        SizedBox(width: 20),
+                        const SizedBox(width: 20),
 
                         //add new product button
-                        Container(
+                        SizedBox(
                           height: 45,
                           child: ElevatedButton(
                               onPressed: () {
@@ -238,13 +233,13 @@ class _ProductsState extends State<Products> {
                                     color:
                                         Theme.of(context).colorScheme.primary),
                               ),
-                              child: Text('Add New Product')),
+                              child: const Text('Add New Product')),
                         ),
 
-                        SizedBox(width: 20),
+                        const SizedBox(width: 20),
 
                         //export as csv button
-                        Container(
+                        SizedBox(
                           height: 45,
                           child: ElevatedButton(
                               onPressed: () {
@@ -258,12 +253,12 @@ class _ProductsState extends State<Products> {
                                     color:
                                         Theme.of(context).colorScheme.primary),
                               ),
-                              child: Text('Export As CSV')),
+                              child: const Text('Export As CSV')),
                         ),
                       ],
                     ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -272,7 +267,7 @@ class _ProductsState extends State<Products> {
                             headingRowColor: MaterialStateColor.resolveWith(
                                 (states) =>
                                     Theme.of(context).colorScheme.primary),
-                            headingTextStyle: TextStyle(
+                            headingTextStyle: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
@@ -293,7 +288,7 @@ class _ProductsState extends State<Products> {
                         ),
                         const SizedBox(width: 20),
                         isExpanded
-                            ? Container(
+                            ? SizedBox(
                                 width: 500,
                                 child: Column(
                                   children: [
@@ -303,7 +298,7 @@ class _ProductsState extends State<Products> {
                                       color:
                                           Theme.of(context).colorScheme.primary,
                                       child: Row(children: [
-                                        Expanded(
+                                        const Expanded(
                                             child: Center(
                                           child: Text(
                                             'Add New Product',
@@ -312,7 +307,7 @@ class _ProductsState extends State<Products> {
                                           ),
                                         )),
                                         Container(
-                                          margin: EdgeInsets.only(right: 5),
+                                          margin: const EdgeInsets.only(right: 5),
                                           child: IconButton(
                                             onPressed: () {
                                               setState(() {
@@ -321,7 +316,7 @@ class _ProductsState extends State<Products> {
                                                 selected2 = false;
                                               });
                                             },
-                                            icon: Icon(
+                                            icon: const Icon(
                                               Icons.close,
                                               color: Colors.white,
                                             ),
@@ -343,7 +338,7 @@ class _ProductsState extends State<Products> {
                                     Row(
                                       children: [
                                         Expanded(
-                                          child: Container(
+                                          child: SizedBox(
                                             height: 50,
                                             child: ElevatedButton(
                                               onPressed: () async {
@@ -380,7 +375,7 @@ class _ProductsState extends State<Products> {
                                         ),
                                         const SizedBox(width: 20),
                                         Expanded(
-                                          child: Container(
+                                          child: SizedBox(
                                             height: 50,
                                             child: ElevatedButton(
                                               onPressed: () async {
@@ -434,7 +429,7 @@ class _ProductsState extends State<Products> {
                                     Row(
                                       children: [
                                         Expanded(
-                                            child: Container(
+                                            child: SizedBox(
                                           height: 50,
                                           child: ElevatedButton(
                                               onPressed: () async {
@@ -504,7 +499,7 @@ class _ProductsState extends State<Products> {
                                                   ),
                                                 ),
                                               ),
-                                              child: Text('Add Product')),
+                                              child: const Text('Add Product')),
                                         ))
                                       ],
                                     )

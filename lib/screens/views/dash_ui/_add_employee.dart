@@ -23,14 +23,10 @@ class _AddEmployeeState extends State<AddEmployee> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _verificationController = TextEditingController();
-
   // final TextEditingController _dobController = TextEditingController();
-
   // final TextEditingController _designationController = TextEditingController();
   final TextEditingController _baseSalaryController = TextEditingController();
-
-  // final TextEditingController _paymentFrequencyController =
-  //     TextEditingController();
+  // final TextEditingController _paymentFrequencyController = TextEditingController();
   // final TextEditingController _departmentController = TextEditingController();
   final TextEditingController _ratingController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();

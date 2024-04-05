@@ -153,8 +153,6 @@ class _EmployeesAllState extends State<EmployeesAll> {
     }).toList();
   }
 
-  // Replace the build method inside the _EmployeesAllState class with the following:
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

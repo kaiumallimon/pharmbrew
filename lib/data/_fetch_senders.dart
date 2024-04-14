@@ -21,19 +21,22 @@ class FetchSenders {
   }
 }
 
-// void main(List<String> args) async {
-//   List<dynamic> senders = await FetchSenders.fetchEmployee();
-//   List<String> senderIDs = [];
-//
-//   for (var sender in senders) {
-//     senderIDs.add(sender['sender_id']);
-//   }
-//
-//   for(var senderID in senderIDs) {
-//     Map<String,dynamic> employeeData = await FetchEmployeeData.fetchEmployee(senderID);
-//     String id= employeeData['userId'];
-//     String name= employeeData['name'];
-//
-//     print('ID: $id, Name: $name');
-//   }
-// }
+void main(List<String> args) async {
+  List<dynamic> senders = await FetchSenders.fetchEmployee();
+  List<String> senderIDs = [];
+
+  for (var sender in senders) {
+    senderIDs.add(sender['sender_id']);
+  }
+
+  List<dynamic> messages = [];
+
+  for(var senderID in senderIDs) {
+    Map<String,dynamic> employeeData = await FetchEmployeeData.fetchEmployee(senderID);
+    messages.add(employeeData);
+  }
+
+  print(messages);
+
+
+}

@@ -57,6 +57,7 @@ class _WebDashboardState extends State<WebDashboard> {
     preferences.remove("loggedInRole");
     preferences.remove("loggedInUserName");
     preferences.remove("loggedInUserProfilePic");
+    preferences.remove("loggedInUserId");
   }
 
   bool isHovered = false;

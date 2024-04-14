@@ -38,6 +38,8 @@ Future<void> loginClicked(
   Navigator.pop(context); // Dismiss the loading dialog
 
   bool response = responseData['login'];
+
+  print(responseData);
   final SharedPreferences preferences = await SharedPreferences.getInstance();
   bool isRemembered = preferences.getBool("remembered")!;
   if (response) {
@@ -45,8 +47,9 @@ Future<void> loginClicked(
     preferences.setString("loggedInRole", responseData['role']);
     preferences.setString("loggedInUserName", responseData['name']);
     preferences.setString("loggedInUserProfilePic", responseData['picture']);
+    preferences.setString("loggedInUserId", responseData['userId']);
 
-
+    print(preferences.getString("loggedInUserId"));
     if (isRemembered) {
       preferences.setBool("isLoggedIn", true);
 

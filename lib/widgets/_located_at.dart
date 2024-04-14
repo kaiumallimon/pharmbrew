@@ -24,7 +24,9 @@ class LocatedAt extends StatelessWidget {
         // ),
         space5w(),
         Text(
-          country=="BD"?"Bangladesh":country,
+
+          country=="BD"
+              ?"Bangladesh":country,
           style: const TextStyle(fontWeight: FontWeight.bold),
         )
       ],

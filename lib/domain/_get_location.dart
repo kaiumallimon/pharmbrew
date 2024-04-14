@@ -34,5 +34,5 @@ Future<Map<String, dynamic>?> getLocation() async {
 }
 
 void main(List<String> args) {
-  getLocation().then((value) => print(value));
+  print(getCountry().then((value){return value;}).toString());
 }

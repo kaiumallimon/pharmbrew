@@ -123,6 +123,7 @@ Future<Map<String, dynamic>> loginValidation(
         return {
           "login": true,
           "response": "Login Successful",
+          "userId":responseData['userId'],
           "email": responseData['email'],
           "name": responseData['name'],
           "picture": responseData['profile_pic'],

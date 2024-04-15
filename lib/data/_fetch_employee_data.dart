@@ -1,5 +1,8 @@
 import 'package:http/http.dart' as http;
+import 'package:intl/date_symbol_data_file.dart';
 import 'dart:convert';
+
+import 'package:intl/intl.dart';
 
 class FetchEmployeeData {
   static Future<Map<String,dynamic>> fetchEmployee(String userId) async {
@@ -20,11 +23,3 @@ class FetchEmployeeData {
       }
   }
 }
-
-// void main(List<String> args) async {
-//   Map<String,dynamic> employeeData = await FetchEmployeeData.fetchEmployee('EMP20240326092142');
-//   String id= employeeData['userId'];
-//   String name= employeeData['name'];
-//
-//   print('ID: $id, Name: $name');
-// }

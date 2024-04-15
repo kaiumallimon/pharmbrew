@@ -88,7 +88,7 @@ class _EmployeesAllState extends State<RolesAndAccess> {
                   padding: const EdgeInsets.only(top: 20, bottom: 20),
                   color: Colors.white,
                   child: const Text(
-                    'All Employees',
+                    'Roles & Access',
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
                 ),

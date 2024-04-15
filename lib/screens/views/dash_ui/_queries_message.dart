@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../data/_fetch_admins.dart';
 import '../../../data/_fetch_all_employee.dart';
 import '../../../data/_fetch_employee_data.dart';
 import '../../../data/_fetch_messages.dart';
@@ -31,17 +33,19 @@ class _QueriesState extends State<Queries> {
   bool isChatOpen = false;
   late Timer timer;
   late Timer timer2;
+
   // late Timer timer3;
   List<Map<String, dynamic>> senders = [];
   List<dynamic> messages = [];
   List<dynamic> allEmployees = [];
+  List<dynamic> searchList = [];
 
   @override
   void initState() {
     super.initState();
     initData();
     print("Logged in: $userId");
-    timer = Timer.periodic(const Duration(milliseconds: 1), (Timer timer) {
+    timer = Timer.periodic(const Duration(milliseconds: 500), (Timer timer) {
       setState(() {
         fetchData();
         // print('refreshed');
@@ -68,6 +72,20 @@ class _QueriesState extends State<Queries> {
     timer2.cancel();
   }
 
+  void searchEmployee(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        searchList = [];
+      } else {
+        searchList = allEmployees.where((employee) {
+          String name = employee['name'].toString().toLowerCase();
+          return name.contains(query.toLowerCase());
+        }).toList();
+      }
+    });
+  }
+
+
   void fetchMessage() async {
     List<dynamic> fetchedMessages = await FetchMessages.fetch(inFocusSender);
     messages.clear();
@@ -84,13 +102,17 @@ class _QueriesState extends State<Queries> {
 
   void fetchData() async {
     List<dynamic> fetchedSenders = await FetchSenders.fetchEmployee();
-    List senderIDs = [];
-    // fetchedSenders.map((sender) => sender['sender_id']).toList();
-    // fetchedSenders.map((sender) => sender['sender_id']).toList();
+    Set senderIDs = {};
+
+    Map<String,dynamic> admins = await FetchAdmins.fetch();
+    List<dynamic> adminIds = admins['userIds'];
 
     for (var sender in fetchedSenders) {
-      if (userId != sender['sender_id']) {
+      if (!adminIds.contains(sender['sender_id'])) {
         senderIDs.add(sender['sender_id']);
+      }
+      if (!adminIds.contains(sender['receiver_id'])) {
+        senderIDs.add(sender['receiver_id']);
       }
     }
     print('Sender IDs: $senderIDs');
@@ -98,7 +120,7 @@ class _QueriesState extends State<Queries> {
     List<Map<String, dynamic>> loadedSenders = [];
     for (var senderID in senderIDs) {
       Map<String, dynamic> employeeData =
-          await FetchEmployeeData.fetchEmployee(senderID);
+      await FetchEmployeeData.fetchEmployee(senderID);
       String id = employeeData['userId'];
       String name = employeeData['name'];
       String profilePic = employeeData['profile_pic'];
@@ -119,9 +141,10 @@ class _QueriesState extends State<Queries> {
     // print(senders);
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return senders.isNotEmpty
+    return senders.length>0 && allEmployees.length>0 && userId.isNotEmpty
         ? Scaffold(
             backgroundColor: Colors.white,
             body: SafeArea(
@@ -287,6 +310,7 @@ class _QueriesState extends State<Queries> {
                                 height: 20,
                               ),
                               Container(
+                                // color: Colors.yellow,
                                 height:
                                     MediaQuery.of(context).size.height - 240,
                                 // color: Colors.red,
@@ -300,6 +324,7 @@ class _QueriesState extends State<Queries> {
                                               GestureDetector(
                                                 onTap: () async {
                                                   setState(() {
+                                                    selectedIndex=index;
                                                     isChatOpen = true;
                                                     inFocusSender =
                                                         senders[index]['id'];
@@ -311,7 +336,7 @@ class _QueriesState extends State<Queries> {
                                                   });
                                                 },
                                                 child: Container(
-                                                  color: Colors.white,
+                                                  color: selectedIndex==index? Colors.orange.shade100 : Colors.white,
                                                   child: Row(
                                                     children: [
                                                       Expanded(
@@ -411,68 +436,87 @@ class _QueriesState extends State<Queries> {
                                             itemCount: allEmployees.length,
                                             itemBuilder: (context, index) {
                                               return Column(children: [
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Container(
-                                                        margin: const EdgeInsets
-                                                            .only(bottom: 5),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(10),
-                                                        child: Row(
-                                                          children: [
-                                                            Container(
-                                                              child:
-                                                                  CircleAvatar(
-                                                                radius: 20,
-                                                                backgroundColor:
-                                                                    Colors
-                                                                        .green,
-                                                                backgroundImage:
-                                                                    CachedNetworkImageProvider(
-                                                                  getImageLink(
-                                                                    allEmployees[
-                                                                            index]
-                                                                        [
-                                                                        'profile_pic'],
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
+                                                GestureDetector(
+                                                  onTap:(){
+                                                print('clicked');
+                                                setState(() {
+                                                  activeList=0;
+                                                  isChatOpen = true;
+                                                  inFocusSender = allEmployees[index]['userId'];
+                                                  selectedChatData = {
+                                                    'name': allEmployees[index]['name'],
+                                                    'profilePic': allEmployees[index]['profile_pic'],
+                                                    'designation': allEmployees[index]['designation'],
+                                                  };
+                                                  clearTextField();
+                                                });
+                                              },
+                                                  child: Container(
+                                                    color: Colors.white,
+                                                    child: Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: Container(
+                                                            margin: const EdgeInsets
+                                                                .only(bottom: 5),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(10),
+                                                            child: Row(
                                                               children: [
                                                                 Container(
-                                                                  margin:
-                                                                      const EdgeInsets
-                                                                          .only(
-                                                                          left:
-                                                                              10),
-                                                                  child: Text(
-                                                                    allEmployees[
-                                                                            index]
-                                                                        [
-                                                                        'name'],
-                                                                    style:
-                                                                        const TextStyle(
-                                                                      fontSize:
-                                                                          16,
+                                                                  child:
+                                                                      CircleAvatar(
+                                                                    radius: 20,
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .green,
+                                                                    backgroundImage:
+                                                                        CachedNetworkImageProvider(
+                                                                      getImageLink(
+                                                                        allEmployees[
+                                                                                index]
+                                                                            [
+                                                                            'profile_pic'],
+                                                                      ),
                                                                     ),
                                                                   ),
                                                                 ),
+                                                                Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Container(
+                                                                      margin:
+                                                                          const EdgeInsets
+                                                                              .only(
+                                                                              left:
+                                                                                  10),
+                                                                      child: Text(
+                                                                        allEmployees[
+                                                                                index]
+                                                                            [
+                                                                            'name'],
+                                                                        style:
+                                                                            const TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
                                                               ],
                                                             ),
-                                                          ],
+                                                          ),
                                                         ),
-                                                      ),
+                                                      ],
                                                     ),
-                                                  ],
+                                                  ),
                                                 ),
                                                 Divider(
                                                   color: Colors.grey,
@@ -496,7 +540,10 @@ class _QueriesState extends State<Queries> {
                                                             BorderRadius
                                                                 .circular(10),
                                                       ),
-                                                      child: const TextField(
+                                                      child: TextField(
+                                                        onChanged: (value){
+                                                          searchEmployee(value);
+                                                        },
                                                         decoration:
                                                             InputDecoration(
                                                           hintText: 'Search',
@@ -517,20 +564,81 @@ class _QueriesState extends State<Queries> {
                                                 height: MediaQuery.of(context)
                                                         .size
                                                         .height -
-                                                    300,
-                                                color: Colors.red,
+                                                    308,
+                                                // color: Colors.red,
+
+                                                //search-list:
+                                                child: searchList.length>0?  ListView.builder(
+                                                  itemCount: searchList.length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                  return Column(children: [
+                                                    Container(
+                                                      margin: const EdgeInsets
+                                                          .only(bottom: 5),
+                                                      padding:
+                                                      const EdgeInsets
+                                                          .all(10),
+                                                      child: Row(children: [
+                                                        CircleAvatar(
+                                                          radius: 20,
+                                                          backgroundColor:
+                                                              Colors.green,
+                                                          backgroundImage: CachedNetworkImageProvider(
+                                                            getImageLink(
+                                                              searchList[index]
+                                                              ['profile_pic'],
+                                                            ),
+                                                          )
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              searchList[index]
+                                                              ['name'],
+                                                              style: const TextStyle(
+                                                                fontSize: 16,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ]),
+                                                    ),
+                                                    Divider(
+                                                      thickness: 1,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ]);
+                                                }):Center(
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        children: [
+                                                          Icon(Icons.warning),
+                                                          const SizedBox(width: 10),
+                                                          Text(
+                                                            "No employees found",
+                                                            textAlign: TextAlign.center,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
                                               )
                                             ],
                                           ),
                               )
                             ],
                           ),
-                        ),
-
-                        Container(
-                          width: 1,
-                          height: MediaQuery.of(context).size.height - 130,
-                          color: Colors.grey,
                         ),
 
                         // const SizedBox(width: 20),
@@ -633,6 +741,7 @@ class _QueriesState extends State<Queries> {
                                                   isChatOpen = false;
                                                   inFocusSender = "";
                                                   selectedChatData.clear();
+                                                  selectedIndex=-1;
                                                 });
                                               },
                                               icon: Icon(
@@ -647,7 +756,7 @@ class _QueriesState extends State<Queries> {
                                       height:
                                           MediaQuery.of(context).size.height -
                                               250,
-                                      child: ListView.builder(
+                                      child: messages.length>0? ListView.builder(
                                         itemCount: messages.length,
                                         itemBuilder: (context, index) {
                                           return messages[index]['send_by'] ==
@@ -720,6 +829,18 @@ class _QueriesState extends State<Queries> {
                                                       )
                                                     ]);
                                         },
+                                      ):Center(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.warning),
+                                            const SizedBox(width: 10),
+                                            Text(
+                                              "No messages found",
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                     Container(
@@ -821,4 +942,5 @@ class _QueriesState extends State<Queries> {
   }
 
   int activeList = 0;
+  int selectedIndex=-1;
 }

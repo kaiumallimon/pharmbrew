@@ -25,12 +25,7 @@ class FetchAllEmployee {
 void main(List<String> args) async {
 
   List<dynamic> emp = await FetchAllEmployee.fetch();
-  List ids=[];
-
-  for(var e in emp){
-    ids.add(e['userId']);
-  }
-  print(ids);
+  print(emp);
 }
 
 

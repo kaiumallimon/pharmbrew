@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:pharmbrew/data/_fetch_admins.dart';
 import 'dart:convert';
 
 import 'package:pharmbrew/data/_fetch_employee_data.dart';
@@ -21,22 +22,5 @@ class FetchSenders {
   }
 }
 
-void main(List<String> args) async {
-  List<dynamic> senders = await FetchSenders.fetchEmployee();
-  List<String> senderIDs = [];
-
-  for (var sender in senders) {
-    senderIDs.add(sender['sender_id']);
-  }
-
-  List<dynamic> messages = [];
-
-  for(var senderID in senderIDs) {
-    Map<String,dynamic> employeeData = await FetchEmployeeData.fetchEmployee(senderID);
-    messages.add(employeeData);
-  }
-
-  print(messages);
 
 
-}

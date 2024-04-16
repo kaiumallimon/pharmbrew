@@ -61,6 +61,8 @@ class _QueriesState extends State<Queries> {
     setState(() {
       _fetchEmployees();
     });
+
+    _scrollController = ScrollController();
   }
 
   @override
@@ -92,6 +94,12 @@ class _QueriesState extends State<Queries> {
         setState(() {
           messages = response;
         });
+
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
       }else{
         setState(() {
           noMessages=true;
@@ -790,6 +798,7 @@ class _QueriesState extends State<Queries> {
                                               250,
                                       child: messages.isNotEmpty
                                           ? ListView.builder(
+                                        controller: _scrollController,
                                               itemCount: messages.length,
                                               itemBuilder: (context, index) {
                                                 return messages[index]
@@ -800,7 +809,9 @@ class _QueriesState extends State<Queries> {
                                                             MainAxisAlignment
                                                                 .start,
                                                         children: [
-                                                            Container(
+                                                            AnimatedContainer(
+                                                              duration: const Duration(milliseconds: 300),
+                                                              curve: Curves.easeInOut,
                                                               constraints:
                                                                   const BoxConstraints(
                                                                       maxWidth:
@@ -846,7 +857,9 @@ class _QueriesState extends State<Queries> {
                                                             MainAxisAlignment
                                                                 .end,
                                                         children: [
-                                                            Container(
+                                                            AnimatedContainer(
+                                                              duration: const Duration(milliseconds: 300),
+                                                              curve: Curves.easeInOut,
                                                               constraints:
                                                                   const BoxConstraints(
                                                                       maxWidth:
@@ -1002,4 +1015,5 @@ class _QueriesState extends State<Queries> {
 
   int activeList = 0;
   String selectedEmployee = "";
+  late ScrollController _scrollController;
 }

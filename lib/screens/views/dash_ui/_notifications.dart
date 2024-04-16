@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/_fetch_employee_data.dart';
+import '../../../data/_update_notification_status.dart';
 import '../../../data/fetch_notification.dart';
 
 class Notifications extends StatefulWidget {
@@ -83,51 +86,70 @@ class _NotificationState extends State<Notifications> {
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
-                        SizedBox(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width - 60,
-                          height: 80,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  CircleAvatar(
-                                    radius: 30,
-                                    backgroundColor: Colors.black,
-                                    backgroundImage: NetworkImage(
-                                        getEmployeeImage(
-                                            notifications[index]['sender_id'])),
-                                  ),
-                                  const SizedBox(width: 20),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .center,
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                        GestureDetector(
+                          onTap: () async {
+                            print('clicked: ${notifications[index]['notification_id']}');
+                            await UpdateNotificationStatus.update(
+                                notifications[index]['notification_id']);
+                          },
+                          child: Container(
+                            color: notifications[index]['status']=='unread'?Colors.grey[300]:Colors.white,
+                            width: MediaQuery
+                                .of(context)
+                                .size
+                                .width - 60,
+                            height: 80,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(left: 20),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        notifications[index]['content'],
-                                        style: const TextStyle(
-                                            fontSize: 17)
+                                      CircleAvatar(
+                                        radius: 30,
+                                        backgroundColor: Colors.black,
+                                        backgroundImage: NetworkImage(
+                                            getEmployeeImage(
+                                                notifications[index]['sender_id'])),
                                       ),
+                                      const SizedBox(width: 20),
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .center,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            notifications[index]['content'],
+                                            style: TextStyle(
+                                                fontSize: 17,
+                                                fontWeight: notifications[index]['status']=='unread'? FontWeight.bold:FontWeight.normal),
+                                          ),
+                                        ],
+                                      )
                                     ],
-                                  )
-                                ],
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    getTime(notifications[index]['created_at']),
                                   ),
-                                ],
-                              )
-                            ],
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(right: 20),
+                                      child: Text(
+                                        getTime(notifications[index]['created_at']),
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey,
+                                            fontWeight: notifications[index]['status']=='unread'? FontWeight.bold:FontWeight.normal),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
                         const Divider(

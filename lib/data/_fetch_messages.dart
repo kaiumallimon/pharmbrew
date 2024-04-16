@@ -4,7 +4,7 @@ import 'dart:convert';
 import '_fetch_senders.dart';
 
 class FetchMessages {
-  static Future<List<dynamic>> fetch(String userId) async {
+  static Future<dynamic> fetch(String userId) async {
     try {
       final response = await http.post(
           Uri.parse('https://bcrypt.site/scripts/php/get_message.php'),
@@ -17,29 +17,23 @@ class FetchMessages {
         return json.decode(response.body);
 
       } else {
-        throw Exception('Failed to load employees: ${response.statusCode}');
+        throw Exception('Failed to load Message: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Failed to load employees: $e');
+      throw Exception('Failed to load employee Message: $e');
     }
   }
 }
 
 
 void main() async{
-  List<dynamic> senders = await FetchSenders.fetchEmployee();
-  List<String> senderIDs = [];
+  dynamic senders = await FetchMessages.fetch('EMP20240414160009');
+  print(senders);
 
-  for (var sender in senders) {
-    senderIDs.add(sender['sender_id']);
-  }
+  // Make the fetch call and store the response in a variable
+  var response = await FetchMessages.fetch('EMP20240414160009');
 
-  print(senderIDs);
-  List<dynamic> messages = [];
+// Print the data type of the response
+  print('Data type of the response: ${response.runtimeType}');
 
-  for(var senderID in senderIDs) {
-    messages = await FetchMessages.fetch(senderID);
-  }
-
-  print(messages);
 }

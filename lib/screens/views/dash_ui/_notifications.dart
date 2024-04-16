@@ -1,11 +1,7 @@
 import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../data/_fetch_employee_data.dart';
 import '../../../data/fetch_notification.dart';
 
@@ -50,7 +46,6 @@ class _NotificationState extends State<Notifications> {
     for (var notification in notifications) {
       final senderId = notification['sender_id'];
       final employeeData = await FetchEmployeeData.fetchEmployee(senderId);
-      print("Data: $employeeData" );
       setState(() {
         employeeDatas.add(employeeData);
       });
@@ -59,7 +54,7 @@ class _NotificationState extends State<Notifications> {
 
   @override
   Widget build(BuildContext context) {
-    return notifications.length > 0 ? Container(
+    return notifications.isNotEmpty ? Container(
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -73,7 +68,7 @@ class _NotificationState extends State<Notifications> {
             ),
             const SizedBox(height: 40),
 
-            Container(
+            SizedBox(
               height: MediaQuery
                   .of(context)
                   .size
@@ -88,7 +83,7 @@ class _NotificationState extends State<Notifications> {
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
-                        Container(
+                        SizedBox(
                           width: MediaQuery
                               .of(context)
                               .size
@@ -97,51 +92,45 @@ class _NotificationState extends State<Notifications> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 30,
-                                      backgroundColor: Colors.black,
-                                      backgroundImage: NetworkImage(
-                                          getEmployeeImage(
-                                              notifications[index]['sender_id'])),
-                                    ),
-                                    const SizedBox(width: 20),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .center,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          notifications[index]['content'],
-                                          style: const TextStyle(
-                                              fontSize: 17)
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  CircleAvatar(
+                                    radius: 30,
+                                    backgroundColor: Colors.black,
+                                    backgroundImage: NetworkImage(
+                                        getEmployeeImage(
+                                            notifications[index]['sender_id'])),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .center,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        notifications[index]['content'],
+                                        style: const TextStyle(
+                                            fontSize: 17)
+                                      ),
+                                    ],
+                                  )
+                                ],
                               ),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Container(
-                                    child: Text(
-                                      getTime(notifications[index]['created_at']),
-                                    ),
-                                    // width: 200,
-                                    // color: Colors.green,
+                                  Text(
+                                    getTime(notifications[index]['created_at']),
                                   ),
                                 ],
                               )
                             ],
                           ),
                         ),
-                        Divider(
+                        const Divider(
                           thickness: 1,
                           color: Colors.grey,
                         )
@@ -156,7 +145,6 @@ class _NotificationState extends State<Notifications> {
   }
 
   String getEmployeeImage(String userId) {
-    print(employeeDatas);
     for (var employeeData in employeeDatas) {
       if (employeeData['userId'] == userId) {
         return "https://bcrypt.site/uploads/images/profile/picture/${employeeData['profile_pic']}";
@@ -171,7 +159,7 @@ class _NotificationState extends State<Notifications> {
     String time = parts[1];
 
     DateTime parsedTime = DateFormat('HH:mm:ss').parse(time);
-    DateTime newTime = parsedTime.add(Duration(hours: 6));
+    DateTime newTime = parsedTime.add(const Duration(hours: 6));
     String formattedTime = DateFormat('hh:mm a').format(newTime);
 
     return '$formattedTime, $date';

@@ -36,7 +36,7 @@ class _QueriesState extends State<Queries> {
 
   // late Timer timer3;
   List<Map<String, dynamic>> senders = [];
-  List<dynamic> messages = [];
+  dynamic messages = [];
   List<dynamic> allEmployees = [];
   List<dynamic> searchList = [];
 
@@ -44,15 +44,13 @@ class _QueriesState extends State<Queries> {
   void initState() {
     super.initState();
     initData();
-    print("Logged in: $userId");
-    timer = Timer.periodic(const Duration(milliseconds: 500), (Timer timer) {
+    timer = Timer.periodic(const Duration(milliseconds: 100), (Timer timer) {
       setState(() {
         fetchData();
-        // print('refreshed');
       });
     });
 
-    timer2 = Timer.periodic(const Duration(milliseconds: 500), (Timer timer) {
+    timer2 = Timer.periodic(const Duration(milliseconds: 100), (Timer timer) {
       setState(() {
         if (inFocusSender.isNotEmpty) {
           fetchMessage();
@@ -85,16 +83,24 @@ class _QueriesState extends State<Queries> {
     });
   }
 
-
   void fetchMessage() async {
-    List<dynamic> fetchedMessages = await FetchMessages.fetch(inFocusSender);
-    messages.clear();
-    setState(() {
-      messages = fetchedMessages;
-    });
+    if (inFocusSender.isNotEmpty) {
 
-    print("messages: $messages");
+      var response = await FetchMessages.fetch(inFocusSender);
+      messages.clear();
+      if (response is! Map<String, dynamic>) {
+        setState(() {
+          messages = response;
+        });
+      }else{
+        setState(() {
+          noMessages=true;
+        });
+      }
+    }
   }
+
+  bool noMessages=false;
 
   void _fetchEmployees() async {
     allEmployees = await FetchAllEmployee.fetch();
@@ -104,7 +110,7 @@ class _QueriesState extends State<Queries> {
     List<dynamic> fetchedSenders = await FetchSenders.fetchEmployee();
     Set senderIDs = {};
 
-    Map<String,dynamic> admins = await FetchAdmins.fetch();
+    Map<String, dynamic> admins = await FetchAdmins.fetch();
     List<dynamic> adminIds = admins['userIds'];
 
     for (var sender in fetchedSenders) {
@@ -115,12 +121,11 @@ class _QueriesState extends State<Queries> {
         senderIDs.add(sender['receiver_id']);
       }
     }
-    print('Sender IDs: $senderIDs');
 
     List<Map<String, dynamic>> loadedSenders = [];
     for (var senderID in senderIDs) {
       Map<String, dynamic> employeeData =
-      await FetchEmployeeData.fetchEmployee(senderID);
+          await FetchEmployeeData.fetchEmployee(senderID);
       String id = employeeData['userId'];
       String name = employeeData['name'];
       String profilePic = employeeData['profile_pic'];
@@ -137,14 +142,11 @@ class _QueriesState extends State<Queries> {
     setState(() {
       senders = loadedSenders;
     });
-    // print('Data fetched');
-    // print(senders);
   }
-
 
   @override
   Widget build(BuildContext context) {
-    return senders.length>0 && allEmployees.length>0 && userId.isNotEmpty
+    return senders.isNotEmpty && allEmployees.isNotEmpty && userId.isNotEmpty
         ? Scaffold(
             backgroundColor: Colors.white,
             body: SafeArea(
@@ -167,35 +169,10 @@ class _QueriesState extends State<Queries> {
                         Expanded(
                           child: Column(
                             children: [
-                              // Row(
-                              //   children: [
-                              //     Expanded(
-                              //       child: Container(
-                              //         width: 400,
-                              //         decoration: BoxDecoration(
-                              //           color: Colors.grey.shade300,
-                              //           borderRadius: BorderRadius.circular(10),
-                              //         ),
-                              //         child: const TextField(
-                              //           decoration: InputDecoration(
-                              //             hintText: 'Search',
-                              //             prefixIcon: Icon(Icons.search),
-                              //             border: InputBorder.none,
-                              //           ),
-                              //         ),
-                              //       ),
-                              //     ),
-                              //   ],
-                              // ),
-                              //
-                              // const SizedBox(
-                              //   height: 20,
-                              // ),
-
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Container(
+                                  SizedBox(
                                     width: 450,
                                     child: Row(
                                       mainAxisAlignment:
@@ -209,8 +186,9 @@ class _QueriesState extends State<Queries> {
                                             });
                                           },
                                           child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 10),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 10),
                                               decoration: BoxDecoration(
                                                 color: activeList == 0
                                                     ? Theme.of(context)
@@ -242,8 +220,9 @@ class _QueriesState extends State<Queries> {
                                             });
                                           },
                                           child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 10),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 10),
                                               decoration: BoxDecoration(
                                                 color: activeList == 2
                                                     ? Theme.of(context)
@@ -275,8 +254,9 @@ class _QueriesState extends State<Queries> {
                                             });
                                           },
                                           child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 10),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 10),
                                               decoration: BoxDecoration(
                                                 color: activeList == 1
                                                     ? Theme.of(context)
@@ -305,11 +285,10 @@ class _QueriesState extends State<Queries> {
                                   )
                                 ],
                               ),
-
                               const SizedBox(
                                 height: 20,
                               ),
-                              Container(
+                              SizedBox(
                                 // color: Colors.yellow,
                                 height:
                                     MediaQuery.of(context).size.height - 240,
@@ -324,19 +303,24 @@ class _QueriesState extends State<Queries> {
                                               GestureDetector(
                                                 onTap: () async {
                                                   setState(() {
-                                                    selectedIndex=index;
+                                                    messages.clear();
+                                                    selectedEmployee =
+                                                        senders[index]['id'];
                                                     isChatOpen = true;
+                                                    // messages.clear();
                                                     inFocusSender =
                                                         senders[index]['id'];
                                                     selectedChatData = senders[
                                                         index]; // Store selected chat data
-                                                    print(selectedChatData);
                                                     // Clear the text field when switching inboxes
                                                     clearTextField();
                                                   });
                                                 },
                                                 child: Container(
-                                                  color: selectedIndex==index? Colors.orange.shade100 : Colors.white,
+                                                  color: selectedEmployee ==
+                                                          senders[index]['id']
+                                                      ? Colors.orange.shade100
+                                                      : Colors.white,
                                                   child: Row(
                                                     children: [
                                                       Expanded(
@@ -350,20 +334,17 @@ class _QueriesState extends State<Queries> {
                                                                   .all(10),
                                                           child: Row(
                                                             children: [
-                                                              Container(
-                                                                child:
-                                                                    CircleAvatar(
-                                                                  radius: 20,
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .green,
-                                                                  backgroundImage:
-                                                                      CachedNetworkImageProvider(
-                                                                    getImageLink(
-                                                                      senders[index]
-                                                                          [
-                                                                          'profilePic'],
-                                                                    ),
+                                                              CircleAvatar(
+                                                                radius: 20,
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .green,
+                                                                backgroundImage:
+                                                                    CachedNetworkImageProvider(
+                                                                  getImageLink(
+                                                                    senders[index]
+                                                                        [
+                                                                        'profilePic'],
                                                                   ),
                                                                 ),
                                                               ),
@@ -398,8 +379,6 @@ class _QueriesState extends State<Queries> {
                                                         ),
                                                       ),
 
-                                                      // messages[index]['status_admin']=="unread"?
-
                                                       SizedBox(
                                                         width: 50,
                                                         height: 50,
@@ -423,7 +402,7 @@ class _QueriesState extends State<Queries> {
                                                   ),
                                                 ),
                                               ),
-                                              Divider(
+                                              const Divider(
                                                 color: Colors.grey,
                                               ),
                                             ],
@@ -437,48 +416,58 @@ class _QueriesState extends State<Queries> {
                                             itemBuilder: (context, index) {
                                               return Column(children: [
                                                 GestureDetector(
-                                                  onTap:(){
-                                                print('clicked');
-                                                setState(() {
-                                                  activeList=0;
-                                                  isChatOpen = true;
-                                                  inFocusSender = allEmployees[index]['userId'];
-                                                  selectedChatData = {
-                                                    'name': allEmployees[index]['name'],
-                                                    'profilePic': allEmployees[index]['profile_pic'],
-                                                    'designation': allEmployees[index]['designation'],
-                                                  };
-                                                  clearTextField();
-                                                });
-                                              },
+                                                  onTap: () {
+                                                    setState(() {
+                                                      selectedEmployee =
+                                                          allEmployees[index]
+                                                              ['userId'];
+                                                      // activeList = 0;
+                                                      isChatOpen = true;
+                                                      messages.clear();
+                                                      inFocusSender =
+                                                          allEmployees[index]
+                                                              ['userId'];
+                                                      selectedChatData = {
+                                                        'name':
+                                                            allEmployees[index]
+                                                                ['name'],
+                                                        'profilePic':
+                                                            allEmployees[index]
+                                                                ['profile_pic'],
+                                                        'designation':
+                                                            allEmployees[index]
+                                                                ['designation'],
+                                                      };
+                                                      clearTextField();
+                                                    });
+                                                  },
                                                   child: Container(
                                                     color: Colors.white,
                                                     child: Row(
                                                       children: [
                                                         Expanded(
                                                           child: Container(
-                                                            margin: const EdgeInsets
-                                                                .only(bottom: 5),
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    bottom: 5),
                                                             padding:
                                                                 const EdgeInsets
                                                                     .all(10),
                                                             child: Row(
                                                               children: [
-                                                                Container(
-                                                                  child:
-                                                                      CircleAvatar(
-                                                                    radius: 20,
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .green,
-                                                                    backgroundImage:
-                                                                        CachedNetworkImageProvider(
-                                                                      getImageLink(
-                                                                        allEmployees[
-                                                                                index]
-                                                                            [
-                                                                            'profile_pic'],
-                                                                      ),
+                                                                CircleAvatar(
+                                                                  radius: 20,
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .green,
+                                                                  backgroundImage:
+                                                                      CachedNetworkImageProvider(
+                                                                    getImageLink(
+                                                                      allEmployees[
+                                                                              index]
+                                                                          [
+                                                                          'profile_pic'],
                                                                     ),
                                                                   ),
                                                                 ),
@@ -491,14 +480,13 @@ class _QueriesState extends State<Queries> {
                                                                           .center,
                                                                   children: [
                                                                     Container(
-                                                                      margin:
-                                                                          const EdgeInsets
-                                                                              .only(
-                                                                              left:
-                                                                                  10),
-                                                                      child: Text(
-                                                                        allEmployees[
-                                                                                index]
+                                                                      margin: const EdgeInsets
+                                                                          .only(
+                                                                          left:
+                                                                              10),
+                                                                      child:
+                                                                          Text(
+                                                                        allEmployees[index]
                                                                             [
                                                                             'name'],
                                                                         style:
@@ -518,7 +506,7 @@ class _QueriesState extends State<Queries> {
                                                     ),
                                                   ),
                                                 ),
-                                                Divider(
+                                                const Divider(
                                                   color: Colors.grey,
                                                 ),
                                               ]);
@@ -530,8 +518,9 @@ class _QueriesState extends State<Queries> {
                                                 children: [
                                                   Expanded(
                                                     child: Container(
-                                                      margin: EdgeInsets.only(
-                                                          right: 20),
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              right: 20),
                                                       width: 400,
                                                       decoration: BoxDecoration(
                                                         color: Colors
@@ -541,11 +530,11 @@ class _QueriesState extends State<Queries> {
                                                                 .circular(10),
                                                       ),
                                                       child: TextField(
-                                                        onChanged: (value){
+                                                        onChanged: (value) {
                                                           searchEmployee(value);
                                                         },
                                                         decoration:
-                                                            InputDecoration(
+                                                            const InputDecoration(
                                                           hintText: 'Search',
                                                           prefixIcon: Icon(
                                                               Icons.search),
@@ -560,7 +549,7 @@ class _QueriesState extends State<Queries> {
                                               const SizedBox(
                                                 height: 20,
                                               ),
-                                              Container(
+                                              SizedBox(
                                                 height: MediaQuery.of(context)
                                                         .size
                                                         .height -
@@ -568,71 +557,111 @@ class _QueriesState extends State<Queries> {
                                                 // color: Colors.red,
 
                                                 //search-list:
-                                                child: searchList.length>0?  ListView.builder(
-                                                  itemCount: searchList.length,
-                                                    itemBuilder:
-                                                        (context, index) {
-                                                  return Column(children: [
-                                                    Container(
-                                                      margin: const EdgeInsets
-                                                          .only(bottom: 5),
-                                                      padding:
-                                                      const EdgeInsets
-                                                          .all(10),
-                                                      child: Row(children: [
-                                                        CircleAvatar(
-                                                          radius: 20,
-                                                          backgroundColor:
-                                                              Colors.green,
-                                                          backgroundImage: CachedNetworkImageProvider(
-                                                            getImageLink(
-                                                              searchList[index]
-                                                              ['profile_pic'],
-                                                            ),
-                                                          )
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                child: searchList.isNotEmpty
+                                                    ? ListView.builder(
+                                                        itemCount:
+                                                            searchList.length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return Column(
+                                                              children: [
+                                                                GestureDetector(
+                                                                  onTap:
+                                                                      () async {
+                                                                    setState(
+                                                                        () {
+                                                                      messages
+                                                                          .clear();
+                                                                      selectedEmployee =
+                                                                          senders[index]['id'];
+                                                                      isChatOpen =
+                                                                          true;
+                                                                      inFocusSender =
+                                                                          searchList[index]['userId'];
+                                                                      selectedChatData =
+                                                                          {
+                                                                        'name': searchList[index]['name'],
+                                                                        'profilePic': searchList[index]['profile_pic'],
+                                                                        'designation': searchList[index]['designation'],
+                                                                      };
+                                                                      // Clear the text field when switching inboxes
+                                                                      clearTextField();
+                                                                    });
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    margin: const EdgeInsets
+                                                                        .only(
+                                                                        bottom:
+                                                                            5),
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                            10),
+                                                                    child: Row(
+                                                                        children: [
+                                                                          CircleAvatar(
+                                                                              radius: 20,
+                                                                              backgroundColor: Colors.green,
+                                                                              backgroundImage: CachedNetworkImageProvider(
+                                                                                getImageLink(
+                                                                                  searchList[index]['profile_pic'],
+                                                                                ),
+                                                                              )),
+                                                                          const SizedBox(
+                                                                            width:
+                                                                                10,
+                                                                          ),
+                                                                          Column(
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            children: [
+                                                                              Text(
+                                                                                searchList[index]['name'],
+                                                                                style: const TextStyle(
+                                                                                  fontSize: 16,
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ]),
+                                                                  ),
+                                                                ),
+                                                                const Divider(
+                                                                  thickness: 1,
+                                                                  color: Colors
+                                                                      .grey,
+                                                                ),
+                                                              ]);
+                                                        })
+                                                    : const Center(
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
                                                           children: [
-                                                            Text(
-                                                              searchList[index]
-                                                              ['name'],
-                                                              style: const TextStyle(
-                                                                fontSize: 16,
-                                                              ),
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Icon(Icons
+                                                                    .warning),
+                                                                SizedBox(
+                                                                    width: 10),
+                                                                Text(
+                                                                  "No employees found",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                ),
+                                                              ],
                                                             ),
                                                           ],
                                                         ),
-                                                      ]),
-                                                    ),
-                                                    Divider(
-                                                      thickness: 1,
-                                                      color: Colors.grey,
-                                                    ),
-                                                  ]);
-                                                }):Center(
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Icon(Icons.warning),
-                                                          const SizedBox(width: 10),
-                                                          Text(
-                                                            "No employees found",
-                                                            textAlign: TextAlign.center,
-                                                          ),
-                                                        ],
                                                       ),
-                                                    ],
-                                                  ),
-                                                ),
                                               )
                                             ],
                                           ),
@@ -646,10 +675,10 @@ class _QueriesState extends State<Queries> {
                         !isChatOpen
                             ? Expanded(
                                 flex: 2,
-                                child: Container(
+                                child: SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height - 120,
-                                  child: Column(
+                                  child: const Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
@@ -679,7 +708,7 @@ class _QueriesState extends State<Queries> {
                                             color: Colors.grey.withOpacity(0.5),
                                             spreadRadius: 1,
                                             blurRadius: 7,
-                                            offset: Offset(0, 3),
+                                            offset: const Offset(0, 3),
                                           ),
                                         ],
                                       ),
@@ -690,8 +719,8 @@ class _QueriesState extends State<Queries> {
                                           Row(
                                             children: [
                                               Container(
-                                                margin:
-                                                    EdgeInsets.only(left: 10),
+                                                margin: const EdgeInsets.only(
+                                                    left: 10),
                                                 child: CircleAvatar(
                                                   radius: 20,
                                                   backgroundImage: NetworkImage(
@@ -707,11 +736,12 @@ class _QueriesState extends State<Queries> {
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 10),
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 10),
                                                     child: Text(
                                                       selectedChatData['name'],
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 16,
                                                         fontWeight:
@@ -720,12 +750,13 @@ class _QueriesState extends State<Queries> {
                                                     ),
                                                   ),
                                                   Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 10),
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 10),
                                                     child: Text(
                                                       selectedChatData[
                                                           'designation'],
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 12,
                                                       ),
@@ -739,12 +770,13 @@ class _QueriesState extends State<Queries> {
                                               onPressed: () {
                                                 setState(() {
                                                   isChatOpen = false;
+                                                  // messages.clear();
                                                   inFocusSender = "";
                                                   selectedChatData.clear();
-                                                  selectedIndex=-1;
+                                                  selectedEmployee = "";
                                                 });
                                               },
-                                              icon: Icon(
+                                              icon: const Icon(
                                                 Icons.close,
                                                 color: Colors.white,
                                               )),
@@ -756,92 +788,120 @@ class _QueriesState extends State<Queries> {
                                       height:
                                           MediaQuery.of(context).size.height -
                                               250,
-                                      child: messages.length>0? ListView.builder(
-                                        itemCount: messages.length,
-                                        itemBuilder: (context, index) {
-                                          return messages[index]['send_by'] ==
-                                                  'employee'
-                                              ? Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                      Container(
-                                                        constraints:
-                                                            BoxConstraints(
-                                                                maxWidth: 450),
-                                                        decoration: BoxDecoration(
-                                                            color: Colors
-                                                                .orangeAccent
-                                                                .shade100,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10)),
-                                                        margin: EdgeInsets.only(
-                                                            left: 20,
-                                                            top: 10,
-                                                            bottom: 10),
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 10,
-                                                                vertical: 5),
-                                                        child: Text(
-                                                            messages[index][
-                                                                'message_content'],
-                                                            maxLines: null,
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize: 16)),
-                                                      )
-                                                    ])
-                                              : Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                      Container(
-                                                        constraints:
-                                                            BoxConstraints(
-                                                                maxWidth: 450),
-                                                        decoration: BoxDecoration(
-                                                            color:
-                                                                CupertinoColors
-                                                                    .activeBlue,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10)),
-                                                        margin: EdgeInsets.only(
-                                                            right: 20,
-                                                            top: 10,
-                                                            bottom: 10),
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 12,
-                                                                vertical: 8),
-                                                        child: Text(
-                                                            messages[index][
-                                                                'message_content'],
-                                                            maxLines: null,
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white)),
-                                                      )
-                                                    ]);
-                                        },
-                                      ):Center(
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(Icons.warning),
-                                            const SizedBox(width: 10),
-                                            Text(
-                                              "No messages found",
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                      child: messages.isNotEmpty
+                                          ? ListView.builder(
+                                              itemCount: messages.length,
+                                              itemBuilder: (context, index) {
+                                                return messages[index]
+                                                            ['send_by'] ==
+                                                        'employee'
+                                                    ? Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                            Container(
+                                                              constraints:
+                                                                  const BoxConstraints(
+                                                                      maxWidth:
+                                                                          450),
+                                                              decoration: BoxDecoration(
+                                                                  color: Colors
+                                                                      .orangeAccent
+                                                                      .shade100,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10)),
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      left: 20,
+                                                                      top: 10,
+                                                                      bottom:
+                                                                          10),
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          10,
+                                                                      vertical:
+                                                                          5),
+                                                              child: Text(
+                                                                  messages[
+                                                                          index]
+                                                                      [
+                                                                      'message_content'],
+                                                                  maxLines:
+                                                                      null,
+                                                                  style: const TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize:
+                                                                          16)),
+                                                            )
+                                                          ])
+                                                    : Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                            Container(
+                                                              constraints:
+                                                                  const BoxConstraints(
+                                                                      maxWidth:
+                                                                          450),
+                                                              decoration: BoxDecoration(
+                                                                  color: CupertinoColors
+                                                                      .activeBlue,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10)),
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      right: 20,
+                                                                      top: 10,
+                                                                      bottom:
+                                                                          10),
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          12,
+                                                                      vertical:
+                                                                          8),
+                                                              child: Text(
+                                                                  messages[
+                                                                          index]
+                                                                      [
+                                                                      'message_content'],
+                                                                  maxLines:
+                                                                      null,
+                                                                  style: const TextStyle(
+                                                                      color: Colors
+                                                                          .white)),
+                                                            )
+                                                          ]);
+                                              },
+                                            )
+                                          : noMessages?  const Center(
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(Icons.warning),
+                                                  SizedBox(width: 10),
+                                                  Text(
+                                                    "No messages found",
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ],
+                                              ),
+                                            ):const Center(
+                                              child: CircularProgressIndicator(),
+                                            )
                                     ),
                                     Container(
                                       height: 60,
@@ -852,7 +912,7 @@ class _QueriesState extends State<Queries> {
                                             color: Colors.grey.withOpacity(0.5),
                                             spreadRadius: 1,
                                             blurRadius: 7,
-                                            offset: Offset(0, 3),
+                                            offset: const Offset(0, 3),
                                           ),
                                         ],
                                       ),
@@ -860,7 +920,8 @@ class _QueriesState extends State<Queries> {
                                         children: [
                                           Expanded(
                                             child: Container(
-                                              margin: EdgeInsets.only(left: 10),
+                                              margin: const EdgeInsets.only(
+                                                  left: 10),
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
@@ -882,8 +943,6 @@ class _QueriesState extends State<Queries> {
                                                   .text
                                                   .toString()
                                                   .trim();
-
-                                              print(userId);
 
                                               if (text.isNotEmpty) {
                                                 SendMessages.toEmployee(userId,
@@ -942,5 +1001,5 @@ class _QueriesState extends State<Queries> {
   }
 
   int activeList = 0;
-  int selectedIndex=-1;
+  String selectedEmployee = "";
 }

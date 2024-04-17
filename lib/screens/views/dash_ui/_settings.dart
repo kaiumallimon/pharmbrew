@@ -10,14 +10,12 @@ class Settings extends StatefulWidget {
 class _AddEmployeeState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text('Settings Page',
-          style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold
-          ),),
-      ),
+    return const Center(
+      child: Text('Settings Page',
+        style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold
+        ),),
     );
   }
 }

@@ -6,12 +6,14 @@ class SidePanelButton extends StatelessWidget {
       required this.label,
       required this.icon,
       required this.controller,
-      required this.onClick});
+      required this.onClick,
+      this.notificationDot = false});
 
   final String label;
   final IconData icon;
   final bool controller;
   final VoidCallback onClick;
+  final bool notificationDot;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +55,30 @@ class SidePanelButton extends StatelessWidget {
                   color: controller ? Colors.black : Colors.white,
                 ),
               ),
+
+              if (notificationDot)
+                Transform.translate(
+                  offset: const Offset(0, -10),
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 5),
+                    // height: 20,
+                    // width: 20,
+                      padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    // child: Center(
+                    //   child: Text(
+                    //     '100',
+                    //     style: TextStyle(
+                    //       color: Colors.white,
+                    //       fontSize: 13,
+                    //     ),
+                    //   ),
+                    // )
+                  ),
+                ),
             ],
           ),
         ),

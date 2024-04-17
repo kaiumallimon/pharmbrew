@@ -14,7 +14,7 @@ class _LoginWeb2State extends State<LoginWeb2> {
     return SafeArea(
       child: Stack(
         children: [
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width, // Match screen width
             height: MediaQuery.of(context).size.height, // Match screen height
             child: Image.asset(

@@ -10,14 +10,12 @@ class SalaryManagement extends StatefulWidget {
 class _AddEmployeeState extends State<SalaryManagement> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text('Salary Management Page',
-          style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold
-          ),),
-      ),
+    return const Center(
+      child: Text('Salary Management Page',
+        style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold
+        ),),
     );
   }
 }

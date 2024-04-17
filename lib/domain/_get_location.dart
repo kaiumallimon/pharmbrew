@@ -24,7 +24,6 @@ Future<Map<String, dynamic>?> getLocation() async {
   Map<String, dynamic> fetchedData = await fetchIPInfo();
 
   if (fetchedData.isNotEmpty) {
-    print(fetchedData['loc']);
     return {
       'lattitude': fetchedData['loc'].toString().split(',')[0],
       'longitude': fetchedData['loc'].toString().split(',')[1]
@@ -35,5 +34,5 @@ Future<Map<String, dynamic>?> getLocation() async {
 }
 
 void main(List<String> args) {
-  getLocation().then((value) => print(value));
+  print(getCountry().then((value){return value;}).toString());
 }

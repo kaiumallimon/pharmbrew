@@ -42,7 +42,7 @@ class _RememberAndForgotPasswordState
   }
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       // color: Colors.red,
       width: widget.width,
       child: Row(
@@ -60,7 +60,7 @@ class _RememberAndForgotPasswordState
                   });
                 },
               ),
-              Text('Remember me')
+              const Text('Remember me')
             ],
           ),
           // Forgot_Password()
@@ -93,7 +93,7 @@ class _Forgot_PasswordState extends State<Forgot_Password> {
             // color: CupertinoColors.activeBlue,
           ),
         ),
-        SizedBox(width: 5),
+        const SizedBox(width: 5),
         MouseRegion(
           onHover: (event) {
             setState(() {

@@ -12,15 +12,12 @@ Future<Map<String, dynamic>> fetchIPInfo() async {
         final Map<String, dynamic> data = json.decode(response.body);
         return data;
       } else {
-        print('Failed to fetch IP info. Response is not in JSON format.');
         return {};
       }
     } else {
-      print('Failed to fetch IP info. Status code: ${response.statusCode}');
       return {};
     }
   } catch (e) {
-    print('Error occurred while fetching IP info: $e');
     return {};
   }
 }

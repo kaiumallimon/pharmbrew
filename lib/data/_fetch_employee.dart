@@ -43,11 +43,3 @@ class FetchEmployee {
     }
   }
 }
-
-// void main(List<String> args) {
-//   FetchEmployee.fetchEmployee().then((value) {
-//     print(value);
-//   }).catchError((error) {
-//     print('Error: $error');
-//   });
-// }

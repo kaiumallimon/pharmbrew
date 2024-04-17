@@ -1,22 +1,14 @@
 import 'dart:async';
-import 'dart:html' as html;
-import 'dart:html';
-import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 import 'package:email_otp/email_otp.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server.dart';
+import 'package:pharmbrew/data/_check_mail.dart';
 import 'package:pharmbrew/domain/_generate_password.dart';
 import 'package:pharmbrew/domain/_mailer.dart';
 import 'package:pharmbrew/domain/_register.dart';
 import 'package:pharmbrew/widgets/_add_employee_text_boxes.dart';
-import 'package:pharmbrew/widgets/_successful_dialog.dart';
 
 import '../../../domain/usecases/_get_department_and_id.dart';
 import '../../../utils/_show_dialog.dart';
@@ -34,12 +26,10 @@ class _AddEmployeeState extends State<AddEmployee> {
   final TextEditingController _verificationController = TextEditingController();
 
   // final TextEditingController _dobController = TextEditingController();
-
   // final TextEditingController _designationController = TextEditingController();
   final TextEditingController _baseSalaryController = TextEditingController();
 
-  // final TextEditingController _paymentFrequencyController =
-  //     TextEditingController();
+  // final TextEditingController _paymentFrequencyController = TextEditingController();
   // final TextEditingController _departmentController = TextEditingController();
   final TextEditingController _ratingController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
@@ -50,6 +40,13 @@ class _AddEmployeeState extends State<AddEmployee> {
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _postalCodeController = TextEditingController();
   final TextEditingController _countryController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  bool isValid = true;
 
   // final TextEditingController _roleController = TextEditingController();
 
@@ -104,7 +101,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                 AddEmployeeTextBoxes(
                   controller: _nameController,
                   title: 'Name',
-                  hintText: 'Enter Employee Name',
+                  hintText: 'eg. John Doe',
                 ),
 
                 const SizedBox(
@@ -147,14 +144,14 @@ class _AddEmployeeState extends State<AddEmployee> {
                               child: TextField(
                                 controller: _emailController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: const OutlineInputBorder(
+                                    enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: const OutlineInputBorder(
+                                    focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
-                                    hintText: 'Enter Email Address',
+                                    hintText: 'eg. doe@gmail.com',
                                     hintStyle: TextStyle(color: Colors.grey)),
                               ),
                             ),
@@ -178,29 +175,39 @@ class _AddEmployeeState extends State<AddEmployee> {
                                     String email =
                                         _emailController.text.toString().trim();
 
-                                    // print(email);
+                                    bool emailExists = await CheckMail.check(email);
+
+                                    print(email);
+                                    print(emailExists);
 
                                     final bool isValid =
                                         EmailValidator.validate(email);
 
                                     // Check if email field is empty
-                                    if (email.isEmpty || !isValid) {
-                                      // Show error dialog if email field is empty
+                                    if(emailExists){
                                       showCustomErrorDialog(
-                                          "Please enter a valid email address",
+                                          "Email already exists! Please enter a different email address",
                                           context);
-                                    } else {
-                                      // Generate OTP
-                                      generatedOTP = generateOTP();
-                                      sendEmail(
-                                          email,
-                                          "Pharmabrew Verification Code",
-                                          "Dear user,\nHere is your verification code: $generatedOTP");
+                                      // _emailController.clear();
+                                    }else{
+                                      if ( email.isEmpty || !isValid) {
+                                        // Show error dialog if email field is empty
+                                        showCustomErrorDialog(
+                                            "Please enter a valid email address",
+                                            context);
+                                      } else {
+                                        // Generate OTP
+                                        generatedOTP = generateOTP();
+                                        sendEmail(
+                                            email,
+                                            "Pharmabrew Verification Code",
+                                            "Dear user,\nHere is your verification code: $generatedOTP");
 
-                                      // Update state
-                                      setState(() {
-                                        verficationSent = true;
-                                      });
+                                        // Update state
+                                        setState(() {
+                                          verficationSent = true;
+                                        });
+                                      }
                                     }
                                   },
                                   child: Row(
@@ -241,7 +248,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                   controller: _verificationController,
                   title:
                       "Verification Code [Don't Forget To Check Spam Folder]",
-                  hintText: 'Enter Verification Code From Email',
+                  hintText: 'eg. 1111',
                 ),
                 const SizedBox(
                   height: 10,
@@ -284,22 +291,20 @@ class _AddEmployeeState extends State<AddEmployee> {
                           width: MediaQuery.of(context).size.width / 2.3,
                           child: DropdownMenu<String>(
                             width: MediaQuery.of(context).size.width / 2.3,
-                            inputDecorationTheme: InputDecorationTheme(
-                                enabledBorder: const OutlineInputBorder(
+                            inputDecorationTheme: const InputDecorationTheme(
+                                enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide.none,
                                 ),
-                                focusedBorder: const OutlineInputBorder(
+                                focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.blue, width: 2.0),
                                 ),
-                                hintStyle: const TextStyle(color: Colors.grey)),
+                                hintStyle: TextStyle(color: Colors.grey)),
                             initialSelection: roles.first,
                             onSelected: (String? value) {
                               setState(() {
                                 dropDownValueRole = value!;
                               });
-
-                              print("Selected Role: $dropDownValueRole");
                             },
                             dropdownMenuEntries: roles
                                 .map<DropdownMenuEntry<String>>((String value) {
@@ -320,7 +325,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                   children: [
                     Row(children: [
                       RichText(
-                          text: TextSpan(
+                          text: const TextSpan(
                         text: "Date of Birth",
                         style: TextStyle(
                             fontSize: 16,
@@ -341,7 +346,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                     ),
                     Row(
                       children: [
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width / 2.3,
                           height: 50,
                           child: ElevatedButton(
@@ -368,7 +373,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                             ),
                             child: !selected
                                 ? Text(
-                                    'Enter Date of Birth',
+                                    'YYYY-MM-DD',
                                     style:
                                         TextStyle(color: Colors.grey.shade700),
                                   )
@@ -393,7 +398,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                 AddEmployeeTextBoxes(
                   controller: _baseSalaryController,
                   title: 'Base Salary',
-                  hintText: 'Enter Base Salary',
+                  hintText: 'eg. 45000.00',
                 ),
                 const SizedBox(
                   height: 10,
@@ -450,24 +455,21 @@ class _AddEmployeeState extends State<AddEmployee> {
                           width: MediaQuery.of(context).size.width / 2.3,
                           child: DropdownMenu<String>(
                             width: MediaQuery.of(context).size.width / 2.3,
-                            inputDecorationTheme: InputDecorationTheme(
-                                enabledBorder: const OutlineInputBorder(
+                            inputDecorationTheme: const InputDecorationTheme(
+                                enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide.none,
                                 ),
-                                focusedBorder: const OutlineInputBorder(
+                                focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.blue, width: 2.0),
                                 ),
-                                hintStyle: const TextStyle(color: Colors.grey)),
+                                hintStyle: TextStyle(color: Colors.grey)),
                             initialSelection: departmentNames.first,
                             onSelected: (String? value) {
                               // This is called when the user selects an item.
                               setState(() {
                                 dropDownValue = value!;
                               });
-
-                              print(
-                                  "Selected: ${getDepartmentIdByDesignation(dropDownValue)}");
                             },
                             dropdownMenuEntries: departmentNames
                                 .map<DropdownMenuEntry<String>>((String value) {
@@ -486,7 +488,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                 AddEmployeeTextBoxes(
                   controller: _ratingController,
                   title: 'Rating',
-                  hintText: 'Enter Rating',
+                  hintText: 'eg. 5',
                 ),
                 const SizedBox(
                   height: 10,
@@ -494,8 +496,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                 AddEmployeeTextBoxes(
                   controller: _phoneNumberController,
                   title: 'Phone Number',
-                  hintText:
-                      'Enter Phone Number (separated by comma if multiple)',
+                  hintText: 'eg. 017xxxxxxxx, 019xxxxxxxx',
                 ),
                 const SizedBox(
                   height: 10,
@@ -503,7 +504,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                 AddEmployeeTextBoxes(
                   controller: _skillsController,
                   title: 'Skills',
-                  hintText: 'Enter Skills (separated by comma)',
+                  hintText: 'eg. C++, Java, Python',
                 ),
                 const SizedBox(
                   height: 20,
@@ -544,14 +545,14 @@ class _AddEmployeeState extends State<AddEmployee> {
                               child: TextField(
                                 controller: _apartmentController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: const OutlineInputBorder(
+                                    enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: const OutlineInputBorder(
+                                    focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
-                                    hintText: 'Enter Apartment Number',
+                                    hintText: 'eg. #8A1',
                                     hintStyle: TextStyle(color: Colors.grey)),
                               ),
                             ),
@@ -580,14 +581,14 @@ class _AddEmployeeState extends State<AddEmployee> {
                               child: TextField(
                                 controller: _buildingController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: const OutlineInputBorder(
+                                    enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: const OutlineInputBorder(
+                                    focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
-                                    hintText: 'Enter Building Name',
+                                    hintText: 'eg. Cyrus Tower',
                                     hintStyle: TextStyle(color: Colors.grey)),
                               ),
                             ),
@@ -620,14 +621,14 @@ class _AddEmployeeState extends State<AddEmployee> {
                               child: TextField(
                                 controller: _streetController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: const OutlineInputBorder(
+                                    enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: const OutlineInputBorder(
+                                    focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
-                                    hintText: 'Enter Street Name/Number',
+                                    hintText: 'eg. Road 1',
                                     hintStyle: TextStyle(color: Colors.grey)),
                               ),
                             ),
@@ -656,14 +657,14 @@ class _AddEmployeeState extends State<AddEmployee> {
                               child: TextField(
                                 controller: _cityController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: const OutlineInputBorder(
+                                    enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: const OutlineInputBorder(
+                                    focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
-                                    hintText: 'Enter City Name',
+                                    hintText: 'eg. Dhaka',
                                     hintStyle: TextStyle(color: Colors.grey)),
                               ),
                             ),
@@ -696,14 +697,14 @@ class _AddEmployeeState extends State<AddEmployee> {
                               child: TextField(
                                 controller: _postalCodeController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: const OutlineInputBorder(
+                                    enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: const OutlineInputBorder(
+                                    focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
-                                    hintText: 'Enter Postal Code',
+                                    hintText: 'eg. 1207',
                                     hintStyle: TextStyle(color: Colors.grey)),
                               ),
                             ),
@@ -732,14 +733,14 @@ class _AddEmployeeState extends State<AddEmployee> {
                               child: TextField(
                                 controller: _countryController,
                                 decoration: const InputDecoration(
-                                    enabledBorder: const OutlineInputBorder(
+                                    enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: const OutlineInputBorder(
+                                    focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.blue, width: 2.0),
                                     ),
-                                    hintText: 'Enter Country Name',
+                                    hintText: 'eg. Bangladesh',
                                     hintStyle: TextStyle(color: Colors.grey)),
                               ),
                             ),
@@ -797,6 +798,11 @@ class _AddEmployeeState extends State<AddEmployee> {
                       child: ElevatedButton(
                           onPressed: () async {
                             try {
+                              // bool isEmailValid = !EmailValidator.validate(
+                              //     _emailController.text.toString().trim());
+                              //
+                              // print("Validity:$isEmailValid");
+
                               String name =
                                   _nameController.text.toString().trim();
                               String email =
@@ -837,88 +843,95 @@ class _AddEmployeeState extends State<AddEmployee> {
                               // String role =
                               //     _roleController.text.toString().trim();
 
-                              if (_nameController.text.trim().isEmpty ||
-                                      _emailController.text.trim().isEmpty ||
-                                      _verificationController.text
-                                          .trim()
-                                          .isEmpty ||
-                                      // _dobController.text.trim().isEmpty ||
-                                      // _designationController.text.trim().isEmpty ||
-                                      // _baseSalaryController.text.trim().isEmpty ||
-                                      // _paymentFrequencyController.text
-                                      //     .trim()
-                                      //     .isEmpty ||
-                                      // _departmentController.text.trim().isEmpty ||
-                                      _ratingController.text.trim().isEmpty ||
-                                      _phoneNumberController.text
-                                          .trim()
-                                          .isEmpty ||
-                                      _skillsController.text.trim().isEmpty ||
-                                      _apartmentController.text
-                                          .trim()
-                                          .isEmpty ||
-                                      _buildingController.text.trim().isEmpty ||
-                                      _streetController.text.trim().isEmpty ||
-                                      _cityController.text.trim().isEmpty ||
-                                      _postalCodeController.text
-                                          .trim()
-                                          .isEmpty ||
-                                      _countryController.text.trim().isEmpty
-                                  // _roleController.text.trim().isEmpty
-                                  ) {
-                                // At least one field is empty
-                                showCustomErrorDialog(
-                                    "Pleas fill all the fields!", context);
-                              } else {
-                                // All fields are filled
-                                if (generatedOTP == verificationCode) {
-                                  String password = generateRandomPassword();
 
-                                  String? departmentId =
-                                      getDepartmentIdByDesignation(
-                                          dropDownValue);
-
-                                  bool response = await createUser(
-                                      "$name",
-                                      email,
-                                      dob,
-                                      dropDownValue,
-                                      password,
-                                      dropDownValueRole,
-                                      _image,
-                                      rating,
-                                      departmentId.toString(),
-                                      skills,
-                                      "$apartment, $building, $street, $city, $postalCode, $country",
-                                      phoneNumber,
-                                      baseSalary,
-                                      context);
-
-                                  if (response) {
-                                    //clear all the controllers
-                                    _nameController.clear();
-                                    _emailController.clear();
-                                    _verificationController.clear();
-                                    selected = false;
-                                    _baseSalaryController.clear();
-                                    _ratingController.clear();
-                                    _phoneNumberController.clear();
-                                    _skillsController.clear();
-                                    _apartmentController.clear();
-                                    _buildingController.clear();
-                                    _streetController.clear();
-                                    _cityController.clear();
-                                    _postalCodeController.clear();
-                                    _countryController.clear();
-                                    // _roleController.clear();
-                                  }
-                                } else {
+                                if ((_nameController.text.trim().isEmpty ||
+                                        _emailController.text.trim().isEmpty ||
+                                        _verificationController.text
+                                            .trim()
+                                            .isEmpty ||
+                                        // _dobController.text.trim().isEmpty ||
+                                        // _designationController.text.trim().isEmpty ||
+                                        // _baseSalaryController.text.trim().isEmpty ||
+                                        // _paymentFrequencyController.text
+                                        //     .trim()
+                                        //     .isEmpty ||
+                                        // _departmentController.text.trim().isEmpty ||
+                                        _ratingController.text.trim().isEmpty ||
+                                        _phoneNumberController.text
+                                            .trim()
+                                            .isEmpty ||
+                                        _skillsController.text.trim().isEmpty ||
+                                        _apartmentController.text
+                                            .trim()
+                                            .isEmpty ||
+                                        _buildingController.text
+                                            .trim()
+                                            .isEmpty ||
+                                        _streetController.text.trim().isEmpty ||
+                                        _cityController.text.trim().isEmpty ||
+                                        _postalCodeController.text
+                                            .trim()
+                                            .isEmpty ||
+                                        _countryController.text.trim().isEmpty)
+                                    // _roleController.text.trim().isEmpty
+                                    ) {
+                                  // At least one field is empty
                                   showCustomErrorDialog(
-                                      "Invalid OTP!", context);
+                                      "Pleas fill all the fields!", context);
+                                } else {
+                                  // All fields are filled
+                                  if (generatedOTP == verificationCode) {
+                                    String password = generateRandomPassword();
+
+                                    String? departmentId =
+                                        getDepartmentIdByDesignation(
+                                            dropDownValue);
+
+                                    bool response = await createUser(
+                                        name,
+                                        email,
+                                        dob,
+                                        dropDownValue,
+                                        password,
+                                        dropDownValueRole,
+                                        _image,
+                                        rating,
+                                        departmentId.toString(),
+                                        skills,
+                                        "$apartment, $building, $street, $city, $postalCode, $country",
+                                        phoneNumber,
+                                        baseSalary,
+                                        context);
+
+                                    if (response) {
+                                      //clear all the controllers
+                                      _nameController.clear();
+                                      _emailController.clear();
+                                      _verificationController.clear();
+                                      selected = false;
+                                      _baseSalaryController.clear();
+                                      _ratingController.clear();
+                                      _phoneNumberController.clear();
+                                      _skillsController.clear();
+                                      _apartmentController.clear();
+                                      _buildingController.clear();
+                                      _streetController.clear();
+                                      _cityController.clear();
+                                      _postalCodeController.clear();
+                                      _countryController.clear();
+                                      // _roleController.clear();
+                                    }
+                                  } else {
+                                    showCustomErrorDialog(
+                                        "Invalid OTP!", context);
+                                  }
                                 }
                               }
-                            } catch (e) {
+                            catch (e) {
                               print(e);
+                              showCustomErrorDialog(
+                                  "An error occurred. Please try again later.",
+                                  context);
                             }
                           },
                           style: ElevatedButton.styleFrom(

@@ -70,8 +70,6 @@ Future<bool> login(String email, String password, BuildContext context) async {
 
       if (responseData['success']) {
         // Login successful, do something
-        print('Login successful');
-        print('User: ${responseData['user']}');
 
         return true;
       } else {
@@ -119,16 +117,13 @@ Future<Map<String, dynamic>> loginValidation(
     });
 
     if (response.statusCode == 200) {
-      // no internal errors
       final Map<String, dynamic> responseData = json.decode(response.body);
-      // print(responseData['role']);
-      // print(responseData);
 
       if (responseData['success'] == true) {
-        //login successful
         return {
           "login": true,
           "response": "Login Successful",
+          "userId":responseData['userId'],
           "email": responseData['email'],
           "name": responseData['name'],
           "picture": responseData['profile_pic'],

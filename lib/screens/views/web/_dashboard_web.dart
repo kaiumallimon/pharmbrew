@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pharmbrew/data/_update_notification_status.dart';
+import 'package:pharmbrew/data/fetch_notification.dart';
 import 'package:pharmbrew/widgets/_dashboard_mainPanel.dart';
 import 'package:pharmbrew/widgets/_logout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +13,7 @@ import '../../../widgets/_logo2.dart';
 class WebDashboard extends StatefulWidget {
   WebDashboard({Key? key, required this.isAdministrator}) : super(key: key);
   bool isAdministrator;
+
   @override
   State<WebDashboard> createState() => _WebDashboardState();
 }
@@ -17,6 +22,7 @@ class _WebDashboardState extends State<WebDashboard> {
   late String pp = ''; // Initialize pp with an empty string
   late String name = '';
   late String userRole;
+  late String loggedInUserId='';
 
   void initData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -28,15 +34,23 @@ class _WebDashboardState extends State<WebDashboard> {
     name = nameLocal ??
         ''; // Assign nameLocal to name, if nameLocal is null assign an empty string
 
+    final userId = prefs.getString('loggedInUserId');
+    loggedInUserId = userId ?? '';
+
+
     setState(
         () {}); // Update the state after retrieving data from SharedPreferences
   }
+
+
+  late Timer timer;
 
   @override
   void initState() {
     super.initState();
     initData();
     inFocus = widget.isAdministrator ? 0 : 12;
+    timer=Timer.periodic(const Duration(milliseconds: 500), (Timer t) => _fetchNotification());
   }
 
   void switchPage(int index) {
@@ -49,6 +63,7 @@ class _WebDashboardState extends State<WebDashboard> {
   void dispose() {
     super.dispose();
     clearSharedPreferences();
+    timer.cancel();
   }
 
   Future<void> clearSharedPreferences() async {
@@ -57,6 +72,7 @@ class _WebDashboardState extends State<WebDashboard> {
     preferences.remove("loggedInRole");
     preferences.remove("loggedInUserName");
     preferences.remove("loggedInUserProfilePic");
+    preferences.remove("loggedInUserId");
   }
 
   bool isHovered = false;
@@ -136,40 +152,29 @@ class _WebDashboardState extends State<WebDashboard> {
                               : const SizedBox.shrink(),
                           widget.isAdministrator
                               ? SidePanelButton(
-                            label: 'Products',
-                            icon: Icons.shopping_bag_outlined,
-                            controller: inFocus == 15,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 15;
-                              });
-                            },
-                          )
-                              : const SizedBox.shrink(),
-                          widget.isAdministrator
-                              ? SidePanelButton(
-                                  label: 'Edit Profile',
-                                  icon: Icons.edit,
-                                  controller: inFocus == 3,
+                                  label: 'Products',
+                                  icon: Icons.shopping_bag_outlined,
+                                  controller: inFocus == 15,
                                   onClick: () {
                                     setState(() {
-                                      inFocus = 3;
+                                      inFocus = 15;
                                     });
                                   },
                                 )
                               : const SizedBox.shrink(),
-                          widget.isAdministrator
-                              ? SidePanelButton(
-                                  label: 'Notifications',
-                                  icon: Icons.notifications,
-                                  controller: inFocus == 4,
-                                  onClick: () {
-                                    setState(() {
-                                      inFocus = 4;
-                                    });
-                                  },
-                                )
-                              : const SizedBox.shrink(),
+                          // widget.isAdministrator
+                          //     ? SidePanelButton(
+                          //         label: 'Edit Profile',
+                          //         icon: Icons.edit,
+                          //         controller: inFocus == 3,
+                          //         onClick: () {
+                          //           setState(() {
+                          //             inFocus = 3;
+                          //           });
+                          //         },
+                          //       )
+                          //     : const SizedBox.shrink(),
+
                           widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Access',
@@ -181,6 +186,35 @@ class _WebDashboardState extends State<WebDashboard> {
                                     });
                                   },
                                 )
+                              : const SizedBox.shrink(),
+
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Notifications',
+                                  icon: Icons.notifications,
+                                  controller: inFocus == 4,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 4;
+                                      // notificationsCount = 0;
+                                      print("Logged in user: $loggedInUserId");
+                                      // UpdateNotificationStatus.update(loggedInUserId);
+                                    });
+                                  },
+                                  notificationDot: notificationsCount>0?true:false,
+                                )
+                              : const SizedBox.shrink(),
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                            label: 'Queries',
+                            icon: Icons.inbox,
+                            controller: inFocus == 10,
+                            onClick: () {
+                              setState(() {
+                                inFocus = 10;
+                              });
+                            },
+                          )
                               : const SizedBox.shrink(),
                           widget.isAdministrator
                               ? SidePanelButton(
@@ -230,18 +264,7 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
-                          widget.isAdministrator
-                              ? SidePanelButton(
-                                  label: 'Queries',
-                                  icon: Icons.inbox,
-                                  controller: inFocus == 10,
-                                  onClick: () {
-                                    setState(() {
-                                      inFocus = 10;
-                                    });
-                                  },
-                                )
-                              : const SizedBox.shrink(),
+
                           widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Settings',
@@ -285,6 +308,32 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
+
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Orders',
+                                  icon: Icons.shopping_cart_outlined,
+                                  controller: inFocus == 16,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 16;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                            label: 'Support',
+                            icon: Icons.support_agent,
+                            controller: inFocus == 17,
+                            onClick: () {
+                              setState(() {
+                                inFocus = 17;
+                              });
+                            },
+                          )
+                              : const SizedBox.shrink(),
                         ],
                       ),
                     ),
@@ -305,7 +354,26 @@ class _WebDashboardState extends State<WebDashboard> {
 
   Future<void> _handleRefresh() async {
     await Future.delayed(const Duration(seconds: 2)); // Simulating a delay
-    setState(() {
-    });
+    setState(() {});
   }
+
+  void _fetchNotification() async {
+    notifications = await FetchNotification.fetch();
+    // print(notifications);
+    setState(() {
+      notificationsCount = 0;
+    });
+    //read the status of notifications:
+    for (var notification in notifications) {
+      if (notification['status'] == 'unread') {
+        setState(() {
+          notificationsCount++;
+        });
+      }
+    }
+    print("Notifications: $notificationsCount");
+  }
+
+  List<dynamic> notifications = [];
+  int notificationsCount = 0;
 }

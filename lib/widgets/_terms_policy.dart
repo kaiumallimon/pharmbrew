@@ -9,7 +9,7 @@ class Terms_Policy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double dWidth = MediaQuery.of(context).size.width;
-    return Container(
+    return SizedBox(
       // color: Colors.red,
       height: 120,
       child:  Column(
@@ -19,18 +19,18 @@ class Terms_Policy extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            (dWidth>600)?Text("By proceeding, you agree to the"):Text("By proceeding, you agree to the"),
-            SizedBox(
+            (dWidth>600)?const Text("By proceeding, you agree to the"):const Text("By proceeding, you agree to the"),
+            const SizedBox(
               width: 5,
             ),
             
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
 
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(

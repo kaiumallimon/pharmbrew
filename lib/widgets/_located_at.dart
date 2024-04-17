@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../routes/_image_routes.dart';
 
 class LocatedAt extends StatelessWidget {
   const LocatedAt({super.key, required this.country});
@@ -25,7 +24,9 @@ class LocatedAt extends StatelessWidget {
         // ),
         space5w(),
         Text(
-          "${country=="BD"?"Bangladesh":"${country}"}",
+
+          country=="BD"
+              ?"Bangladesh":country,
           style: const TextStyle(fontWeight: FontWeight.bold),
         )
       ],

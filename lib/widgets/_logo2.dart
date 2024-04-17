@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 
 import '../routes/_image_routes.dart';
@@ -23,7 +21,7 @@ class Logo2 extends StatelessWidget {
           // ),
           Transform.translate(
             offset: const Offset(0, 3),
-            child: Container(
+            child: SizedBox(
               width: 40,
               child: Lottie.asset(
                 ImageRoutes.tabletAnimation,

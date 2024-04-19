@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/_fetch_admins.dart';
 import '../../../data/_fetch_all_employee.dart';
@@ -983,7 +982,19 @@ class _QueriesState extends State<Queries> {
               ),
             ),
           )
-        : const Center(child: CircularProgressIndicator());
+        : const Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+                width: 30,
+                height: 30,
+                child: CircularProgressIndicator()),
+
+             SizedBox(height: 20),
+             Text("Loading..." , style: TextStyle(fontSize: 20)),
+          ],
+        );
   }
 
   String getImageLink(String? image) {

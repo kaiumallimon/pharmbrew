@@ -7,6 +7,7 @@ import 'package:pharmbrew/domain/_get_location.dart';
 import 'package:pharmbrew/widgets/_dashboard_home_grid_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import '../../../data/_fetch_attendance_stats.dart';
 import '../../../data/_fetch_daily_analytics_attendance.dart';
 import '../../../data/fetch_notification.dart';
 import '../../../domain/_fetch_products.dart';
@@ -356,18 +357,26 @@ class _DashboardHomeState extends State<DashboardHome> {
                         itemCount: 4,
                         itemBuilder: (context, index) {
                           return index==0? DashboardGridItem(
+                            background: Color(0xFF003366),
+                            textColor: Colors.white,
                             title: dashboardItems[index]["title"],
                             data: products.toString(),
                             image: dashboardItems[index]["image"],
                           ): index==1? DashboardGridItem(
+                            background: Color(0xFF004040),
+                            textColor: Colors.white,
                             title: dashboardItems[index]["title"],
                             data: dashboardItems[index]["data"],
                             image: dashboardItems[index]["image"],
                           ): index==2? DashboardGridItem(
+                            background: Color(0xFF400040),
+                            textColor: Colors.white,
                             title: dashboardItems[index]["title"],
                             data: getTotalEmployees().toString(),
                             image: dashboardItems[index]["image"],
                           ): DashboardGridItem(
+                            background: Color(0xFFf5f0ce),
+                            textColor: Colors.black,
                             title: dashboardItems[index]["title"],
                             data: attendanceStats['present_today'],
                             image: dashboardItems[index]["image"],
@@ -552,6 +561,8 @@ class _DashboardHomeState extends State<DashboardHome> {
     count+=int.parse(attendanceStats['not_checked_in']);
     return count;
   }
+
+
 }
 
 

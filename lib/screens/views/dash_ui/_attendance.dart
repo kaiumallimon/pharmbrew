@@ -1,12 +1,19 @@
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cool_dropdown/controllers/dropdown_controller.dart';
+import 'package:cool_dropdown/cool_dropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:pharmbrew/data/_attendance_absent.dart';
 import 'package:pharmbrew/data/_attendance_checkin_checkout.dart';
 import 'package:pharmbrew/data/_get_attendace.dart';
+import 'package:pharmbrew/widgets/_attendance_stats.dart';
+import 'package:pharmbrew/widgets/_attendance_timesheet.dart';
 import 'package:pharmbrew/widgets/_successful_dialog.dart';
+import 'package:pharmbrew/widgets/_today_activity_attendance.dart';
+import 'package:table_calendar/table_calendar.dart';
+import '../../../data/_fetch_attendance_stats.dart';
 import '../../../data/_fetch_employee.dart';
 
 class Attendance extends StatefulWidget {
@@ -32,9 +39,17 @@ class _AttendanceState extends State<Attendance> {
   void dispose() {
     super.dispose();
     searchController.dispose();
+    searchController2.dispose();
+    timer.cancel();
+    timer1.cancel();
+    timer2.cancel();
+    timer3.cancel();
+    timer4.cancel();
   }
 
-  late Timer timer1, timer2;
+  List<dynamic> absents=[];
+
+  late Timer timer1, timer2, timer3, timer4;
 
   @override
   void initState() {
@@ -47,12 +62,32 @@ class _AttendanceState extends State<Attendance> {
     timer2 = Timer.periodic(const Duration(milliseconds: 500), (timer) {
       fetchAttendance();
     });
+
+    timer3 = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+      fetchAttendanceStatsIndividual(selectedEmployee['userId']);
+    });
+
+    timer4=Timer.periodic(const Duration(milliseconds: 500), (timer) {
+     if(selectedEmployee.isNotEmpty){
+       fetchAbsent();
+     }
+    });
+
   }
 
   void reload() {
     setState(() {
       fetchEmployees(null, null);
     });
+  }
+
+  void fetchAbsent() async{
+    List<dynamic> localAbsent=await fetchAttendanceAbsents(selectedEmployee['userId']);
+    setState(() {
+      absents=localAbsent;
+    });
+
+    print("Absent list: $absents");
   }
 
   void fetchEmployees(String? orderBy, String? order) async {
@@ -114,10 +149,22 @@ class _AttendanceState extends State<Attendance> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Attendance Management',
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Attendance',
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            'Dashboard / Attendance',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ],
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -226,8 +273,8 @@ class _AttendanceState extends State<Attendance> {
                           employees.isEmpty
                               ? const Column(
                                   children: [
-                                     SizedBox(height: 20),
-                                     Center(
+                                    SizedBox(height: 20),
+                                    Center(
                                       child: CircularProgressIndicator(),
                                     ),
                                   ],
@@ -300,10 +347,9 @@ class _AttendanceState extends State<Attendance> {
                                               children: [
                                                 GestureDetector(
                                                   onTap: () {
-
-
                                                     setState(() {
-                                                      selectedEmployee = employee;
+                                                      selectedEmployee =
+                                                          employee;
                                                     });
                                                     toggleActionExpansion(
                                                         rowIndex);
@@ -315,7 +361,8 @@ class _AttendanceState extends State<Attendance> {
                                                         vertical: 5),
                                                     child: ElevatedButton(
                                                       onPressed: () {
-                                                        print("Attendacne: ${getAttendanceStatus(employee['userId'])}");
+                                                        // print(
+                                                        //     "Attendacne: ${getAttendanceStatus(employee['userId'])}");
                                                         toggleActionExpansion(
                                                             rowIndex);
                                                       },
@@ -328,7 +375,8 @@ class _AttendanceState extends State<Attendance> {
                                                                 .comfortable,
                                                       ),
                                                       child: isExpanded
-                                                          ? const Icon(Icons.close)
+                                                          ? const Icon(
+                                                              Icons.close)
                                                           : const Text(
                                                               'Take Attendance',
                                                               style: TextStyle(
@@ -341,110 +389,125 @@ class _AttendanceState extends State<Attendance> {
                                                 const SizedBox(width: 10),
                                                 isExpanded
                                                     ? Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: 130,
-                                                          child:
-                                                              ElevatedButton(
-                                                            onPressed: isCheckedIn(
-                                                                    employee[
-                                                                        'userId'])
-                                                                ? null
-                                                                : () async {
-                                                                    bool result = await TakeAttendance.checkIn(
-                                                                        employee['userId'],
-                                                                        '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}',
-                                                                        '${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}',
-                                                                        'Present');
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          SizedBox(
+                                                            width: 130,
+                                                            child:
+                                                                ElevatedButton(
+                                                              onPressed: isCheckedIn(
+                                                                      employee[
+                                                                          'userId'])
+                                                                  ? null
+                                                                  : () async {
+                                                                      bool result = await TakeAttendance.checkIn(
+                                                                          employee[
+                                                                              'userId'],
+                                                                          '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}',
+                                                                          '${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}',
+                                                                          'Present');
+                                                                      //
+                                                                      // print(
+                                                                      //     'Attendance: $result');
 
-                                                                    print(
-                                                                        'Attendance: $result');
-
-                                                                    if (result) {
-                                                                      showCustomSuccessDialog(
-                                                                          'Check-In Successful!',
-                                                                          context);
-                                                                    }else{
-                                                                      showCustomSuccessDialog('Check-In Failed!', context);
-                                                                    }
-                                                                  },
-                                                            style: ElevatedButton
-                                                                .styleFrom(
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .green,
-                                                              foregroundColor:
-                                                                  Colors
-                                                                      .white,
+                                                                      if (result) {
+                                                                        showCustomSuccessDialog(
+                                                                            'Check-In Successful!',
+                                                                            context);
+                                                                      } else {
+                                                                        showCustomSuccessDialog(
+                                                                            'Check-In Failed!',
+                                                                            context);
+                                                                      }
+                                                                    },
+                                                              style:
+                                                                  ElevatedButton
+                                                                      .styleFrom(
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .green,
+                                                                foregroundColor:
+                                                                    Colors
+                                                                        .white,
+                                                              ),
+                                                              child: const Text(
+                                                                  'Check-In'),
                                                             ),
-                                                            child: const Text(
-                                                                'Check-In'),
                                                           ),
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 10),
-                                                        SizedBox(
-                                                          width: 130,
-                                                          child:
-                                                              ElevatedButton(
-                                                                  onPressed: isCheckedOut(employee['userId']) ||
-                                                                          getAttendanceStatus(employee['userId']) ==
-                                                                              'Absent' || !isCheckedIn(employee['userId'])
-                                                                      ? null
-                                                                      : () async {
-                                                                          //send check-out request to the server
+                                                          const SizedBox(
+                                                              height: 10),
+                                                          SizedBox(
+                                                            width: 130,
+                                                            child:
+                                                                ElevatedButton(
+                                                                    onPressed: isCheckedOut(employee['userId']) ||
+                                                                            getAttendanceStatus(employee['userId']) ==
+                                                                                'Absent' ||
+                                                                            !isCheckedIn(employee[
+                                                                                'userId'])
+                                                                        ? null
+                                                                        : () async {
+                                                                            //send check-out request to the server
 
-                                                                    bool result=await TakeAttendance.checkout(employee['userId'], '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}', '${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}');
-                                                                    if(result){
-                                                                      showCustomSuccessDialog('Check-Out Successful!', context);
-                                                                    }else{
-                                                                      showCustomSuccessDialog('Check-Out Failed!', context);
-                                                                    }
-
-                                                                  },
-                                                                  style: ElevatedButton
-                                                                      .styleFrom(
-                                                                    backgroundColor:
-                                                                        Colors.blueAccent,
-                                                                    foregroundColor:
-                                                                        Colors.white,
-                                                                  ),
-                                                                  child: const Text(
-                                                                      'Check-Out')),
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 10),
-                                                        SizedBox(
-                                                          width: 130,
-                                                          child:
-                                                              ElevatedButton(
-                                                                  onPressed: getAttendanceStatus(employee['userId']) ==
-                                                                          'Present' || getAttendanceStatus(employee['userId'])=='Absent'
-                                                                      ? null
-                                                                      : () async {
-                                                                          //send absent request to the server
-                                                                          bool result = await AbsentAttendance.set(employee['userId'], '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}');
-                                                                          if (result) {
-                                                                            showCustomSuccessDialog("${employee['name']} marked as absent!!", context);
-                                                                          }else{
-                                                                            showCustomSuccessDialog('Failed to mark as absent!', context);
-                                                                          }
-                                                                        },
-                                                                  style: ElevatedButton
-                                                                      .styleFrom(
-                                                                    backgroundColor:
-                                                                        Colors.red,
-                                                                    foregroundColor:
-                                                                        Colors.white,
-                                                                  ),
-                                                                  child: const Text(
-                                                                      'Absent')),
-                                                        ),
-                                                      ],
-                                                    )
+                                                                            bool
+                                                                                result =
+                                                                                await TakeAttendance.checkout(employee['userId'], '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}', '${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}');
+                                                                            if (result) {
+                                                                              showCustomSuccessDialog('Check-Out Successful!', context);
+                                                                            } else {
+                                                                              showCustomSuccessDialog('Check-Out Failed!', context);
+                                                                            }
+                                                                          },
+                                                                    style: ElevatedButton
+                                                                        .styleFrom(
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .blueAccent,
+                                                                      foregroundColor:
+                                                                          Colors
+                                                                              .white,
+                                                                    ),
+                                                                    child: const Text(
+                                                                        'Check-Out')),
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 10),
+                                                          SizedBox(
+                                                            width: 130,
+                                                            child:
+                                                                ElevatedButton(
+                                                                    onPressed: getAttendanceStatus(employee['userId']) ==
+                                                                                'Present' ||
+                                                                            getAttendanceStatus(employee['userId']) ==
+                                                                                'Absent'
+                                                                        ? null
+                                                                        : () async {
+                                                                            //send absent request to the server
+                                                                            bool
+                                                                                result =
+                                                                                await AbsentAttendance.set(employee['userId'], '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}');
+                                                                            if (result) {
+                                                                              showCustomSuccessDialog("${employee['name']} marked as absent!!", context);
+                                                                            } else {
+                                                                              showCustomSuccessDialog('Failed to mark as absent!', context);
+                                                                            }
+                                                                          },
+                                                                    style: ElevatedButton
+                                                                        .styleFrom(
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .red,
+                                                                      foregroundColor:
+                                                                          Colors
+                                                                              .white,
+                                                                    ),
+                                                                    child: const Text(
+                                                                        'Absent')),
+                                                          ),
+                                                        ],
+                                                      )
                                                     : const SizedBox.shrink(),
                                               ],
                                             ),
@@ -484,62 +547,103 @@ class _AttendanceState extends State<Attendance> {
                                         ),
                                       ),
                                     )
-                                  : Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.shade300,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 5),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            height: 60,
-                                            width: 60,
-                                            decoration: const BoxDecoration(
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: CachedNetworkImage(
-                                              imageUrl: getImageLink(
-                                                  selectedEmployee[
-                                                      'profile_pic']),
-                                              fit: BoxFit.cover,
-                                            ),
+                                  : Row(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade300,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                           ),
-                                          const SizedBox(width: 10),
-                                          Column(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 5),
+                                          child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                selectedEmployee['userId'],
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 3),
+                                                height: 60,
+                                                width: 60,
+                                                margin: const EdgeInsets.only(
+                                                    right: 10),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: CachedNetworkImage(
+                                                    imageUrl: getImageLink(
+                                                        selectedEmployee[
+                                                            'profile_pic']),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
                                               ),
-                                              Text(
-                                                selectedEmployee['name'],
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16),
+                                              const SizedBox(width: 10),
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    selectedEmployee['userId'],
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 16),
+                                                  ),
+                                                  Text(
+                                                    selectedEmployee['name'],
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 16),
+                                                  ),
+                                                ],
                                               ),
+                                              const SizedBox(width: 10),
+                                              IconButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    selectedEmployee = {};
+                                                    selectedDate = '';
+                                                  });
+                                                },
+                                                icon: const Icon(Icons.close,
+                                                    color: Colors.red),
+                                              )
                                             ],
                                           ),
-                                          const SizedBox(width: 10),
-                                          IconButton(
-                                            onPressed: () {
+                                        ),
+                                        const SizedBox(width: 20),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20, vertical: 10),
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade300,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: DropdownButton(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            underline: const SizedBox.shrink(),
+                                            dropdownColor: Colors.grey.shade300,
+                                            hint: Text(selectedDate.isNotEmpty
+                                                ? selectedDate
+                                                : 'Select Date'),
+                                            items: _buildDropdownMenuItems(),
+                                            onChanged: (value) {
                                               setState(() {
-                                                selectedEmployee = {};
+                                                selectedDate = value.toString();
                                               });
                                             },
-                                            icon: Icon(Icons.close),
-                                          )
-                                        ],
-                                      ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                               const SizedBox(width: 20),
                             ],
@@ -547,8 +651,8 @@ class _AttendanceState extends State<Attendance> {
                           const SizedBox(height: 20),
                           searchController.text.isNotEmpty
                               ? Row(
-                                children: [
-                                  SizedBox(
+                                  children: [
+                                    SizedBox(
                                       width: 600,
                                       height: 300,
                                       child: ListView.builder(
@@ -556,7 +660,8 @@ class _AttendanceState extends State<Attendance> {
                                         itemCount: searchList.length,
                                         itemBuilder: (context, index) {
                                           return Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               GestureDetector(
                                                 onTap: () {
@@ -565,6 +670,9 @@ class _AttendanceState extends State<Attendance> {
                                                         searchList[index];
                                                   });
 
+                                                  // fetchAttendanceStatsIndividual(
+                                                  //     selectedEmployee[
+                                                  //         'userId']);
                                                   searchController.clear();
                                                 },
                                                 child: Container(
@@ -573,10 +681,11 @@ class _AttendanceState extends State<Attendance> {
                                                       SizedBox(
                                                         height: 60,
                                                         width: 60,
-                                                        child: CachedNetworkImage(
+                                                        child:
+                                                            CachedNetworkImage(
                                                           imageUrl: getImageLink(
-                                                              searchList[index]
-                                                                  ['profile_pic']),
+                                                              searchList[index][
+                                                                  'profile_pic']),
                                                           fit: BoxFit.cover,
                                                         ),
                                                       ),
@@ -591,13 +700,16 @@ class _AttendanceState extends State<Attendance> {
                                                         children: [
                                                           Text(searchList[index]
                                                               ['userId']),
-                                                          const SizedBox(width: 10),
+                                                          const SizedBox(
+                                                              width: 10),
                                                           Text(
                                                             searchList[index]
                                                                 ['name'],
-                                                            style: const TextStyle(
+                                                            style:
+                                                                const TextStyle(
                                                               fontWeight:
-                                                                  FontWeight.bold,
+                                                                  FontWeight
+                                                                      .bold,
                                                             ),
                                                           ),
                                                           Text(
@@ -605,7 +717,8 @@ class _AttendanceState extends State<Attendance> {
                                                                 ['designation'],
                                                             style: TextStyle(
                                                                 color: Colors
-                                                                    .grey.shade500),
+                                                                    .grey
+                                                                    .shade500),
                                                           ),
                                                         ],
                                                       ),
@@ -622,9 +735,89 @@ class _AttendanceState extends State<Attendance> {
                                         },
                                       ),
                                     ),
-                                ],
-                              )
+                                  ],
+                                )
                               : const SizedBox.shrink(),
+
+
+                          selectedDate.isNotEmpty ? TableCalendar(
+                            headerStyle: HeaderStyle(
+                              headerMargin: const EdgeInsets.only(bottom: 20),
+                              leftChevronVisible: false,
+                              rightChevronVisible: false,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              formatButtonVisible: false,
+                              titleCentered: true,
+                              titleTextStyle: GoogleFonts.inter(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            calendarStyle: CalendarStyle(
+                              // todayDecoration: BoxDecoration(
+                              //   color: absents.contains(DateTime.now().toString().split(" ")[0])?Colors.red: Theme.of(context).colorScheme.primary,
+                              //   shape: BoxShape.circle,
+                              // ),
+                              selectedDecoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                                shape: BoxShape.circle,
+                              ),
+                              selectedTextStyle: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              todayTextStyle: const TextStyle(
+                                color: Colors.white,
+                              ),
+
+                            ),
+                            onDaySelected: (date, focusedDate) {
+                              setState(() {
+                                selectedCalendarValue = date;
+                              });
+                              print('Selected day: $selectedCalendarValue');
+                            },
+                            calendarBuilders: CalendarBuilders(
+                              defaultBuilder: (context, day, _) {
+                                String formattedDate = DateFormat('yyyy-MM-dd').format(day);
+                                bool isCurrentDateAbsent = isAbsent(formattedDate);
+                                return Center(
+                                  child: Text(
+                                    '${day.day}',
+                                    style: TextStyle(
+                                      fontWeight: isCurrentDateAbsent ? FontWeight.bold : FontWeight.normal,
+                                      color: isCurrentDateAbsent ? Colors.red : Colors.black, // Change text color to red if absent
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            currentDay: selectedCalendarValue,
+                            focusedDay: DateTime.utc(
+                              getFirstDayOfMonth(selectedDate)[0],
+                              getFirstDayOfMonth(selectedDate)[1],
+                              getFirstDayOfMonth(selectedDate)[2],
+                            ),
+                            firstDay: DateTime.utc(
+                              getFirstDayOfMonth(selectedDate)[0],
+                              getFirstDayOfMonth(selectedDate)[1],
+                              getFirstDayOfMonth(selectedDate)[2],
+                            ),
+                            lastDay: DateTime.utc(
+                              getLastDayOfMonth(selectedDate)[0],
+                              getLastDayOfMonth(selectedDate)[1],
+                              getLastDayOfMonth(selectedDate)[2],
+                            ),
+                          ) : Container(
+                            height: 300,
+                            width: 300,
+                            child: Text('Select a date to view attendance'),
+                          )
+
+
+
                         ],
                       ),
                 const SizedBox(height: 20),
@@ -647,8 +840,7 @@ class _AttendanceState extends State<Attendance> {
 
   String getAttendanceStatus(String userId) {
     for (var attendance in employeeAttendances) {
-      if (attendance['userId'] == userId &&
-          checkDate(attendance['date'])) {
+      if (attendance['userId'] == userId && checkDate(attendance['date'])) {
         return attendance['status'];
       }
     }
@@ -657,8 +849,7 @@ class _AttendanceState extends State<Attendance> {
 
   bool isCheckedIn(String userId) {
     for (var attendance in employeeAttendances) {
-      if (attendance['userId'] == userId &&
-          checkDate(attendance['date'])) {
+      if (attendance['userId'] == userId && checkDate(attendance['date'])) {
         return true;
       }
     }
@@ -667,8 +858,7 @@ class _AttendanceState extends State<Attendance> {
 
   bool isCheckedOut(String userId) {
     for (var attendance in employeeAttendances) {
-      if (attendance['userId'] == userId &&
-          checkDate(attendance['date'])) {
+      if (attendance['userId'] == userId && checkDate(attendance['date'])) {
         if (attendance['checkOutTime'] != null) {
           return true;
         }
@@ -692,19 +882,17 @@ class _AttendanceState extends State<Attendance> {
     return 'Yet to Check-In';
   }
 
-
   String getCheckOutTime(String userId) {
     for (var attendance in employeeAttendances) {
-      if (attendance['userId'] == userId &&
-          checkDate(attendance['date'])) {
+      if (attendance['userId'] == userId && checkDate(attendance['date'])) {
         String? time = attendance['checkOutTime'];
-        String? status=attendance['status'];
-        if (time != null && status=='Present') {
+        String? status = attendance['status'];
+        if (time != null && status == 'Present') {
           return convertTo12HourFormat(time);
         } else {
-          if(status=='Absent'){
+          if (status == 'Absent') {
             return '-';
-          }else{
+          } else {
             return 'Yet to Check-Out';
           }
         }
@@ -735,17 +923,116 @@ class _AttendanceState extends State<Attendance> {
     }).toList();
   }
 
-  bool checkDate(String date){
-    try{
+  bool checkDate(String date) {
+    try {
       DateTime parsedDate = DateTime.parse(date);
-      String formattedDate = "${parsedDate.year}-${parsedDate.month}-${parsedDate.day}";
+      String formattedDate =
+          "${parsedDate.year}-${parsedDate.month}-${parsedDate.day}";
       DateTime now = DateTime.now();
       String today = "${now.year}-${now.month}-${now.day}";
       return formattedDate == today;
-    }catch(e){
+    } catch (e) {
       return false;
     }
   }
 
   int inFocus = 0;
+  DropdownController yearController = DropdownController();
+
+  List<dynamic> attendanceStatsIndividual = [];
+
+  void fetchAttendanceStatsIndividual(String userId) async {
+    var response = await FetchAttendanceStatsIndividual.fetch();
+    // print("Response $response");
+
+    attendanceStatsIndividual.clear(); // Clear existing data
+
+    for (var attendance in response) {
+      if (attendance['userId'] == userId) {
+        setState(() {
+          attendanceStatsIndividual.add(attendance);
+          print('Attendance added to list');
+        });
+      }
+    }
+
+    print('Attendance Stats: $attendanceStatsIndividual');
+  }
+
+  List<DropdownMenuItem<String>> _buildDropdownMenuItems() {
+    List<String> years = []; // Your dynamic list of years
+
+    for (var attendance in attendanceStatsIndividual) {
+      years.add(attendance['month']);
+    }
+
+    return years.map((String year) {
+      return DropdownMenuItem(
+        value: year,
+        child: Text(year),
+      );
+    }).toList();
+  }
+
+  List<int> getFirstDayOfMonth(String monthYear) {
+    // Parse the month and year from the input string
+    List<String> parts = monthYear.split('-');
+    int year = int.parse(parts[0]);
+    int month = int.parse(parts[1]);
+
+
+    return [year, month, 1];
+  }
+
+  List<int> getLastDayOfMonth(String monthYear) {
+    List<String> parts = monthYear.split('-');
+    int year = int.parse(parts[0]);
+    int month = int.parse(parts[1]);
+    DateTime lastDayOfNextMonth =
+        DateTime(year, month + 1, 1).subtract(Duration(days: 1));
+    List parts2 = lastDayOfNextMonth.toString().split(' ');
+    String lastDay = parts2[0];
+
+    List<int> date = [];
+
+    List parts3 = lastDay.split('-');
+    date.add(int.parse(parts3[0]));
+    date.add(int.parse(parts3[1]));
+    date.add(int.parse(parts3[2]));
+
+    return date;
+  }
+
+  String selectedDate = '';
+
+  DateTime selectedCalendarValue = DateTime.now();
+
+  String getEventLoader(DateTime day){
+    String fYear=day.year.toString();
+    String fMonth=day.month.toString();
+    String fDay=day.day.toString();
+
+    if(fMonth.length==1){
+      fMonth='0$fMonth';
+    }
+
+    if(fDay.length==1){
+      fDay='0$fDay';
+    }
+
+    String formattedEventLoader='$fYear-$fMonth-$fDay';
+
+    return formattedEventLoader;
+  }
+
+
+  bool isAbsent(String date){
+    print('Given Date: $date');
+    print("Result: ${absents.contains(date)}  ");
+    if(absents.contains(date)){
+      return true;
+    }else{
+      return false;
+    }
+  }
 }

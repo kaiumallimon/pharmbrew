@@ -22,21 +22,16 @@ class FetchAdmins {
 
 }
 
-void main(List<String> args) async {
-  List<dynamic> senders1=await FetchSenders.fetchEmployee();
-  List<String> senders2 = [];
-  for (var sender in senders1) {
-    senders2.add(sender['sender_id']);
+
+void main(){
+  List absentDates=["2024-03-01", "2024-03-08", "2024-03-15", "2024-03-22", "2024-03-29"];
+
+  String eventLoaderDate='2024-03-01';
+
+  if(absentDates.contains(eventLoaderDate)){
+    print('Absent');
+  }else{
+    print('Present');
   }
-  // print(senders2);
-
-
-  Map<String,dynamic> admins = await FetchAdmins.fetch();
-  List<dynamic> adminIDs = admins['userIds'];
-  // print(senderIDs);
-
-
-
 }
-
 

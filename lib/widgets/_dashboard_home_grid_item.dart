@@ -8,11 +8,13 @@ class DashboardGridItem extends StatefulWidget {
       {super.key,
       required this.title,
       required this.data,
-      required this.image});
+      required this.image, required this.background, required this.textColor});
 
   final String title;
   final String data;
   final String image;
+  final Color background;
+  final Color textColor;
 
   @override
   State<DashboardGridItem> createState() => _DashboardGridItemState();
@@ -35,7 +37,7 @@ class _DashboardGridItemState extends State<DashboardGridItem> {
     return Container(
         // margin: EdgeInsets.only(left: 10, right: 10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: widget.background,
           borderRadius: BorderRadius.circular(10),
           boxShadow: const [
             BoxShadow(
@@ -53,6 +55,7 @@ class _DashboardGridItemState extends State<DashboardGridItem> {
                   child: Opacity(
                     opacity: 0.3,
                     child: Image.asset(
+                      color: widget.textColor,
                       height: 60,
                       width: 60,
                       widget.image,
@@ -70,7 +73,7 @@ class _DashboardGridItemState extends State<DashboardGridItem> {
                       widget.title,
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.grey[500],
+                        color: widget.textColor,
                       ),
                     ),
                   ),
@@ -86,6 +89,7 @@ class _DashboardGridItemState extends State<DashboardGridItem> {
                               style: GoogleFonts.inter(
                                 fontSize: 35,
                                 fontWeight: FontWeight.bold,
+                                color: widget.textColor,
                               ),
                             ),
                           ],

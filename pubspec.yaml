@@ -58,6 +58,11 @@ dependencies:
   url_launcher: ^6.2.5
   intl: ^0.19.0
   syncfusion_flutter_charts: ^25.1.40
+  syncfusion_flutter_gauges: ^25.1.40
+  table_calendar: ^3.1.1
+  syncfusion_flutter_calendar: ^25.1.40
+  calendar_view: ^1.1.0
+  flutter_neat_and_clean_calendar: ^0.3.16+36
   # path: ^1.9.0
 
 dev_dependencies:

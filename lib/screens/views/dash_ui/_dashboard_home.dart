@@ -493,8 +493,8 @@ class _DashboardHomeState extends State<DashboardHome> {
                                         ),
                                         labelPosition: ChartDataLabelPosition.outside,
                                         labelIntersectAction: LabelIntersectAction.shift,
-                                        connectorLineSettings: ConnectorLineSettings(
-                                          type: ConnectorType.curve,
+                                        connectorLineSettings: const ConnectorLineSettings(
+                                          type: ConnectorType.line,
                                           length: '20%',
                                           color: Colors.black,
                                           width: 1,

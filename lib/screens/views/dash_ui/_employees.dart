@@ -362,14 +362,14 @@ class _EmployeesAllState extends State<EmployeesAll> {
                                   width: 100, child: Text(employee['email']))),
                               DataCell(
                                 SizedBox(
-                                  width: 100,
+                                  width: 140,
                                   child: Text(getLocation(employee['address']),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
                               DataCell(
                                 SizedBox(
-                                  width: 140,
+                                  width: 120,
                                   child: Text(
                                       getPhoneNumber(employee['phone_numbers']),
                                       textAlign: TextAlign.center),
@@ -391,9 +391,12 @@ class _EmployeesAllState extends State<EmployeesAll> {
                                 Text('${employee['base_salary']} tk',
                                     textAlign: TextAlign.center),
                               ),
-                              DataCell(Text(employee['leaves'].toString(),
-                                  textAlign: TextAlign
-                                      .center)), // Placeholder for leaves
+                              DataCell(SizedBox(
+                                width: 40,
+                                child: Text(employee['leaves'].toString(),
+                                    textAlign: TextAlign
+                                        .center),
+                              )), // Placeholder for leaves
                               DataCell(
                                 PopupMenuButton(
                                   surfaceTintColor: Theme.of(context).colorScheme.primary,

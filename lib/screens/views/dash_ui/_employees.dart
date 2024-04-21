@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:cool_dropdown/cool_dropdown.dart';
 import 'package:cool_dropdown/models/cool_dropdown_item.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pharmbrew/data/_fetch_employee.dart';
+import 'package:pharmbrew/utils/_show_dialog.dart';
+import 'package:pharmbrew/widgets/_successful_dialog.dart';
 
+import '../../../data/_remove_user.dart';
 import '_search_employee.dart';
 
 class EmployeesAll extends StatefulWidget {
@@ -67,7 +71,7 @@ class _EmployeesAllState extends State<EmployeesAll> {
 
     fetchEmployees(null, null);
 
-    // timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+    // timer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
     //   setState(() {
     //     reload();
     //   });
@@ -390,10 +394,39 @@ class _EmployeesAllState extends State<EmployeesAll> {
                               DataCell(Text(employee['leaves'].toString(),
                                   textAlign: TextAlign
                                       .center)), // Placeholder for leaves
-                              DataCell(IconButton(
-                                icon: const Icon(Icons.more_horiz),
-                                onPressed: () {},
-                              )),
+                              DataCell(
+                                PopupMenuButton(
+                                  surfaceTintColor: Theme.of(context).colorScheme.primary,
+                                  color: Colors.white,
+                                  icon: const Icon(Icons.more_horiz),
+                                  itemBuilder: (context) => [
+                                    PopupMenuItem(
+                                      child: TextButton.icon(
+                                        onPressed: (){
+                                          String user=employee['userId'];
+                                          RemoveUser.remove(employee['userId']);
+                                          setState(() {
+                                            snapshot.data!.removeWhere((element) => element['userId']==user);
+                                          });
+                                          showCustomSuccessDialog('Removal Successful!', context);
+                                        },
+                                        icon: const Icon(Icons.delete),
+                                        label: Text('Remove Employee'),
+                                      ),
+                                    ),
+
+                                    PopupMenuItem(
+                                      child: TextButton.icon(
+                                        onPressed: () {
+                                          showCustomErrorDialog('Coming Soon!', context);
+                                        },
+                                        icon: const Icon(Icons.edit),
+                                        label: const Text('Edit Employee'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ]);
                           }).toList(),
                         ),

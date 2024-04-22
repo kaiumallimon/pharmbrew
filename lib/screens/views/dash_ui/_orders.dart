@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:html';
 
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pharmbrew/utils/_show_dialog.dart';
 import 'package:pharmbrew/widgets/_add_product_fields.dart';
 import 'dart:convert';
 import 'dart:typed_data';
@@ -13,6 +15,7 @@ import 'package:pdf/widgets.dart' as pw;
 
 import 'package:pdf/pdf.dart' as pw;
 import 'package:url_launcher/url_launcher.dart';
+import '../../../data/_fetch_products_quantity.dart';
 import '../../../domain/_fetch_products.dart';
 
 class Orders extends StatefulWidget {
@@ -36,6 +39,9 @@ class _OrdersState extends State<Orders> {
     fetchProductsLocal(allProducts);
     filteredData = List.from(allProducts); // Initialize filteredData
   }
+
+
+  String quantityLeft='';
 
   bool isLoading = true;
 
@@ -76,18 +82,16 @@ class _OrdersState extends State<Orders> {
         filteredData = List.from(allProducts);
       } else {
         filteredData = allProducts.where((row) {
-          for (var cell in row) {
-            if (cell.toLowerCase().contains(query.toLowerCase())) {
-              suggestions.add('$cell - ${row[2]}');
-              // variantNames.add(row[2]);
-              return true;
-            }
+          if (row[1].toLowerCase().contains(query.toLowerCase())) {
+            suggestions.add('${row[1]} - ${row[2]}');
+            return true;
           }
           return false;
         }).toList();
       }
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -127,13 +131,13 @@ class _OrdersState extends State<Orders> {
                         ),
                         // Text field with suggestions
                         TextField(
-                          onChanged: (value) {
+                          onChanged: (value) async {
                             filterData(value);
-                            print(filteredData);
 
                             if (value.trim().isEmpty) {
                               setState(() {
                                 quantityController.text = '0';
+                                quantityLeft='';
                               });
                             }
                           },
@@ -163,15 +167,22 @@ class _OrdersState extends State<Orders> {
                             children: suggestions
                                 .map((suggestion) => ListTile(
                                       title: Text(suggestion),
-                                      onTap: () {
-                                        // You can do something when a suggestion is tapped
-                                        // For example, you can set the text field value to the suggestion
-                                        // nameController.text = suggestion;
-                                        // print('Selected item: $suggestion');
+                                      onTap: () async {
+
                                         nameController.text = suggestion;
                                         setState(() {
                                           suggestions = [];
                                         });
+
+                                        String name = suggestion;
+                                        var data= await FetchProductsQuantity.fetch(name);
+                                        print('Product data: $data');
+                                        if(data!=null){
+                                          setState(() {
+                                            quantityLeft=data['quantity'].toString();
+                                          });
+                                        }
+
                                       },
                                     ))
                                 .toList(),
@@ -182,81 +193,24 @@ class _OrdersState extends State<Orders> {
                               )
                             : const SizedBox.shrink(),
 
+                        quantityLeft==''?SizedBox.shrink(): Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                          Text('Product left: '),
+                            Text('$quantityLeft',style: TextStyle(color: quantityLeft=='0' ? Colors.red : Colors.green),),
+                        ],),
+
+                        quantityLeft==''?SizedBox.shrink():  SizedBox(
+                          height: 15,
+                        ),
+
                         Row(
                           children: [
                             Expanded(
-                              child: GestureDetector(
-                                onLongPress: _startTimer2,
-                                onLongPressUp: _stopTimer,
-                                child: SizedBox(
-                                  height: 50,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      String text = quantityController.text;
-                                      int quantity = int.parse(text);
-                                      if (quantity > 0) {
-                                        setState(() {
-                                          quantityController.text =
-                                              (quantity - 1).toString();
-                                        });
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      foregroundColor: Colors.black,
-                                      shape: const RoundedRectangleBorder(),
-                                      side: BorderSide(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                          width: 2),
-                                    ),
-                                    child: const Icon(Icons.remove),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
                               child: AddProductFields(
                                 controller: quantityController,
-                                readOnly: true,
+                                readOnly: false,
                                 labelText: "Product Quantity",
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: GestureDetector(
-                                onLongPress: _startTimer,
-                                onLongPressUp: _stopTimer,
-                                child: SizedBox(
-                                  height: 50,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      String text = quantityController.text;
-                                      int quantity = int.parse(text);
-                                      setState(() {
-                                        quantityController.text =
-                                            (quantity + 1).toString();
-                                      });
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      foregroundColor: Colors.black,
-                                      shape: const RoundedRectangleBorder(),
-                                      side: BorderSide(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                          width: 2),
-                                    ),
-                                    child: const Icon(Icons.add),
-                                  ),
-                                ),
                               ),
                             ),
                           ],
@@ -271,15 +225,22 @@ class _OrdersState extends State<Orders> {
                                 height: 50,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    setState(() {
-                                      isProductFound = !isProductFound;
-                                    });
+                                    if (nameController.text.trim().isNotEmpty &&
+                                        quantityController.text
+                                            .trim()
+                                            .isNotEmpty) {
+                                      setState(() {
+                                        isProductFound = !isProductFound;
+                                      });
 
-                                    Map<String, dynamic> productInfo =
-                                        getSelectedProuctInfo(
-                                            nameController.text);
-                                    cartItems.add(productInfo);
-                                    print(cartItems);
+                                      Map<String, dynamic> productInfo =
+                                      getSelectedProuctInfo(
+                                          nameController.text);
+                                      cartItems.add(productInfo);
+                                      print(cartItems);
+                                    }else{
+                                      showCustomErrorDialog('Please fill all the data!', context);
+                                    }
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
@@ -366,16 +327,42 @@ class _OrdersState extends State<Orders> {
                                 height: 50,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    setState(() {
-                                      customerInfo['name'] =
-                                          customerNameController.text;
-                                      customerInfo['email'] =
-                                          customerEmailController.text;
-                                      customerInfo['phone'] =
-                                          customerPhoneController.text;
-                                      customerInfo['billing'] =
-                                          customerBillingController.text;
-                                    });
+                                    if (customerNameController.text
+                                            .trim()
+                                            .isNotEmpty &&
+                                        customerEmailController.text
+                                            .trim()
+                                            .isNotEmpty &&
+                                        customerPhoneController.text
+                                            .trim()
+                                            .isNotEmpty &&
+                                        customerBillingController.text
+                                            .trim()
+                                            .isNotEmpty) {
+                                      bool isValidEmail =
+                                          EmailValidator.validate(
+                                              customerEmailController.text);
+
+                                      if (isValidEmail) {
+                                        setState(() {
+                                          customerInfo['name'] =
+                                              customerNameController.text;
+                                          customerInfo['email'] =
+                                              customerEmailController.text;
+                                          customerInfo['phone'] =
+                                              customerPhoneController.text;
+                                          customerInfo['billing'] =
+                                              customerBillingController.text;
+                                        });
+                                      } else {
+                                        showCustomErrorDialog(
+                                            'Please enter a valid email!',
+                                            context);
+                                      }
+                                    } else {
+                                      showCustomErrorDialog(
+                                          'Please fill all the data!', context);
+                                    }
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
@@ -440,7 +427,7 @@ class _OrdersState extends State<Orders> {
                                   Row(children: [
                                     Expanded(
                                       child: Text(
-                                          'Email: ${customerInfo['phone']}'),
+                                          'Email: ${customerInfo['email']}'),
                                     ),
                                   ]),
                                   const SizedBox(
@@ -460,55 +447,64 @@ class _OrdersState extends State<Orders> {
                         ),
                         cartItems.isNotEmpty
                             ? Row(
-                              children: [
-                                Expanded(
-                                  child: DataTable(
-                                    headingTextStyle: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    dataTextStyle: const TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                    border: TableBorder.all(
-                                      color: Colors.grey.shade300,
-                                      width: 1.5,
-                                    ),
-                                    headingRowColor: MaterialStateProperty.all(
-                                      Theme.of(context).colorScheme.primary,
-                                    ),
-                                    columns: const [
-                                      DataColumn(label: Text('Name')),
-                                      DataColumn(label: Text('Variant')),
-                                      DataColumn(label: Text('Quantity')),
-                                      DataColumn(label: Text('Price')),
-                                    ],
-                                    rows: [
-                                      // Your cart items
-                                      for (var item in cartItems)
+                                children: [
+                                  Expanded(
+                                    child: DataTable(
+                                      headingTextStyle: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      dataTextStyle: const TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                      border: TableBorder.all(
+                                        color: Colors.grey.shade300,
+                                        width: 1.5,
+                                      ),
+                                      headingRowColor:
+                                          MaterialStateProperty.all(
+                                        Theme.of(context).colorScheme.primary,
+                                      ),
+                                      columns: const [
+                                        DataColumn(label: Text('Name')),
+                                        DataColumn(label: Text('Variant')),
+                                        DataColumn(label: Text('Quantity')),
+                                        DataColumn(label: Text('Price')),
+                                      ],
+                                      rows: [
+                                        // Your cart items
+                                        for (var item in cartItems)
+                                          DataRow(cells: [
+                                            DataCell(Text(item['name'])),
+                                            DataCell(Text(item['variant'])),
+                                            DataCell(Text(
+                                                item['quantity (strips)'])),
+                                            DataCell(
+                                                Text(item['price'].toString())),
+                                          ]),
+                                        // Extra row for total price
                                         DataRow(cells: [
-                                          DataCell(Text(item['name'])),
-                                          DataCell(Text(item['variant'])),
-                                          DataCell(Text(item['quantity (strips)'])),
-                                          DataCell(Text(item['price'].toString())),
-                                        ]),
-                                      // Extra row for total price
-                                      DataRow(cells: [
-                                        const DataCell(Text('Total Price', style: TextStyle(fontWeight: FontWeight.bold))),
-                                        const DataCell(Text('')), // Variant column is empty for total price
-                                        const  DataCell(Text('')), // Quantity column is empty for total price
-                                         DataCell(
-                                          Text(
-                                            calculateTotalPrice(), // Call a function to calculate total price
-                                            style: const TextStyle(fontWeight: FontWeight.bold),
+                                          const DataCell(Text('Total Price',
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      FontWeight.bold))),
+                                          const DataCell(Text('')),
+                                          // Variant column is empty for total price
+                                          const DataCell(Text('')),
+                                          // Quantity column is empty for total price
+                                          DataCell(
+                                            Text(
+                                              calculateTotalPrice(),
+                                              // Call a function to calculate total price
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                           ),
-                                        ),
-                                      ]),
-                                    ],
+                                        ]),
+                                      ],
+                                    ),
                                   ),
-
-                                ),
-                              ],
-                            )
+                                ],
+                              )
                             : Container(
                                 height: 400,
                                 decoration: BoxDecoration(
@@ -524,11 +520,9 @@ class _OrdersState extends State<Orders> {
                   ),
                 ],
               ),
-
               const SizedBox(
                 height: 20,
               ),
-
               Row(
                 children: [
                   Expanded(
@@ -539,7 +533,8 @@ class _OrdersState extends State<Orders> {
                           generateAndSavePDF(customerInfo, cartItems);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
                           foregroundColor: Colors.white,
                           shape: const RoundedRectangleBorder(),
                         ),
@@ -623,7 +618,7 @@ class _OrdersState extends State<Orders> {
     _timer?.cancel();
   }
 
-  String calculateTotalPrice(){
+  String calculateTotalPrice() {
     double totalPrice = 0.0;
     for (var item in cartItems) {
       totalPrice += item['price'];
@@ -631,7 +626,8 @@ class _OrdersState extends State<Orders> {
     return totalPrice.toString();
   }
 
-  Future<void> generateAndSavePDF(Map<String, dynamic> invoiceData, List<Map<String, dynamic>> cartItems) async {
+  Future<void> generateAndSavePDF(Map<String, dynamic> invoiceData,
+      List<Map<String, dynamic>> cartItems) async {
     // Create a PDF document
     final pdf = pw.Document();
 
@@ -643,14 +639,33 @@ class _OrdersState extends State<Orders> {
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.center,
               children: [
-                pw.Text('Invoice', style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
+                pw.Text('Invoice',
+                    style: pw.TextStyle(
+                        fontSize: 20, fontWeight: pw.FontWeight.bold)),
+                pw.SizedBox(height: 10),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.center,
+                  children:[
+                    pw.Text('This is an auto-generated invoice.',
+                        style: pw.TextStyle(fontSize: 13,color: PdfColors.grey)),
+                  ]
+                ),
                 pw.SizedBox(height: 20),
                 // Add invoice data from the map
+                pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.end,
+                    children:[
+                      pw.Text('Date: ${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}',
+                          style: pw.TextStyle(fontSize: 13,color: PdfColors.grey)),
+                    ]
+                ),
+                pw.SizedBox(height: 20),
                 for (var entry in invoiceData.entries)
                   pw.Row(
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: [
-                      pw.Text('Receiver ${entry.key}: ', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      pw.Text('Receiver ${entry.key}: ',
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                       pw.Expanded(child: pw.Text(entry.value)),
                     ],
                   ),
@@ -662,16 +677,63 @@ class _OrdersState extends State<Orders> {
                     ['Name', 'Variant', 'Quantity', 'Price'],
                     // Rows for cart items
                     for (var item in cartItems)
-                      [item['name'], item['variant'], item['quantity (strips)'], item['price'].toString()],
+                      [
+                        item['name'],
+                        item['variant'],
+                        item['quantity (strips)'],
+                        item['price'].toString()
+                      ],
                   ],
                   border: pw.TableBorder.all(
                     color: PdfColors.grey,
                     width: 1,
                   ),
-                  headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold, ),
+                  headerStyle: pw.TextStyle(
+                    fontWeight: pw.FontWeight.bold,
+                  ),
                   cellStyle: const pw.TextStyle(),
                   cellAlignment: pw.Alignment.centerLeft,
                 ),
+
+                pw.SizedBox(height: 20),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text('Total Price: ',
+                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                    pw.Text(calculateTotalPrice()),
+                  ],
+                ),
+                pw.SizedBox(height: 20),
+
+                pw.Row(
+                  children: [
+                    pw.Text("Thank you for your purchase, you're always welcomed to pharmabrew!",
+                        style: pw.TextStyle(fontSize: 13,color: PdfColors.grey)),
+                  ]
+                ),
+                pw.SizedBox(height: 10),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Row(
+                        children: [
+                          pw.Text('Status:',style: pw.TextStyle(color: PdfColors.grey),),
+                          pw.SizedBox(width: 10),
+                          pw.Text('Paid',style: pw.TextStyle(color: PdfColors.green,fontWeight: pw.FontWeight.bold),),
+                        ]
+                      ),
+
+                      pw.Row(
+                        children:
+                          [
+                            pw.Text('Sold by:',style: pw.TextStyle(color: PdfColors.grey,),),
+                            pw.SizedBox(width: 10),
+                            pw.Text('Limon',style: pw.TextStyle(color: PdfColors.black,fontWeight: pw.FontWeight.bold),),
+                          ]
+                      )
+                    ]
+                )
               ],
             ),
           );
@@ -704,7 +766,8 @@ class _OrdersState extends State<Orders> {
       builder: (_) => AlertDialog(
         backgroundColor: Colors.white,
         title: Text('PDF Generated'),
-        content: Text('The invoice PDF has been generated and downloaded successfully.'),
+        content: Text(
+            'The invoice PDF has been generated and downloaded successfully.'),
         actions: <Widget>[
           TextButton(
             onPressed: () {
@@ -716,5 +779,4 @@ class _OrdersState extends State<Orders> {
       ),
     );
   }
-
 }

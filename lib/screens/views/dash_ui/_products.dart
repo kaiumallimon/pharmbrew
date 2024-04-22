@@ -1,5 +1,6 @@
 import 'dart:html';
 import 'dart:typed_data';
+import 'package:pharmbrew/data/_delete_product.dart';
 import 'package:pharmbrew/domain/_add_products.dart';
 import 'package:pharmbrew/utils/_show_dialog.dart';
 import 'package:pharmbrew/widgets/_add_product_fields.dart';
@@ -19,7 +20,7 @@ class _ProductsState extends State<Products> {
   bool isLoading = true; // Flag to track loading state
 
   List<String> dataTableColumns = [
-    'Product ID',
+    'Index',
     'Product Name',
     'Variant',
     'Production Date',
@@ -27,6 +28,7 @@ class _ProductsState extends State<Products> {
     'Unit Per Strips',
     'Unit Price',
     'Stock',
+    // 'Actions'
   ];
 
   List<List<String>> allProducts = [];
@@ -47,7 +49,7 @@ class _ProductsState extends State<Products> {
       setState(() {
         for (var product in productsList) {
           List<String> productData = [];
-          productData.add(product['product_id']);
+          productData.add((productsList.indexOf(product) + 1).toString());
           productData.add(product['productName']);
           productData.add(product['variant']);
           productData.add(product['productionDate']);
@@ -141,7 +143,8 @@ class _ProductsState extends State<Products> {
   TextEditingController searchController = TextEditingController();
   TextEditingController productNameController = TextEditingController();
   TextEditingController productVariantController = TextEditingController();
-  TextEditingController productUnitPerStripsController = TextEditingController();
+  TextEditingController productUnitPerStripsController =
+      TextEditingController();
   TextEditingController productUnitPriceController = TextEditingController();
   TextEditingController productStockController = TextEditingController();
 
@@ -275,13 +278,37 @@ class _ProductsState extends State<Products> {
                             ),
                             columns: [
                               for (var column in dataTableColumns)
-                                DataColumn(label: Text(column))
+                                DataColumn(label: Text(column)),
+                              DataColumn(label: Text('Actions')),
+                              // Add column for actions
                             ],
                             rows: [
-                              for (var row in filteredData)
+                              for (var i = 0; i < filteredData.length; i++)
                                 DataRow(cells: [
-                                  for (var cell in row) DataCell(Text(cell))
-                                ])
+                                  for (var j = 0;
+                                      j < filteredData[i].length;
+                                      j++)
+                                    DataCell(Text(filteredData[i][j])),
+                                  DataCell(
+                                    IconButton(
+                                      icon: Icon(Icons.delete_forever),
+                                      // Use your desired icon
+                                      onPressed: () async {
+                                        bool? result =
+                                            await DeleteProduct.delete(
+                                                filteredData[i][1],
+                                                filteredData[i][2]);
+                                        if (result == true) {
+                                          setState(() {
+                                            fetchProductsLocal(allProducts);
+                                          });
+                                          showCustomSuccessDialog(
+                                              "Product deleted!", context);
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ]),
                             ],
                           ),
                         ),
@@ -306,7 +333,8 @@ class _ProductsState extends State<Products> {
                                           ),
                                         )),
                                         Container(
-                                          margin: const EdgeInsets.only(right: 5),
+                                          margin:
+                                              const EdgeInsets.only(right: 5),
                                           child: IconButton(
                                             onPressed: () {
                                               setState(() {
@@ -433,10 +461,12 @@ class _ProductsState extends State<Products> {
                                           child: ElevatedButton(
                                               onPressed: () async {
                                                 String productName =
-                                                    productNameController.text.toString();
+                                                    productNameController.text
+                                                        .toString();
                                                 String variant =
                                                     productVariantController
-                                                        .text.toString();
+                                                        .text
+                                                        .toString();
                                                 String prodDate =
                                                     productionDate.toString();
                                                 String unitPrice =
@@ -445,10 +475,12 @@ class _ProductsState extends State<Products> {
                                                 String expDate =
                                                     expiryDate.toString();
                                                 String quantity =
-                                                    productStockController.text.toString();
+                                                    productStockController.text
+                                                        .toString();
                                                 String unitPerStrips =
                                                     productUnitPerStripsController
-                                                        .text.toString();
+                                                        .text
+                                                        .toString();
 
                                                 bool? result = await addProduct(
                                                   productName: productName,
@@ -475,13 +507,17 @@ class _ProductsState extends State<Products> {
                                                     selected1 = false;
                                                     selected2 = false;
 
-                                                    fetchProductsLocal(allProducts);
+                                                    fetchProductsLocal(
+                                                        allProducts);
 
-                                                    showCustomSuccessDialog("Product added!", context);
-
+                                                    showCustomSuccessDialog(
+                                                        "Product added!",
+                                                        context);
                                                   });
-                                                }else{
-                                                  showCustomErrorDialog('Failed to add product!', context);
+                                                } else {
+                                                  showCustomErrorDialog(
+                                                      'Failed to add product!',
+                                                      context);
                                                 }
                                               },
                                               style: ElevatedButton.styleFrom(

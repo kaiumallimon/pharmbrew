@@ -11,3 +11,11 @@ Future<List<dynamic>> fetchProducts() async {
     throw Exception('Failed to load products');
   }
 }
+
+
+void main(List<String> args) async {
+
+  List<dynamic> emp = await fetchProducts();
+  print(emp);
+}
+

@@ -23,3 +23,14 @@ class FetchEmployeeData {
       }
   }
 }
+
+
+String getName(String id){
+  String name='';
+  FetchEmployeeData.fetchEmployee(id).then((value) => name=value['name']);
+  return name;
+}
+
+void main(){
+  print(getName('EMP20240319055204'));
+}

@@ -6,7 +6,6 @@ import 'package:pharmbrew/widgets/_add_product_fields.dart';
 import 'package:pharmbrew/widgets/_successful_dialog.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xcel;
 import 'package:flutter/material.dart';
-
 import '../../../domain/_fetch_products.dart';
 
 class Products extends StatefulWidget {

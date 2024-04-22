@@ -216,6 +216,19 @@ class _WebDashboardState extends State<WebDashboard> {
                             },
                           )
                               : const SizedBox.shrink(),
+
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                            label: 'Attendance',
+                            icon: Icons.person,
+                            controller: inFocus == 7,
+                            onClick: () {
+                              setState(() {
+                                inFocus = 7;
+                              });
+                            },
+                          )
+                              : const SizedBox.shrink(),
                           widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Finance',
@@ -228,18 +241,7 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
-                          widget.isAdministrator
-                              ? SidePanelButton(
-                                  label: 'Attendance',
-                                  icon: Icons.person,
-                                  controller: inFocus == 7,
-                                  onClick: () {
-                                    setState(() {
-                                      inFocus = 7;
-                                    });
-                                  },
-                                )
-                              : const SizedBox.shrink(),
+
                           widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Events',

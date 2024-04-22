@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:pharmbrew/data/_fetch_admin_name.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/_fetch_admins.dart';
 import '../../../data/_fetch_all_employee.dart';
@@ -851,51 +853,72 @@ class _QueriesState extends State<Queries> {
                                                                           16)),
                                                             )
                                                           ])
-                                                    : Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .end,
-                                                        children: [
-                                                            AnimatedContainer(
-                                                              duration: const Duration(milliseconds: 300),
-                                                              curve: Curves.easeInOut,
-                                                              constraints:
-                                                                  const BoxConstraints(
-                                                                      maxWidth:
-                                                                          450),
-                                                              decoration: BoxDecoration(
-                                                                  color: CupertinoColors
-                                                                      .activeBlue,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10)),
-                                                              margin:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                      right: 20,
-                                                                      top: 10,
-                                                                      bottom:
-                                                                          10),
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                      horizontal:
-                                                                          12,
-                                                                      vertical:
-                                                                          8),
-                                                              child: Text(
-                                                                  messages[
-                                                                          index]
-                                                                      [
-                                                                      'message_content'],
-                                                                  maxLines:
-                                                                      null,
-                                                                  style: const TextStyle(
-                                                                      color: Colors
-                                                                          .white)),
+                                                    : Column(
+                                                      children: [
+                                                        Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .end,
+                                                            children: [
+                                                                AnimatedContainer(
+                                                                  duration: const Duration(milliseconds: 300),
+                                                                  curve: Curves.easeInOut,
+                                                                  constraints:
+                                                                      const BoxConstraints(
+                                                                          maxWidth:
+                                                                              450),
+                                                                  decoration: BoxDecoration(
+                                                                      color: CupertinoColors
+                                                                          .activeBlue,
+                                                                      borderRadius:
+                                                                          BorderRadius
+                                                                              .circular(
+                                                                                  10)),
+                                                                  margin:
+                                                                      const EdgeInsets
+                                                                          .only(
+                                                                          right: 20,
+                                                                          top: 10,
+                                                                          bottom:
+                                                                              10),
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .symmetric(
+                                                                          horizontal:
+                                                                              12,
+                                                                          vertical:
+                                                                              8),
+                                                                  child: Text(
+                                                                      messages[
+                                                                              index]
+                                                                          [
+                                                                          'message_content'],
+                                                                      maxLines:
+                                                                          null,
+                                                                      style: const TextStyle(
+                                                                          color: Colors
+                                                                              .white)),
+                                                                )
+                                                              ]),
+
+                                                        Row(
+                                                          mainAxisAlignment: MainAxisAlignment.end,
+                                                          children: [
+                                                            Container(
+                                                                margin: const EdgeInsets.only(right: 25,bottom: 10),
+                                                                child:  Row(
+                                                                  children: [
+                                                                    Text('Replied by:'),
+                                                                    const SizedBox(width: 5,),
+                                                                    Text(messages[index]['sender_name'])
+                                                                  ],
+                                                                )
                                                             )
-                                                          ]);
+                                                          ],
+                                                        )
+
+                                                      ],
+                                                    );
                                               },
                                             )
                                           : noMessages?  const Center(

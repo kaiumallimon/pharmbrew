@@ -27,13 +27,7 @@ class FetchMessages {
 
 
 void main() async{
-  dynamic senders = await FetchMessages.fetch('EMP20240414160009');
+  dynamic senders = await FetchMessages.fetch('EMP20240319055204');
   print(senders);
-
-  // Make the fetch call and store the response in a variable
-  var response = await FetchMessages.fetch('EMP20240414160009');
-
-// Print the data type of the response
-  print('Data type of the response: ${response.runtimeType}');
 
 }

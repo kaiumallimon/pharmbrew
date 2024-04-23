@@ -244,7 +244,7 @@ class _WebDashboardState extends State<WebDashboard> {
 
                           widget.isAdministrator
                               ? SidePanelButton(
-                                  label: 'Events',
+                                  label: 'Announcement',
                                   icon: Icons.event,
                                   controller: inFocus == 8,
                                   onClick: () {
@@ -298,6 +298,34 @@ class _WebDashboardState extends State<WebDashboard> {
 
                           //employee edit profile request
 
+
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                            label: 'Orders',
+                            icon: Icons.shopping_cart_outlined,
+                            controller: inFocus == 16,
+                            onClick: () {
+                              setState(() {
+                                inFocus = 16;
+                              });
+                            },
+                          )
+                              : const SizedBox.shrink(),
+
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                            label: 'Notifications',
+                            icon: Icons.notifications,
+                            controller: inFocus == 18,
+                            onClick: () {
+                              setState(() {
+                                inFocus = 18;
+                              });
+                            },
+                            notificationDot: notificationCountEmployee>0?true:false,
+                          )
+                              : const SizedBox.shrink(),
+
                           !widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Edit Profile',
@@ -311,20 +339,20 @@ class _WebDashboardState extends State<WebDashboard> {
                                 )
                               : const SizedBox.shrink(),
 
-                          !widget.isAdministrator
-                              ? SidePanelButton(
-                                  label: 'Orders',
-                                  icon: Icons.shopping_cart_outlined,
-                                  controller: inFocus == 16,
-                                  onClick: () {
-                                    setState(() {
-                                      inFocus = 16;
-                                    });
-                                  },
-                                )
-                              : const SizedBox.shrink(),
+
 
                           !widget.isAdministrator
+                              ? SidePanelButton(
+                            label: 'Announcements',
+                            icon: Icons.event,
+                            controller: inFocus == 19,
+                            onClick: () {
+                              setState(() {
+                                inFocus = 19;
+                              });
+                            },
+                          )
+                              : const SizedBox.shrink(),!widget.isAdministrator
                               ? SidePanelButton(
                             label: 'Support',
                             icon: Icons.support_agent,
@@ -367,9 +395,17 @@ class _WebDashboardState extends State<WebDashboard> {
     });
     //read the status of notifications:
     for (var notification in notifications) {
-      if (notification['status'] == 'unread') {
+      if (notification['status'] == 'unread' &&
+          notification['receiver'] == 'hr' &&
+          notification['receiver_id'] == null){
         setState(() {
           notificationsCount++;
+        });
+      }else if(notification['status'] == 'unread' &&
+          notification['receiver'] == 'employee' &&
+          notification['receiver_id'] == loggedInUserId){
+        setState(() {
+          notificationCountEmployee++;
         });
       }
     }
@@ -378,4 +414,5 @@ class _WebDashboardState extends State<WebDashboard> {
 
   List<dynamic> notifications = [];
   int notificationsCount = 0;
+  int notificationCountEmployee = 0;
 }

@@ -1,23 +1,23 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../data/_fetch_employee_data.dart';
-import '../../../data/_update_notification_status.dart';
-import '../../../data/fetch_notification.dart';
 
-class Notifications extends StatefulWidget {
-  const Notifications({super.key});
+import '../../../../data/_fetch_employee_data.dart';
+import '../../../../data/_update_notification_status.dart';
+import '../../../../data/fetch_notification.dart';
+
+class EmployeeNotifications extends StatefulWidget {
+  const EmployeeNotifications({super.key});
 
   @override
-  State<Notifications> createState() => _NotificationState();
+  State<EmployeeNotifications> createState() => _EmployeeNotificationsState();
 }
 
-class _NotificationState extends State<Notifications> {
+class _EmployeeNotificationsState extends State<EmployeeNotifications> {
   List<dynamic> notifications = [];
-  List<Map<String, dynamic>> employeeDatas = [];
+  // List<Map<String, dynamic>> employeeDatas = [];
   late String userId = '';
   late Timer timer;
 
@@ -39,26 +39,29 @@ class _NotificationState extends State<Notifications> {
 
   Future<void> _fetchNotification() async {
     final fetchedNotifications = await FetchNotification.fetch();
+
+
+    print("Notifications: $fetchedNotifications");
     List<dynamic> notificationsLocal=[];
 
+
     for(var notification in fetchedNotifications){
-      if(notification['receiver']=='hr'){
+      if(notification['receiver']=='employee' && notification['receiver_id']==userId ){
         notificationsLocal.add(notification);
       }
     }
 
+    print("Notifications for liza: $notificationsLocal");
+
     setState(() {
       notifications = notificationsLocal;
     });
-    initEmpData();
-  }
+    // initEmpData();
 
-  void initEmpData() async {
-    for (var notification in notifications) {
-      final senderId = notification['sender_id'];
-      final employeeData = await FetchEmployeeData.fetchEmployee(senderId);
+
+    if(!isNotificationEmpty && notifications.isEmpty){
       setState(() {
-        employeeDatas.add(employeeData);
+        isNotificationEmpty=true;
       });
     }
   }
@@ -128,12 +131,14 @@ class _NotificationState extends State<Notifications> {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
-                                        CircleAvatar(
-                                          radius: 30,
-                                          backgroundColor: Colors.black,
-                                          backgroundImage: NetworkImage(
-                                              getEmployeeImage(
-                                                  notifications[index]['sender_id'])),
+                                        Container(
+                                          padding: const EdgeInsets.all(5),
+                                          child: CircleAvatar(
+                                            radius: 40,
+                                            backgroundImage: AssetImage(
+                                                'assets/images/admin.jpg'
+                                            ),
+                                          ),
                                         ),
                                         const SizedBox(width: 20),
                                         Column(
@@ -186,17 +191,22 @@ class _NotificationState extends State<Notifications> {
           ],
         ),
       ),
+    ) : isNotificationEmpty? Center(
+      child: Text(
+        'No notifications',
+        style: const TextStyle(fontSize: 20),
+      )
     ) : const Center(child: CircularProgressIndicator());
   }
 
-  String getEmployeeImage(String userId) {
-    for (var employeeData in employeeDatas) {
-      if (employeeData['userId'] == userId) {
-        return "https://bcrypt.site/uploads/images/profile/picture/${employeeData['profile_pic']}";
-      }
-    }
-    return '';
-  }
+  // String getEmployeeImage(String userId) {
+  //   for (var employeeData in employeeDatas) {
+  //     if (employeeData['userId'] == userId) {
+  //       return "https://bcrypt.site/uploads/images/profile/picture/${employeeData['profile_pic']}";
+  //     }
+  //   }
+  //   return '';
+  // }
 // 2024-04-15 10:07:35
   String getTime(String raw){
     var parts = raw.split(' ');
@@ -211,4 +221,5 @@ class _NotificationState extends State<Notifications> {
   }
 
   int hoveredIndex=-1;
+  bool isNotificationEmpty = false;
 }

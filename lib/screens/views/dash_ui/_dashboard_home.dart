@@ -38,7 +38,7 @@ class _DashboardHomeState extends State<DashboardHome> {
     });
     //read the status of notifications:
     for (var notification in notifications) {
-      if (notification['status'] == 'unread') {
+      if (notification['status'] == 'unread' && notification['receiver'] == 'hr' && notification['receiver_id'] == null) {
         setState(() {
           notificationsCount++;
         });
@@ -98,6 +98,7 @@ class _DashboardHomeState extends State<DashboardHome> {
 
   late String pp = ''; // Initialize pp with an empty string
   late String name = '';
+  late String userId='';
 
   void initData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -107,6 +108,8 @@ class _DashboardHomeState extends State<DashboardHome> {
           ''; // Assign x to pp, if x is null assign an empty string
 
       name = prefs.getString('loggedInUserName') ??
+          '';
+      userId = prefs.getString('loggedInUserId') ??
           ''; // Assign x to pp, if x is null assign an empty string
     });
 

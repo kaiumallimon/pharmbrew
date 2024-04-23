@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../data/_openweathermap.dart';
+import '../../../../data/fetch_notification.dart';
 import '../../../../domain/_get_location.dart';
 
 class EmployeeHome extends StatefulWidget {
@@ -23,6 +25,8 @@ class _AddEmployeeState extends State<EmployeeHome> {
   late String? region = "";
   late String? weather = "";
 
+  late Timer timer;
+
   @override
   void initState() {
     super.initState();
@@ -38,10 +42,34 @@ class _AddEmployeeState extends State<EmployeeHome> {
       );
     });
     focusNode.addListener(_onFocusChange);
+
+    timer = Timer.periodic(const Duration(milliseconds: 500), (Timer t) => _fetchNotification());
+  }
+
+  void _fetchNotification() async {
+    var notifications = await FetchNotification.fetch();
+    // print(notifications);
+    setState(() {
+      notificationsCount = 0;
+    });
+
+    print('Logged in user: $userId');
+    //read the status of notifications:
+    for (var notification in notifications) {
+      if (notification['status'] == 'unread' &&
+          notification['receiver'] == 'employee' &&
+          notification['receiver_id'] == userId) {
+        setState(() {
+          notificationsCount++;
+        });
+      }
+    }
+    print("Notifications: $notificationsCount");
   }
 
   late String pp = ''; // Initialize pp with an empty string
   late String name = '';
+  late String userId='';
   void initData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -51,6 +79,8 @@ class _AddEmployeeState extends State<EmployeeHome> {
 
       name = prefs.getString('loggedInUserName') ??
           ''; // Assign x to pp, if x is null assign an empty string
+      userId = prefs.getString('loggedInUserId') ??
+          '';
     });
 
     country = await getCountry();
@@ -70,6 +100,7 @@ class _AddEmployeeState extends State<EmployeeHome> {
     _scrollController.dispose(); // Dispose ScrollController
     focusNode.dispose(); // Dispose FocusNode
     super.dispose();
+    timer.cancel();
   }
 
   bool isTextFieldFocused = false;
@@ -196,9 +227,36 @@ class _AddEmployeeState extends State<EmployeeHome> {
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.linear,
-                      child: Icon(
-                        CupertinoIcons.bell_fill,
-                        color: Colors.grey.shade700,
+                      child: Stack(
+                        children: [
+                          Icon(
+                            CupertinoIcons.bell_fill,
+                            color: Colors.grey.shade700,
+                          ),
+                          notificationsCount > 0
+                              ? Transform.translate(
+                            offset: Offset(10, -10),
+                            child: Container(
+                              height: 20,
+                              width: 20,
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  notificationsCount.toString(),
+                                  style: GoogleFonts.inter(
+                                    color: Colors.white,
+                                    fontSize: 8,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                              : const SizedBox.shrink(),
+                        ],
                       ),
                     ),
                     const SizedBox(
@@ -236,4 +294,6 @@ class _AddEmployeeState extends State<EmployeeHome> {
       ],
     );
   }
+
+  int notificationsCount=0;
 }

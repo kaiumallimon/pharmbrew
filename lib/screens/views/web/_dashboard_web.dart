@@ -298,6 +298,34 @@ class _WebDashboardState extends State<WebDashboard> {
 
                           //employee edit profile request
 
+
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                            label: 'Orders',
+                            icon: Icons.shopping_cart_outlined,
+                            controller: inFocus == 16,
+                            onClick: () {
+                              setState(() {
+                                inFocus = 16;
+                              });
+                            },
+                          )
+                              : const SizedBox.shrink(),
+
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                            label: 'Notifications',
+                            icon: Icons.notifications,
+                            controller: inFocus == 18,
+                            onClick: () {
+                              setState(() {
+                                inFocus = 18;
+                              });
+                            },
+                            notificationDot: notificationsCount>0?true:false,
+                          )
+                              : const SizedBox.shrink(),
+
                           !widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Edit Profile',
@@ -311,18 +339,7 @@ class _WebDashboardState extends State<WebDashboard> {
                                 )
                               : const SizedBox.shrink(),
 
-                          !widget.isAdministrator
-                              ? SidePanelButton(
-                                  label: 'Orders',
-                                  icon: Icons.shopping_cart_outlined,
-                                  controller: inFocus == 16,
-                                  onClick: () {
-                                    setState(() {
-                                      inFocus = 16;
-                                    });
-                                  },
-                                )
-                              : const SizedBox.shrink(),
+
 
                           !widget.isAdministrator
                               ? SidePanelButton(

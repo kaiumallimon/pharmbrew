@@ -322,7 +322,7 @@ class _WebDashboardState extends State<WebDashboard> {
                                 inFocus = 18;
                               });
                             },
-                            notificationDot: notificationsCount>0?true:false,
+                            notificationDot: notificationCountEmployee>0?true:false,
                           )
                               : const SizedBox.shrink(),
 
@@ -384,9 +384,17 @@ class _WebDashboardState extends State<WebDashboard> {
     });
     //read the status of notifications:
     for (var notification in notifications) {
-      if (notification['status'] == 'unread') {
+      if (notification['status'] == 'unread' &&
+          notification['receiver'] == 'hr' &&
+          notification['receiver_id'] == null){
         setState(() {
           notificationsCount++;
+        });
+      }else if(notification['status'] == 'unread' &&
+          notification['receiver'] == 'employee' &&
+          notification['receiver_id'] == loggedInUserId){
+        setState(() {
+          notificationCountEmployee++;
         });
       }
     }
@@ -395,4 +403,5 @@ class _WebDashboardState extends State<WebDashboard> {
 
   List<dynamic> notifications = [];
   int notificationsCount = 0;
+  int notificationCountEmployee = 0;
 }

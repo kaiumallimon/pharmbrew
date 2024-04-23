@@ -461,36 +461,39 @@ class _AddEmployeeState extends State<Events> {
                           ),
                           const SizedBox(height: 10),
                           Container(
-                            constraints: BoxConstraints(
-                              minHeight: 50,
-                              maxHeight: 300,
+                            height: 400,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(10)
                             ),
-                            child: TextField(
-                              textAlignVertical: TextAlignVertical.top,
-                              controller: descriptionController,
-                              maxLines: null, // Allow the text field to expand vertically
-                              // expands: true, // Allow the text field to expand vertically
-                              decoration: InputDecoration(
-                                hintStyle: TextStyle(
-                                  color: Colors.grey.shade500,
-                                ),
-                                hintText: 'Write the announcement description here...',
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: Colors.grey.shade300,
-                                    width: 2,
+                            child: Expanded(
+                              child: TextField(
+                                textAlignVertical: TextAlignVertical.top,
+                                controller: descriptionController,
+                                maxLines: null, // Allow the text field to expand vertically
+                                expands: true, // Allow the text field to expand vertically
+                                decoration: InputDecoration(
+                                  hintStyle: TextStyle(
+                                    color: Colors.grey.shade500,
                                   ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: Colors.orange,
-                                    width: 2,
+                                  hintText: 'Write the announcement description here...',
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.grey.shade300,
+                                      width: 2,
+                                    ),
                                   ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                      color: Colors.orange,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.grey.shade300,
                                 ),
-                                filled: true,
-                                fillColor: Colors.grey.shade300,
                               ),
                             ),
                           ),

@@ -34,5 +34,4 @@ Future<Map<String, dynamic>?> getLocation() async {
 }
 
 void main(List<String> args) async {
-print(await getCountry());
 }

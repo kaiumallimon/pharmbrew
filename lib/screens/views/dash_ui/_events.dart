@@ -1,12 +1,6 @@
 import 'dart:async';
-import 'dart:typed_data';
-import 'dart:html' as html;
-import 'package:pdf/pdf.dart' as pw;
-import 'package:pdf/widgets.dart' as pw;
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:pharmbrew/data/_delete_announcement.dart';
@@ -419,7 +413,7 @@ class _AddEmployeeState extends State<Events> {
                 )
               : Container(
                   color: Colors.white,
-                  height: 810,
+                  height: 830,
                   padding: const EdgeInsets.symmetric(horizontal: 200),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -467,42 +461,40 @@ class _AddEmployeeState extends State<Events> {
                           ),
                           const SizedBox(height: 10),
                           Container(
-                            height: 400,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(10),
+                            constraints: BoxConstraints(
+                              minHeight: 50,
+                              maxHeight: 300,
                             ),
-                            child: Expanded(
-                              child: TextField(
-                                textAlignVertical: TextAlignVertical.top,
-                                controller: descriptionController,
-                                maxLines: null, // Allow the text field to expand vertically
-                                expands: true, // Allow the text field to expand vertically
-                                decoration: InputDecoration(
-                                  hintStyle: TextStyle(
-                                    color: Colors.grey.shade500,
-                                  ),
-                                  hintText: 'Write the announcement description here...',
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(
-                                      color: Colors.grey.shade300,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(
-                                      color: Colors.orange,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.grey.shade300,
+                            child: TextField(
+                              textAlignVertical: TextAlignVertical.top,
+                              controller: descriptionController,
+                              maxLines: null, // Allow the text field to expand vertically
+                              // expands: true, // Allow the text field to expand vertically
+                              decoration: InputDecoration(
+                                hintStyle: TextStyle(
+                                  color: Colors.grey.shade500,
                                 ),
+                                hintText: 'Write the announcement description here...',
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade300,
+                                    width: 2,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color: Colors.orange,
+                                    width: 2,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey.shade300,
                               ),
                             ),
                           ),
+                          const SizedBox(height: 10),
                         ],
                       ),
 

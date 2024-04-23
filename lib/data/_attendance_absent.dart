@@ -33,7 +33,6 @@ bool checkDate(String date){
 }
 
 void main(){
-  print(checkDate('2024-04-19'));
 }
 
 

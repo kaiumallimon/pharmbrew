@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pharmbrew/data/_update_notification_status.dart';
 import 'package:pharmbrew/data/fetch_notification.dart';
 import 'package:pharmbrew/widgets/_dashboard_mainPanel.dart';
 import 'package:pharmbrew/widgets/_logout.dart';

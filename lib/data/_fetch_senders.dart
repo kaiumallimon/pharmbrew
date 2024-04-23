@@ -1,8 +1,6 @@
 import 'package:http/http.dart' as http;
-import 'package:pharmbrew/data/_fetch_admins.dart';
 import 'dart:convert';
 
-import 'package:pharmbrew/data/_fetch_employee_data.dart';
 
 class FetchSenders {
   static Future<List<dynamic>> fetchEmployee() async {

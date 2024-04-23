@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pharmbrew/widgets/_error_dialog.dart';
 
-import '../widgets/_detailed_announcement.dart';
 
 void showCustomErrorDialog(String errorText, BuildContext context) {
   showDialog(

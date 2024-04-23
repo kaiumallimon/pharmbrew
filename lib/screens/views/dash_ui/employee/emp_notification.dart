@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../data/_fetch_employee_data.dart';
 import '../../../../data/_update_notification_status.dart';
 import '../../../../data/fetch_notification.dart';
 

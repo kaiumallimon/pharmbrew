@@ -32,5 +32,4 @@ class FetchAdminData {
 }
 
 main () async {
-  print(await FetchEmployeeData.fetchEmployee('EMP20240319055204'));
 }

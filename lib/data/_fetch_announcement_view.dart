@@ -1,7 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import '_fetch_employee_data.dart';
 
 
 class FetchAnnouncementsView {
@@ -22,5 +21,4 @@ class FetchAnnouncementsView {
 }
 
 main () async {
-  print(await FetchAnnouncementsView.fetch());
 }

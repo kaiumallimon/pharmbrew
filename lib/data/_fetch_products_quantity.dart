@@ -26,5 +26,4 @@ class FetchProductsQuantity {
 void main() async{
   String name='Napa Rapiddd - 500mg';
   var data= await FetchProductsQuantity.fetch(name);
-  print(data);
 }

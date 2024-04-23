@@ -12,7 +12,6 @@ class CheckMail {
 
       if (response.statusCode == 200) {
         var result= json.decode(response.body);
-        print("Response: result['success']");
 
         return result['success'];
       } else {
@@ -26,5 +25,4 @@ class CheckMail {
 
 void main(List<String> args) async {
   bool result = await CheckMail.check('rvivy41@gmail.com');
-  print(result);
 }

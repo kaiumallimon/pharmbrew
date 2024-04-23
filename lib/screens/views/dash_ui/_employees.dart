@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:cool_dropdown/cool_dropdown.dart';
 import 'package:cool_dropdown/models/cool_dropdown_item.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:pharmbrew/data/_fetch_employee.dart';
 import 'package:pharmbrew/utils/_show_dialog.dart';
 import 'package:pharmbrew/widgets/_successful_dialog.dart';

@@ -244,7 +244,7 @@ class _WebDashboardState extends State<WebDashboard> {
 
                           widget.isAdministrator
                               ? SidePanelButton(
-                                  label: 'Events',
+                                  label: 'Announcement',
                                   icon: Icons.event,
                                   controller: inFocus == 8,
                                   onClick: () {

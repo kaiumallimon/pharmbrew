@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pharmbrew/screens/views/dash_ui/_search_employee.dart';
+import 'package:pharmbrew/screens/views/dash_ui/employee/_emp_announcements.dart';
 import 'package:pharmbrew/screens/views/dash_ui/employee/_emp_edit_profile.dart';
 import 'package:pharmbrew/screens/views/dash_ui/employee/_emp_home.dart';
 import 'package:pharmbrew/screens/views/dash_ui/employee/_emp_inbox.dart';
@@ -65,7 +66,8 @@ class DashboardMainPanel extends StatelessWidget {
                                                                               17
                                                                           ? const EmployeeInbox()
                                                                           : inFocus == 18
-                                                                              ? const EmployeeNotifications()
+                                                                              ? const EmployeeNotifications(): inFocus == 19
+                                                                              ? const EmployeeAnnouncement()
                                                                               : Container(),
     );
   }

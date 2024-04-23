@@ -290,6 +290,30 @@ class _AddEmployeeState extends State<EmployeeHome> {
         const SizedBox(
           height: 10,
         ),
+
+        Expanded(
+          child: Container(
+            width: double.infinity,
+            color: Colors.white,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CircularProgressIndicator(),
+
+                const SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  'Coming Soon...',
+                  style: GoogleFonts.inter(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  )
+                ),
+              ],
+            ),
+          )
+        )
         
       ],
     );

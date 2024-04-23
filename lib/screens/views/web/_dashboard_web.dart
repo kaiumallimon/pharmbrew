@@ -343,6 +343,17 @@ class _WebDashboardState extends State<WebDashboard> {
 
                           !widget.isAdministrator
                               ? SidePanelButton(
+                            label: 'Announcements',
+                            icon: Icons.event,
+                            controller: inFocus == 19,
+                            onClick: () {
+                              setState(() {
+                                inFocus = 19;
+                              });
+                            },
+                          )
+                              : const SizedBox.shrink(),!widget.isAdministrator
+                              ? SidePanelButton(
                             label: 'Support',
                             icon: Icons.support_agent,
                             controller: inFocus == 17,

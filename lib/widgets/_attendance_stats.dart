@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class AttendanceStatsWidget extends StatefulWidget {
   const AttendanceStatsWidget({super.key});

@@ -22,8 +22,8 @@ class SidePanelButton extends StatelessWidget {
         onClick();
       },
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.linear,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
         margin: const EdgeInsets.only(left: 15, bottom: 20),
         padding: const EdgeInsets.symmetric(vertical: 15),
         decoration: BoxDecoration(

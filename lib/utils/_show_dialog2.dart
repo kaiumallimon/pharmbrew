@@ -5,17 +5,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class SuccessDialog extends StatefulWidget {
+class SuccessDialog2 extends StatefulWidget {
   final String successMessage;
 
-  const SuccessDialog({super.key, required this.successMessage});
+  const SuccessDialog2({super.key, required this.successMessage});
 
   @override
-  _CustomDialogState createState() => _CustomDialogState();
+  _CustomDialogState2 createState() => _CustomDialogState2();
 }
 
-class _CustomDialogState extends State<SuccessDialog>
-    with TickerProviderStateMixin {
+class _CustomDialogState2 extends State<SuccessDialog2> with TickerProviderStateMixin {
   late AnimationController _controller;
   late Timer timer;
 
@@ -23,7 +22,7 @@ class _CustomDialogState extends State<SuccessDialog>
   void initState() {
     super.initState();
     _controller = _createController();
-    timer = Timer(Duration(seconds: 3), () {
+    timer=Timer(Duration(milliseconds: 300), () {
       Navigator.of(context).pop(); // Close the dialog after 5 seconds
     });
   }
@@ -105,7 +104,7 @@ void showCustomSuccessDialog(String successMessage, BuildContext context) {
   showDialog(
     context: context,
     builder: (context) {
-      return SuccessDialog(successMessage: successMessage);
+      return SuccessDialog2(successMessage: successMessage);
     },
   );
 }

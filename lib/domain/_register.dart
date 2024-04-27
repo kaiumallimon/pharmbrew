@@ -51,7 +51,7 @@ Future<bool> createUser(
 
     // Add image file
     var stream = http.ByteStream(imageFile!.openRead());
-    var length = await imageFile!.length();
+    var length = await imageFile.length();
     var multipartFile = http.MultipartFile(
       'image',
       stream,

@@ -1,9 +1,7 @@
-import 'dart:html';
 import 'dart:typed_data';
 import 'dart:html' as html; // Import 'html' for web-specific operations
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 class DetailedAnnouncement extends StatefulWidget {
@@ -35,7 +33,7 @@ class _DetailedAnnouncementState extends State<DetailedAnnouncement> {
   Widget build(BuildContext context) {
     return Dialog(
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -51,13 +49,13 @@ class _DetailedAnnouncementState extends State<DetailedAnnouncement> {
             .width - 100,
         child: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.all(40),
+            padding: const EdgeInsets.all(40),
             child: Column(
               children: [
                 Container(
                   height: 50,
-                  margin: EdgeInsets.only(bottom: 10),
-                  decoration: BoxDecoration(shape: BoxShape.circle),
+                  margin: const EdgeInsets.only(bottom: 10),
+                  decoration: const BoxDecoration(shape: BoxShape.circle),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -70,27 +68,25 @@ class _DetailedAnnouncementState extends State<DetailedAnnouncement> {
                     ],
                   ),
                 ),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          widget.title,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(
-                            fontSize: 23,
-                            fontWeight: FontWeight.bold,
-                          ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        widget.title,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.justify,
+                        style: const TextStyle(
+                          fontSize: 23,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 20),
+                  margin: const EdgeInsets.symmetric(vertical: 20),
                   height: 2,
                   width: MediaQuery
                       .of(context)
@@ -126,36 +122,32 @@ class _DetailedAnnouncementState extends State<DetailedAnnouncement> {
                         }catch(e){
                           print("error pdf: $e");
                         }
-                      }, icon: Icon(Icons.print))
+                      }, icon: const Icon(Icons.print))
                     ],
-                  ),
-                ),
-                SizedBox(height: 40),
-                Container(
-                  child: Text(
-                    widget.description,
-                    textAlign: TextAlign.justify,
                   ),
                 ),
                 const SizedBox(height: 40),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Published on:',
-                        style: TextStyle(color: Colors.grey),
+                Text(
+                  widget.description,
+                  textAlign: TextAlign.justify,
+                ),
+                const SizedBox(height: 40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Text(
+                      'Published on:',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(width: 3),
+                    Text(
+                      ' ${widget.publishDate}',
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
                       ),
-                      const SizedBox(width: 3),
-                      Text(
-                        ' ${widget.publishDate}',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 30),
               ],
@@ -198,7 +190,7 @@ class _DetailedAnnouncementState extends State<DetailedAnnouncement> {
                     ),
                   ),
                   pw.Container(
-                    margin: pw.EdgeInsets.symmetric(vertical: 20),
+                    margin: const pw.EdgeInsets.symmetric(vertical: 20),
                   ),
                   pw.Container(
                     child: pw.Row(
@@ -208,7 +200,7 @@ class _DetailedAnnouncementState extends State<DetailedAnnouncement> {
                           children: [
                             pw.Text(
                               'Event:',
-                              style: pw.TextStyle(
+                              style: const pw.TextStyle(
                                 fontSize: 15,
                               ),
                             ),
@@ -282,8 +274,8 @@ class _DetailedAnnouncementState extends State<DetailedAnnouncement> {
         context: context,
         builder: (_) => AlertDialog(
           backgroundColor: Colors.white,
-          title: Text('PDF Generated'),
-          content: Text(
+          title: const Text('PDF Generated'),
+          content: const Text(
             'The announcement PDF has been generated and downloaded successfully.',
           ),
           actions: <Widget>[
@@ -291,7 +283,7 @@ class _DetailedAnnouncementState extends State<DetailedAnnouncement> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         ),

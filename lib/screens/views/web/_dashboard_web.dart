@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pharmbrew/data/_update_notification_status.dart';
 import 'package:pharmbrew/data/fetch_notification.dart';
 import 'package:pharmbrew/widgets/_dashboard_mainPanel.dart';
 import 'package:pharmbrew/widgets/_logout.dart';
@@ -44,6 +43,7 @@ class _WebDashboardState extends State<WebDashboard> {
 
 
   late Timer timer;
+  late Timer timer2;
 
   @override
   void initState() {
@@ -51,6 +51,7 @@ class _WebDashboardState extends State<WebDashboard> {
     initData();
     inFocus = widget.isAdministrator ? 0 : 12;
     timer=Timer.periodic(const Duration(milliseconds: 500), (Timer t) => _fetchNotification());
+    timer2=Timer.periodic(const Duration(milliseconds: 500), (Timer t) => _fetchNotificationEmployee());
   }
 
   void switchPage(int index) {
@@ -64,6 +65,7 @@ class _WebDashboardState extends State<WebDashboard> {
     super.dispose();
     clearSharedPreferences();
     timer.cancel();
+    timer2.cancel();
   }
 
   Future<void> clearSharedPreferences() async {
@@ -402,6 +404,25 @@ class _WebDashboardState extends State<WebDashboard> {
           notificationsCount++;
         });
       }else if(notification['status'] == 'unread' &&
+          notification['receiver'] == 'employee' &&
+          notification['receiver_id'] == loggedInUserId){
+        setState(() {
+          notificationCountEmployee++;
+        });
+      }
+    }
+    print("Notifications: $notificationsCount");
+  }
+
+  void _fetchNotificationEmployee() async {
+    notifications = await FetchNotification.fetch();
+    // print(notifications);
+    setState(() {
+      notificationCountEmployee = 0;
+    });
+    //read the status of notifications:
+    for (var notification in notifications) {
+       if(notification['status'] == 'unread' &&
           notification['receiver'] == 'employee' &&
           notification['receiver_id'] == loggedInUserId){
         setState(() {

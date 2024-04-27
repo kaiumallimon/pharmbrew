@@ -35,5 +35,4 @@ Future<List> fetchAttendanceAbsents(String userId) async{
 
 main() async{
   List absents=await fetchAttendanceAbsents('EMP20240415083627');
-  print(absents);
 }

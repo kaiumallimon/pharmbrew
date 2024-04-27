@@ -1,10 +1,11 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class CreateAnnouncement {
   static Future<bool> create(String title, String description, String create_time, String creatorId, String start_date, String end_date) async {
     try {
-      print('user_id: $creatorId ');
       final response = await http.post(
         Uri.parse('https://bcrypt.site/scripts/php/create_announcement.php'),
         body: {

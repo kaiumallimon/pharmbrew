@@ -12,10 +12,7 @@ Future<List<dynamic>> fetchProducts() async {
   }
 }
 
-
-void main(List<String> args) async {
-
-  List<dynamic> emp = await fetchProducts();
-  print(emp);
+void main() async {
+  List<dynamic> products = await fetchProducts();
+  print(products);
 }
-

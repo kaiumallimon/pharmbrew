@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:pharmbrew/data/_fetch_admin_name.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../data/_delete_message.dart';
 import '../../../data/_fetch_admins.dart';
 import '../../../data/_fetch_all_employee.dart';
 import '../../../data/_fetch_employee_data.dart';
@@ -810,47 +810,57 @@ class _QueriesState extends State<Queries> {
                                                             MainAxisAlignment
                                                                 .start,
                                                         children: [
-                                                            AnimatedContainer(
-                                                              duration: const Duration(milliseconds: 300),
-                                                              curve: Curves.easeInOut,
-                                                              constraints:
-                                                                  const BoxConstraints(
-                                                                      maxWidth:
-                                                                          450),
-                                                              decoration: BoxDecoration(
-                                                                  color: Colors
-                                                                      .orangeAccent
-                                                                      .shade100,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10)),
-                                                              margin:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                      left: 20,
-                                                                      top: 10,
-                                                                      bottom:
-                                                                          10),
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                      horizontal:
-                                                                          10,
-                                                                      vertical:
-                                                                          5),
-                                                              child: Text(
-                                                                  messages[
-                                                                          index]
-                                                                      [
-                                                                      'message_content'],
-                                                                  maxLines:
-                                                                      null,
-                                                                  style: const TextStyle(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          16)),
+                                                            GestureDetector(
+                                                              onHorizontalDragEnd: (details) {
+                                                                // Calculate the difference in position to determine if it's a right swipe
+                                                                if (details.primaryVelocity?.compareTo(0) == 1) {
+                                                                  // Positive value indicates a right swipe
+                                                                  DeleteMessage.delete(messages[index]['message_id']);
+                                                                  // Perform any action here, like navigating to a new screen
+                                                                }
+                                                              },
+                                                              child: AnimatedContainer(
+                                                                duration: const Duration(milliseconds: 300),
+                                                                curve: Curves.easeInOut,
+                                                                constraints:
+                                                                    const BoxConstraints(
+                                                                        maxWidth:
+                                                                            450),
+                                                                decoration: BoxDecoration(
+                                                                    color: Colors
+                                                                        .orangeAccent
+                                                                        .shade100,
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                                10)),
+                                                                margin:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        left: 20,
+                                                                        top: 10,
+                                                                        bottom:
+                                                                            10),
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .symmetric(
+                                                                        horizontal:
+                                                                            10,
+                                                                        vertical:
+                                                                            5),
+                                                                child: Text(
+                                                                    messages[
+                                                                            index]
+                                                                        [
+                                                                        'message_content'],
+                                                                    maxLines:
+                                                                        null,
+                                                                    style: const TextStyle(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontSize:
+                                                                            16)),
+                                                              ),
                                                             )
                                                           ])
                                                     : Column(
@@ -860,44 +870,54 @@ class _QueriesState extends State<Queries> {
                                                                 MainAxisAlignment
                                                                     .end,
                                                             children: [
-                                                                AnimatedContainer(
-                                                                  duration: const Duration(milliseconds: 300),
-                                                                  curve: Curves.easeInOut,
-                                                                  constraints:
-                                                                      const BoxConstraints(
-                                                                          maxWidth:
-                                                                              450),
-                                                                  decoration: BoxDecoration(
-                                                                      color: CupertinoColors
-                                                                          .activeBlue,
-                                                                      borderRadius:
-                                                                          BorderRadius
-                                                                              .circular(
-                                                                                  10)),
-                                                                  margin:
-                                                                      const EdgeInsets
-                                                                          .only(
-                                                                          right: 20,
-                                                                          top: 10,
-                                                                          bottom:
-                                                                              10),
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .symmetric(
-                                                                          horizontal:
-                                                                              12,
-                                                                          vertical:
-                                                                              8),
-                                                                  child: Text(
-                                                                      messages[
-                                                                              index]
-                                                                          [
-                                                                          'message_content'],
-                                                                      maxLines:
-                                                                          null,
-                                                                      style: const TextStyle(
-                                                                          color: Colors
-                                                                              .white)),
+                                                                GestureDetector(
+                                                                  onHorizontalDragEnd: (details) {
+                                                                    // Calculate the difference in position to determine if it's a left swipe
+                                                                    if (details.primaryVelocity?.compareTo(0) == -1) {
+                                                                      // Negative value indicates a left swipe
+                                                                      DeleteMessage.delete(messages[index]['message_id']);
+                                                                      // Perform any action here, like navigating to a new screen
+                                                                    }
+                                                                  },
+                                                                  child: AnimatedContainer(
+                                                                    duration: const Duration(milliseconds: 300),
+                                                                    curve: Curves.easeInOut,
+                                                                    constraints:
+                                                                        const BoxConstraints(
+                                                                            maxWidth:
+                                                                                450),
+                                                                    decoration: BoxDecoration(
+                                                                        color: CupertinoColors
+                                                                            .activeBlue,
+                                                                        borderRadius:
+                                                                            BorderRadius
+                                                                                .circular(
+                                                                                    10)),
+                                                                    margin:
+                                                                        const EdgeInsets
+                                                                            .only(
+                                                                            right: 20,
+                                                                            top: 10,
+                                                                            bottom:
+                                                                                10),
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .symmetric(
+                                                                            horizontal:
+                                                                                12,
+                                                                            vertical:
+                                                                                8),
+                                                                    child: Text(
+                                                                        messages[
+                                                                                index]
+                                                                            [
+                                                                            'message_content'],
+                                                                        maxLines:
+                                                                            null,
+                                                                        style: const TextStyle(
+                                                                            color: Colors
+                                                                                .white)),
+                                                                  ),
                                                                 )
                                                               ]),
 

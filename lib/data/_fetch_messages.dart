@@ -1,7 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import '_fetch_senders.dart';
 
 class FetchMessages {
   static Future<dynamic> fetch(String userId) async {
@@ -28,6 +27,5 @@ class FetchMessages {
 
 void main() async{
   dynamic senders = await FetchMessages.fetch('EMP20240319055204');
-  print(senders);
 
 }

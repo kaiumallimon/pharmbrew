@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:blur/blur.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,11 +17,15 @@ class SuccessDialog extends StatefulWidget {
 class _CustomDialogState extends State<SuccessDialog>
     with TickerProviderStateMixin {
   late AnimationController _controller;
+  late Timer timer;
 
   @override
   void initState() {
     super.initState();
     _controller = _createController();
+    timer = Timer(Duration(seconds: 3), () {
+      Navigator.of(context).pop(); // Close the dialog after 5 seconds
+    });
   }
 
   @override
@@ -56,18 +62,18 @@ class _CustomDialogState extends State<SuccessDialog>
               ),
             ),
             const SizedBox(height: 10.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CupertinoColors.activeBlue,
-              ),
-              child: const Text(
-                'Continue',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     Navigator.of(context).pop(); // Close the dialog
+            //   },
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: CupertinoColors.activeBlue,
+            //   ),
+            //   child: const Text(
+            //     'Continue',
+            //     style: TextStyle(color: Colors.white),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -77,7 +83,7 @@ class _CustomDialogState extends State<SuccessDialog>
   AnimationController _createController() {
     return AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 1),
+      duration: const Duration(seconds: 2),
     );
   }
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:blur/blur.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +14,17 @@ class SuccessDialog2 extends StatefulWidget {
   _CustomDialogState2 createState() => _CustomDialogState2();
 }
 
-class _CustomDialogState2 extends State<SuccessDialog2>
-    with TickerProviderStateMixin {
+class _CustomDialogState2 extends State<SuccessDialog2> with TickerProviderStateMixin {
   late AnimationController _controller;
+  late Timer timer;
 
   @override
   void initState() {
     super.initState();
     _controller = _createController();
+    timer=Timer(Duration(milliseconds: 300), () {
+      Navigator.of(context).pop(); // Close the dialog after 5 seconds
+    });
   }
 
   @override
@@ -56,18 +61,18 @@ class _CustomDialogState2 extends State<SuccessDialog2>
               ),
             ),
             const SizedBox(height: 10.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CupertinoColors.activeBlue,
-              ),
-              child: const Text(
-                'Continue',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     Navigator.of(context).pop(); // Close the dialog
+            //   },
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: CupertinoColors.activeBlue,
+            //   ),
+            //   child: const Text(
+            //     'Continue',
+            //     style: TextStyle(color: Colors.white),
+            //   ),
+            // ),
           ],
         ),
       ),

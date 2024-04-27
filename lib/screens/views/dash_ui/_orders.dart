@@ -164,39 +164,39 @@ class _OrdersState extends State<Orders> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: suggestions
                                 .map((suggestion) => ListTile(
-                                      title: Text(suggestion),
-                                      onTap: () async {
+                              title: Text(suggestion),
+                              onTap: () async {
 
-                                        nameController.text = suggestion;
-                                        setState(() {
-                                          suggestions = [];
-                                        });
+                                nameController.text = suggestion;
+                                setState(() {
+                                  suggestions = [];
+                                });
 
-                                        String name = suggestion;
-                                        var data= await FetchProductsQuantity.fetch(name);
-                                        print('Product data: $data');
-                                        if(data!=null){
-                                          setState(() {
-                                            quantityLeft=data['quantity'].toString();
-                                          });
-                                        }
+                                String name = suggestion;
+                                var data= await FetchProductsQuantity.fetch(name);
+                                print('Product data: $data');
+                                if(data!=null){
+                                  setState(() {
+                                    quantityLeft=data['quantity'].toString();
+                                  });
+                                }
 
-                                      },
-                                    ))
+                              },
+                            ))
                                 .toList(),
                           ),
                         suggestions.isNotEmpty
                             ? const SizedBox(
-                                height: 15,
-                              )
+                          height: 15,
+                        )
                             : const SizedBox.shrink(),
 
                         quantityLeft==''?SizedBox.shrink(): Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                          Text('Product left: '),
+                            Text('Product left: '),
                             Text('$quantityLeft',style: TextStyle(color: quantityLeft=='0' ? Colors.red : Colors.green),),
-                        ],),
+                          ],),
 
                         quantityLeft==''?SizedBox.shrink():  SizedBox(
                           height: 15,
@@ -326,8 +326,8 @@ class _OrdersState extends State<Orders> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     if (customerNameController.text
-                                            .trim()
-                                            .isNotEmpty &&
+                                        .trim()
+                                        .isNotEmpty &&
                                         customerEmailController.text
                                             .trim()
                                             .isNotEmpty &&
@@ -338,8 +338,8 @@ class _OrdersState extends State<Orders> {
                                             .trim()
                                             .isNotEmpty) {
                                       bool isValidEmail =
-                                          EmailValidator.validate(
-                                              customerEmailController.text);
+                                      EmailValidator.validate(
+                                          customerEmailController.text);
 
                                       if (isValidEmail) {
                                         setState(() {
@@ -403,116 +403,116 @@ class _OrdersState extends State<Orders> {
                         ),
                         customerInfo.isNotEmpty
                             ? Column(
-                                children: [
-                                  Row(children: [
-                                    Expanded(
-                                      child:
-                                          Text('Name: ${customerInfo['name']}'),
-                                    ),
-                                  ]),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(children: [
-                                    Expanded(
-                                      child: Text(
-                                          'Phone: ${customerInfo['phone']}'),
-                                    ),
-                                  ]),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(children: [
-                                    Expanded(
-                                      child: Text(
-                                          'Email: ${customerInfo['email']}'),
-                                    ),
-                                  ]),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(children: [
-                                    Expanded(
-                                      child: Text(
-                                          'Billing Info: ${customerInfo['billing']}'),
-                                    ),
-                                  ])
-                                ],
-                              )
+                          children: [
+                            Row(children: [
+                              Expanded(
+                                child:
+                                Text('Name: ${customerInfo['name']}'),
+                              ),
+                            ]),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(children: [
+                              Expanded(
+                                child: Text(
+                                    'Phone: ${customerInfo['phone']}'),
+                              ),
+                            ]),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(children: [
+                              Expanded(
+                                child: Text(
+                                    'Email: ${customerInfo['email']}'),
+                              ),
+                            ]),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(children: [
+                              Expanded(
+                                child: Text(
+                                    'Billing Info: ${customerInfo['billing']}'),
+                              ),
+                            ])
+                          ],
+                        )
                             : const SizedBox.shrink(),
                         const SizedBox(
                           height: 10,
                         ),
                         cartItems.isNotEmpty
                             ? Row(
-                                children: [
-                                  Expanded(
-                                    child: DataTable(
-                                      headingTextStyle: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      dataTextStyle: const TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                      border: TableBorder.all(
-                                        color: Colors.grey.shade300,
-                                        width: 1.5,
-                                      ),
-                                      headingRowColor:
-                                          MaterialStateProperty.all(
-                                        Theme.of(context).colorScheme.primary,
-                                      ),
-                                      columns: const [
-                                        DataColumn(label: Text('Name')),
-                                        DataColumn(label: Text('Variant')),
-                                        DataColumn(label: Text('Quantity')),
-                                        DataColumn(label: Text('Price')),
-                                      ],
-                                      rows: [
-                                        // Your cart items
-                                        for (var item in cartItems)
-                                          DataRow(cells: [
-                                            DataCell(Text(item['name'])),
-                                            DataCell(Text(item['variant'])),
-                                            DataCell(Text(
-                                                item['quantity (strips)'])),
-                                            DataCell(
-                                                Text(item['price'].toString())),
-                                          ]),
-                                        // Extra row for total price
-                                        DataRow(cells: [
-                                          const DataCell(Text('Total Price',
-                                              style: TextStyle(
-                                                  fontWeight:
-                                                      FontWeight.bold))),
-                                          const DataCell(Text('')),
-                                          // Variant column is empty for total price
-                                          const DataCell(Text('')),
-                                          // Quantity column is empty for total price
-                                          DataCell(
-                                            Text(
-                                              calculateTotalPrice(),
-                                              // Call a function to calculate total price
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ]),
-                                      ],
-                                    ),
-                                  ),
+                          children: [
+                            Expanded(
+                              child: DataTable(
+                                headingTextStyle: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                dataTextStyle: const TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                ),
+                                border: TableBorder.all(
+                                  color: Colors.grey.shade300,
+                                  width: 1.5,
+                                ),
+                                headingRowColor:
+                                MaterialStateProperty.all(
+                                  Theme.of(context).colorScheme.primary,
+                                ),
+                                columns: const [
+                                  DataColumn(label: Text('Name')),
+                                  DataColumn(label: Text('Variant')),
+                                  DataColumn(label: Text('Quantity')),
+                                  DataColumn(label: Text('Price')),
                                 ],
-                              )
+                                rows: [
+                                  // Your cart items
+                                  for (var item in cartItems)
+                                    DataRow(cells: [
+                                      DataCell(Text(item['name'])),
+                                      DataCell(Text(item['variant'])),
+                                      DataCell(Text(
+                                          item['quantity (strips)'])),
+                                      DataCell(
+                                          Text(item['price'].toString())),
+                                    ]),
+                                  // Extra row for total price
+                                  DataRow(cells: [
+                                    const DataCell(Text('Total Price',
+                                        style: TextStyle(
+                                            fontWeight:
+                                            FontWeight.bold))),
+                                    const DataCell(Text('')),
+                                    // Variant column is empty for total price
+                                    const DataCell(Text('')),
+                                    // Quantity column is empty for total price
+                                    DataCell(
+                                      Text(
+                                        calculateTotalPrice(),
+                                        // Call a function to calculate total price
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ]),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
                             : Container(
-                                height: 400,
-                                decoration: BoxDecoration(
-                                  border: Border.fromBorderSide(
-                                      BorderSide(color: Colors.grey.shade300)),
-                                ),
-                                child: const Center(
-                                  child: Text('No products added yet'),
-                                ),
-                              )
+                          height: 400,
+                          decoration: BoxDecoration(
+                            border: Border.fromBorderSide(
+                                BorderSide(color: Colors.grey.shade300)),
+                          ),
+                          child: const Center(
+                            child: Text('No products added yet'),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -532,7 +532,7 @@ class _OrdersState extends State<Orders> {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              Theme.of(context).colorScheme.primary,
+                          Theme.of(context).colorScheme.primary,
                           foregroundColor: Colors.white,
                           shape: const RoundedRectangleBorder(),
                         ),
@@ -558,7 +558,7 @@ class _OrdersState extends State<Orders> {
   final TextEditingController customerEmailController = TextEditingController();
   final TextEditingController customerPhoneController = TextEditingController();
   final TextEditingController customerBillingController =
-      TextEditingController();
+  TextEditingController();
   bool isProductFound = true;
 
   void _startTimer() {
@@ -642,11 +642,11 @@ class _OrdersState extends State<Orders> {
                         fontSize: 20, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 10),
                 pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.center,
-                  children:[
-                    pw.Text('This is an auto-generated invoice.',
-                        style: pw.TextStyle(fontSize: 13,color: PdfColors.grey)),
-                  ]
+                    mainAxisAlignment: pw.MainAxisAlignment.center,
+                    children:[
+                      pw.Text('This is an auto-generated invoice.',
+                          style: pw.TextStyle(fontSize: 13,color: PdfColors.grey)),
+                    ]
                 ),
                 pw.SizedBox(height: 20),
                 // Add invoice data from the map
@@ -705,25 +705,25 @@ class _OrdersState extends State<Orders> {
                 pw.SizedBox(height: 20),
 
                 pw.Row(
-                  children: [
-                    pw.Text("Thank you for your purchase, you're always welcomed to pharmabrew!",
-                        style: pw.TextStyle(fontSize: 13,color: PdfColors.grey)),
-                  ]
+                    children: [
+                      pw.Text("Thank you for your purchase, you're always welcomed to pharmabrew!",
+                          style: pw.TextStyle(fontSize: 13,color: PdfColors.grey)),
+                    ]
                 ),
                 pw.SizedBox(height: 10),
                 pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: [
                       pw.Row(
-                        children: [
-                          pw.Text('Status:',style: pw.TextStyle(color: PdfColors.grey),),
-                          pw.SizedBox(width: 10),
-                          pw.Text('Paid',style: pw.TextStyle(color: PdfColors.green,fontWeight: pw.FontWeight.bold),),
-                        ]
+                          children: [
+                            pw.Text('Status:',style: pw.TextStyle(color: PdfColors.grey),),
+                            pw.SizedBox(width: 10),
+                            pw.Text('Paid',style: pw.TextStyle(color: PdfColors.green,fontWeight: pw.FontWeight.bold),),
+                          ]
                       ),
 
                       pw.Row(
-                        children:
+                          children:
                           [
                             pw.Text('Sold by:',style: pw.TextStyle(color: PdfColors.grey,),),
                             pw.SizedBox(width: 10),

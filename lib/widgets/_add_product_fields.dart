@@ -25,9 +25,9 @@ class _AddProductFieldsState extends State<AddProductFields> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      margin: const EdgeInsets.only(right: 10),
       child: TextField(
-
         readOnly: widget.readOnly,
         controller: widget.controller,
         textAlign: widget.readOnly? TextAlign.center: TextAlign.start,

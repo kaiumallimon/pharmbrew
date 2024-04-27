@@ -3,16 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class SuccessDialog extends StatefulWidget {
+class SuccessDialog2 extends StatefulWidget {
   final String successMessage;
 
-  const SuccessDialog({super.key, required this.successMessage});
+  const SuccessDialog2({super.key, required this.successMessage});
 
   @override
-  _CustomDialogState createState() => _CustomDialogState();
+  _CustomDialogState2 createState() => _CustomDialogState2();
 }
 
-class _CustomDialogState extends State<SuccessDialog>
+class _CustomDialogState2 extends State<SuccessDialog2>
     with TickerProviderStateMixin {
   late AnimationController _controller;
 
@@ -77,7 +77,7 @@ class _CustomDialogState extends State<SuccessDialog>
   AnimationController _createController() {
     return AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 1),
+      duration: const Duration(seconds: 2),
     );
   }
 
@@ -99,7 +99,7 @@ void showCustomSuccessDialog(String successMessage, BuildContext context) {
   showDialog(
     context: context,
     builder: (context) {
-      return SuccessDialog(successMessage: successMessage);
+      return SuccessDialog2(successMessage: successMessage);
     },
   );
 }

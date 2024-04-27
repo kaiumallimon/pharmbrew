@@ -10,8 +10,6 @@ Future<bool?> addProduct({
   required String unitPerStrips,
 }) async {
 
-
-
   const String url =
       'https://bcrypt.site/scripts/php/add_products.php'; // Replace with your PHP script URL
 

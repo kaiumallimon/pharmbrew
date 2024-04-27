@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../data/_delete_message.dart';
 import '../../../data/_fetch_admins.dart';
 import '../../../data/_fetch_all_employee.dart';
 import '../../../data/_fetch_employee_data.dart';
@@ -810,8 +811,13 @@ class _QueriesState extends State<Queries> {
                                                                 .start,
                                                         children: [
                                                             GestureDetector(
-                                                              onTap: () {
-                                                                //delete user sent message
+                                                              onHorizontalDragEnd: (details) {
+                                                                // Calculate the difference in position to determine if it's a right swipe
+                                                                if (details.primaryVelocity?.compareTo(0) == 1) {
+                                                                  // Positive value indicates a right swipe
+                                                                  DeleteMessage.delete(messages[index]['message_id']);
+                                                                  // Perform any action here, like navigating to a new screen
+                                                                }
                                                               },
                                                               child: AnimatedContainer(
                                                                 duration: const Duration(milliseconds: 300),
@@ -865,9 +871,13 @@ class _QueriesState extends State<Queries> {
                                                                     .end,
                                                             children: [
                                                                 GestureDetector(
-                                                                  onTap: () {
-                                                                    //delete my sent message
-                                                                    print('delete my message: ${messages[index]['message_id']}');
+                                                                  onHorizontalDragEnd: (details) {
+                                                                    // Calculate the difference in position to determine if it's a left swipe
+                                                                    if (details.primaryVelocity?.compareTo(0) == -1) {
+                                                                      // Negative value indicates a left swipe
+                                                                      DeleteMessage.delete(messages[index]['message_id']);
+                                                                      // Perform any action here, like navigating to a new screen
+                                                                    }
                                                                   },
                                                                   child: AnimatedContainer(
                                                                     duration: const Duration(milliseconds: 300),

@@ -194,42 +194,32 @@ class _EmployeeInboxState extends State<EmployeeInbox> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: [
-                                            GestureDetector(
-                                              onHorizontalDragEnd: (details) {
-                                                // Calculate the difference in position to determine if it's a right swipe
-                                                if (details.primaryVelocity?.compareTo(0) == 1) {
-                                                  // Positive value indicates a right swipe
-                                                  DeleteMessage.delete(messages[index]['message_id']);
-                                                  // Perform any action here, like navigating to a new screen
-                                                }
-                                              },
-                                              child: AnimatedContainer(
-                                                duration: const Duration(
-                                                    milliseconds: 300),
-                                                curve: Curves.easeInOut,
-                                                constraints: const BoxConstraints(
-                                                    maxWidth: 450),
-                                                decoration: BoxDecoration(
-                                                  color: Colors
-                                                      .orangeAccent.shade100,
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                margin: const EdgeInsets.only(
-                                                    right: 20,
-                                                    top: 10,
-                                                    bottom: 10),
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 12,
-                                                        vertical: 8),
-                                                child: Text(
-                                                  messages[index]
-                                                      ['message_content'],
-                                                  maxLines: null,
-                                                  style: const TextStyle(
-                                                      color: Colors.black),
-                                                ),
+                                            AnimatedContainer(
+                                              duration: const Duration(
+                                                  milliseconds: 300),
+                                              curve: Curves.easeInOut,
+                                              constraints: const BoxConstraints(
+                                                  maxWidth: 450),
+                                              decoration: BoxDecoration(
+                                                color: Colors
+                                                    .orangeAccent.shade100,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              margin: const EdgeInsets.only(
+                                                  right: 20,
+                                                  top: 10,
+                                                  bottom: 10),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 12,
+                                                      vertical: 8),
+                                              child: Text(
+                                                messages[index]
+                                                    ['message_content'],
+                                                maxLines: null,
+                                                style: const TextStyle(
+                                                    color: Colors.black),
                                               ),
                                             ),
                                           ],

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -146,12 +147,15 @@ class _EmployeeNotificationsState extends State<EmployeeNotifications> {
                                           crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                           children: [
-                                            Text(
-                                              notifications[index]['content'],
-                                              style: TextStyle(
-                                                  fontSize: 17,
-
-                                                  fontWeight: notifications[index]['status']=='unread'? FontWeight.bold:FontWeight.normal),
+                                            Container(
+                                              margin: const EdgeInsets.only(right: 20),
+                                              child: Text(
+                                                notifications[index]['content'],
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize: 17,
+                                                    fontWeight: notifications[index]['status']=='unread'? FontWeight.bold:FontWeight.normal),
+                                              ),
                                             ),
                                           ],
                                         )

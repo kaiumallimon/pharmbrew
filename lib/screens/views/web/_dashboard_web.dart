@@ -347,10 +347,10 @@ class _WebDashboardState extends State<WebDashboard> {
                               ? SidePanelButton(
                             label: 'Announcements',
                             icon: Icons.event,
-                            controller: inFocus == 19,
+                            controller: inFocus == 20,
                             onClick: () {
                               setState(() {
-                                inFocus = 19;
+                                inFocus = 20;
                               });
                             },
                           )
@@ -362,6 +362,32 @@ class _WebDashboardState extends State<WebDashboard> {
                             onClick: () {
                               setState(() {
                                 inFocus = 17;
+                              });
+                            },
+                          )
+                              : const SizedBox.shrink(),
+
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                            label: 'Products',
+                            icon: Icons.shopping_bag_outlined,
+                            controller: inFocus == 19,
+                            onClick: () {
+                              setState(() {
+                                inFocus =19;
+                              });
+                            },
+                          )
+                              : const SizedBox.shrink(),
+
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                            label: 'Leave Request',
+                            icon: Icons.calendar_today_rounded,
+                            controller: inFocus == 21,
+                            onClick: () {
+                              setState(() {
+                                inFocus =21;
                               });
                             },
                           )

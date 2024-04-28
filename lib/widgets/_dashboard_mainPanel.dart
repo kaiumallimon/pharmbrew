@@ -18,6 +18,8 @@ import '../screens/views/dash_ui/_queries_message.dart';
 import '../screens/views/dash_ui/_roles.dart';
 import '../screens/views/dash_ui/_salary_management.dart';
 import '../screens/views/dash_ui/_settings.dart';
+import '../screens/views/dash_ui/employee/_emp_leave_request.dart';
+import '../screens/views/dash_ui/employee/_emp_products.dart';
 
 class DashboardMainPanel extends StatelessWidget {
   DashboardMainPanel({super.key, required this.inFocus});
@@ -66,9 +68,14 @@ class DashboardMainPanel extends StatelessWidget {
                                                                               17
                                                                           ? const EmployeeInbox()
                                                                           : inFocus == 18
-                                                                              ? const EmployeeNotifications(): inFocus == 19
-                                                                              ? const EmployeeAnnouncement()
-                                                                              : Container(),
+                                                                              ? const EmployeeNotifications()
+                                                                              : inFocus == 19
+                                                                                  ? const EmployeeProducts()
+                                                                                  : inFocus == 20
+                                                                                      ? const EmployeeAnnouncement()
+                                                                                      : inFocus == 21
+                                                                                          ? const EmployeeLeaveRequest()
+                                                                                          : Container(),
     );
   }
 }

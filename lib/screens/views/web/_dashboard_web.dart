@@ -269,31 +269,31 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
-                          widget.isAdministrator
-                              ? SidePanelButton(
-                                  label: 'Analytics',
-                                  icon: Icons.analytics,
-                                  controller: inFocus == 9,
-                                  onClick: () {
-                                    setState(() {
-                                      inFocus = 9;
-                                    });
-                                  },
-                                )
-                              : const SizedBox.shrink(),
+                          // widget.isAdministrator
+                          //     ? SidePanelButton(
+                          //         label: 'Analytics',
+                          //         icon: Icons.analytics,
+                          //         controller: inFocus == 9,
+                          //         onClick: () {
+                          //           setState(() {
+                          //             inFocus = 9;
+                          //           });
+                          //         },
+                          //       )
+                          //     : const SizedBox.shrink(),
 
-                          widget.isAdministrator
-                              ? SidePanelButton(
-                                  label: 'Settings',
-                                  icon: Icons.settings,
-                                  controller: inFocus == 11,
-                                  onClick: () {
-                                    setState(() {
-                                      inFocus = 11;
-                                    });
-                                  },
-                                )
-                              : const SizedBox.shrink(),
+                          // widget.isAdministrator
+                          //     ? SidePanelButton(
+                          //         label: 'Settings',
+                          //         icon: Icons.settings,
+                          //         controller: inFocus == 11,
+                          //         onClick: () {
+                          //           setState(() {
+                          //             inFocus = 11;
+                          //           });
+                          //         },
+                          //       )
+                          //     : const SizedBox.shrink(),
 
                           //employee dashboard
 

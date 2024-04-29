@@ -231,6 +231,19 @@ class _WebDashboardState extends State<WebDashboard> {
                             },
                           )
                               : const SizedBox.shrink(),
+
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                            label: 'Order Logs',
+                            icon: Icons.shopping_bag_outlined,
+                            controller: inFocus == 22,
+                            onClick: () {
+                              setState(() {
+                                inFocus = 22;
+                              });
+                            },
+                          )
+                              : const SizedBox.shrink(),
                           widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Finance',

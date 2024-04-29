@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pharmbrew/screens/views/dash_ui/_order_history.dart';
 import 'package:pharmbrew/screens/views/dash_ui/_search_employee.dart';
 import 'package:pharmbrew/screens/views/dash_ui/employee/_emp_announcements.dart';
 import 'package:pharmbrew/screens/views/dash_ui/employee/_emp_edit_profile.dart';
@@ -74,7 +75,8 @@ class DashboardMainPanel extends StatelessWidget {
                                                                                   : inFocus == 20
                                                                                       ? const EmployeeAnnouncement()
                                                                                       : inFocus == 21
-                                                                                          ? const EmployeeLeaveRequest()
+                                                                                          ? const EmployeeLeaveRequest(): inFocus == 22
+                                                                                          ? const OrderHistory()
                                                                                           : Container(),
     );
   }

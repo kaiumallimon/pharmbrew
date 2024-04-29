@@ -706,7 +706,7 @@ class _OrdersState extends State<Orders> {
 
                               //at first update data in the database
 
-                              bool isOrderPlaced = await PlaceOrder.place(cartItems, customerInfo);
+                              bool isOrderPlaced = await PlaceOrder.place(cartItems, customerInfo, userId, name);
 
                               if(isOrderPlaced){
                                 // then send the mail with attachment
@@ -833,13 +833,13 @@ class _OrdersState extends State<Orders> {
 
   late String name = '';
 
-  // late String userId = '';
+  late String userId = '';
 
   void initSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       name = prefs.getString('loggedInUserName') ?? '';
-      // userId = prefs.getString('loggedInUserId') ?? '';
+      userId = prefs.getString('loggedInUserId') ?? '';
     });
   }
 

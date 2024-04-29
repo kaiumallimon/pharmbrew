@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class PlaceOrder {
-  static Future<bool> place(dynamic cart, dynamic customerInfo) async {
+  static Future<bool> place(dynamic cart, dynamic customerInfo, String userId, String userName) async {
     List<dynamic> orderDetails = [];
     for (var item in cart) {
       orderDetails.add({
@@ -20,6 +20,8 @@ class PlaceOrder {
       'email': customerInfo['email'],
       'phone': customerInfo['phone'],
       'address': customerInfo['billing'],
+      'employeeId': userId,
+      'employeeName': userName,
       'orderdetails': orderDetails,
     };
 

@@ -75,9 +75,12 @@ class DashboardMainPanel extends StatelessWidget {
                                                                                   : inFocus == 20
                                                                                       ? const EmployeeAnnouncement()
                                                                                       : inFocus == 21
-                                                                                          ? const EmployeeLeaveRequest(): inFocus == 22
-                                                                                          ? const OrderHistory()
-                                                                                          : Container(),
+                                                                                          ? const EmployeeLeaveRequest()
+                                                                                          : inFocus == 22
+                                                                                              ? const OrderHistory()
+                                                                                              : inFocus == 23
+                                                                                                  ? const OrderHistory()
+                                                                                                  : Container(),
     );
   }
 }

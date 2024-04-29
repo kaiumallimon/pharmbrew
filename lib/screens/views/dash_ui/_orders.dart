@@ -17,6 +17,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/_fetch_products_quantity.dart';
+import '../../../data/_place_order.dart';
 import '../../../data/_send_mail_with_attachment.dart';
 import '../../../domain/_fetch_products.dart';
 
@@ -103,14 +104,8 @@ class _OrdersState extends State<Orders> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: isLoadingFullScreen?Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 20,),
-              Text('Please wait ...',),
-            ],
+          child: isLoadingFullScreen?Center(
+            child: CircularProgressIndicator(),
           ) : ListView(
             children: [
               const Text(
@@ -711,13 +706,22 @@ class _OrdersState extends State<Orders> {
 
                               //at first update data in the database
 
+                              bool isOrderPlaced = await PlaceOrder.place(cartItems, customerInfo);
 
-
-                              // then send the mail with attachment
-                              generatePDF(customerInfo, cartItems);
-                              setState(() {
-                                isLoadingFullScreen=false;
-                              });
+                              if(isOrderPlaced){
+                                // then send the mail with attachment
+                                generatePDF(customerInfo, cartItems);
+                                setState(() {
+                                  isLoadingFullScreen=false;
+                                  cartItems.clear();
+                                  customerInfo.clear();
+                                });
+                              }else{
+                                setState(() {
+                                  isLoadingFullScreen=false;
+                                });
+                                showCustomErrorDialog('Failed to place order!', context);
+                              }
 
                             } else {
                               showCustomErrorDialog(

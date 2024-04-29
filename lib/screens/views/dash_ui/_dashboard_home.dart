@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:html';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pharmbrew/data/_fetch_orders.dart';
 import 'package:pharmbrew/data/_openweathermap.dart';
 import 'package:pharmbrew/domain/_get_location.dart';
 import 'package:pharmbrew/widgets/_dashboard_home_grid_item.dart';
@@ -28,6 +30,7 @@ class _DashboardHomeState extends State<DashboardHome> {
   late String? weather = "";
 
   late Timer timer;
+  late Timer timer2;
 
   void _fetchNotification() async {
     notifications = await FetchNotification.fetch();
@@ -93,6 +96,9 @@ class _DashboardHomeState extends State<DashboardHome> {
     Timer(const Duration(milliseconds: 500), () {
       getProducts();
     });
+
+    timer2 = Timer.periodic(
+        const Duration(milliseconds: 500), (Timer t) => getOrderDetails());
   }
 
   late String pp = ''; // Initialize pp with an empty string
@@ -128,7 +134,10 @@ class _DashboardHomeState extends State<DashboardHome> {
     focusNode.removeListener(_onFocusChange);
     _scrollController.dispose(); // Dispose ScrollController
     focusNode.dispose(); // Dispose FocusNode
+    timer.cancel();
+    timer2.cancel();
     super.dispose();
+
   }
 
   bool isTextFieldFocused = false;
@@ -352,12 +361,12 @@ class _DashboardHomeState extends State<DashboardHome> {
                         physics: const NeverScrollableScrollPhysics(),
                         gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
+                          crossAxisCount: 5,
                           crossAxisSpacing: 10,
                           mainAxisSpacing: 10,
                           mainAxisExtent: 250,
                         ),
-                        itemCount: 4,
+                        itemCount: 5,
                         itemBuilder: (context, index) {
                           return index==0? DashboardGridItem(
                             background: Colors.white,
@@ -369,7 +378,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                             background: Colors.white,
                             textColor: Colors.black,
                             title: dashboardItems[index]["title"],
-                            data: dashboardItems[index]["data"],
+                            data: orderDetails.length.toString(),
                             image: dashboardItems[index]["image"],
                           ): index==2? DashboardGridItem(
                             background: Colors.white,
@@ -377,12 +386,19 @@ class _DashboardHomeState extends State<DashboardHome> {
                             title: dashboardItems[index]["title"],
                             data: getTotalEmployees().toString(),
                             image: dashboardItems[index]["image"],
-                          ): DashboardGridItem(
+                          ):index==3? DashboardGridItem(
                             background: Colors.white,
                             textColor: Colors.black,
                             title: dashboardItems[index]["title"],
                             data: attendanceStats['present_today'],
                             image: dashboardItems[index]["image"],
+                          ):DashboardGridItem(
+                            background: Colors.white,
+                            textColor: Colors.black,
+                            title: dashboardItems[index]["title"],
+                            data: "BDT ${earnings.toString()}",
+                            image: dashboardItems[index]["image"],
+                            isCost: true,
                           );
                         },
                       )),
@@ -528,7 +544,7 @@ class _DashboardHomeState extends State<DashboardHome> {
       "image": "assets/images/icons8-pills-100.png"
     },
     {
-      "title": "Orders Pending",
+      "title": "Orders Placed",
       "data": "34",
       "image": "assets/images/icons8-order-100.png"
     },
@@ -538,7 +554,12 @@ class _DashboardHomeState extends State<DashboardHome> {
       "image": "assets/images/icons8-employees-100.png"
     },
     {
-      "title": "Present Employees",
+      "title": "Checked In Employees",
+      "data": "118",
+      "image": "assets/images/icons8-attendance-100.png"
+    },
+    {
+      "title": "Sales Revenue",
       "data": "118",
       "image": "assets/images/icons8-attendance-100.png"
     }
@@ -563,6 +584,25 @@ class _DashboardHomeState extends State<DashboardHome> {
     count+=int.parse(attendanceStats['absent_today']);
     count+=int.parse(attendanceStats['not_checked_in']);
     return count;
+  }
+
+  List<dynamic> orderDetails=[];
+  late double earnings=0.0;
+
+  void getOrderDetails() async {
+    var data=await FetchOrders.fetch();
+    double earningLocal=0.0;
+    setState(() {
+      orderDetails = data;
+    });
+
+    for(var order in orderDetails){
+      earningLocal+=double.parse(order['totalCost']);
+    }
+
+    setState(() {
+      earnings=earningLocal;
+    });
   }
 
 

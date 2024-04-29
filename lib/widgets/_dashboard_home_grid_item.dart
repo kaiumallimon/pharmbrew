@@ -8,13 +8,14 @@ class DashboardGridItem extends StatefulWidget {
       {super.key,
       required this.title,
       required this.data,
-      required this.image, required this.background, required this.textColor});
+      required this.image, required this.background, required this.textColor, this.isCost=false});
 
   final String title;
   final String data;
   final String image;
   final Color background;
   final Color textColor;
+  final bool isCost;
 
   @override
   State<DashboardGridItem> createState() => _DashboardGridItemState();
@@ -87,7 +88,7 @@ class _DashboardGridItemState extends State<DashboardGridItem> {
                             Text(
                               widget.data,
                               style: GoogleFonts.inter(
-                                fontSize: 35,
+                                fontSize: widget.isCost? 25:35,
                                 fontWeight: FontWeight.bold,
                                 color: widget.textColor,
                               ),

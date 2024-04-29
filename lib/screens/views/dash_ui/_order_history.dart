@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:blur/blur.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ class _OrderHistoryState extends State<OrderHistory> {
   List<dynamic> orderHistory = [];
   List<dynamic> filteredOrderHistory = [];
 
+  late Timer _timer;
   @override
   void initState() {
     getOrderHistory();
@@ -88,6 +91,11 @@ class _OrderHistoryState extends State<OrderHistory> {
                         ),
                       ),
                     ),
+
+                    const SizedBox(width: 20),
+                    IconButton(onPressed: (){
+                      getOrderHistory();
+                    }, icon: Icon(Icons.refresh, color: Colors.grey.shade500, size: 30,))
                   ],
                 ),
               ),

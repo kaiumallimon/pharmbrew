@@ -50,20 +50,20 @@ class _DashboardGridItemState extends State<DashboardGridItem> {
         ),
         child: Stack(
           children: [
-            Transform.translate(
-              offset: const Offset(340, 180),
-              child: Container(
-                  child: Opacity(
-                    opacity: 0.3,
-                    child: Image.asset(
-                      color: widget.textColor,
-                      height: 60,
-                      width: 60,
-                      widget.image,
-
-                    ),
-                  )),
-            ),
+            // Transform.translate(
+            //   offset: const Offset(340, 180),
+            //   child: Container(
+            //       child: Opacity(
+            //         opacity: 0.3,
+            //         child: Image.asset(
+            //           color: widget.textColor,
+            //           height: 60,
+            //           width: 60,
+            //           widget.image,
+            //
+            //         ),
+            //       )),
+            // ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Column(

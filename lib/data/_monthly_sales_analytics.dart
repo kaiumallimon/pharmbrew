@@ -6,7 +6,7 @@ class MonthlySales {
     try {
       final response = await http.post(
           Uri.parse('https://bcrypt.site/scripts/php/get_day_wise_sales.php'),
-          body: {'month': '${DateTime.now().month}', 'year': '${DateTime.now().year}'});
+          body: {'month': '${DateTime.now().month}', 'year': '${DateTime.now().year}', 'day': '${DateTime.now().day}'});
 
       if (response.statusCode == 200) {
         var result = json.decode(response.body);

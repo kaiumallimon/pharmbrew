@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -8,7 +9,7 @@ class DashboardGridItem extends StatefulWidget {
       {super.key,
       required this.title,
       required this.data,
-      required this.image, required this.background, required this.textColor, this.isCost=false});
+      required this.image, required this.background, required this.textColor, this.isCost=false, this.salesInLast24Hours=''});
 
   final String title;
   final String data;
@@ -16,6 +17,7 @@ class DashboardGridItem extends StatefulWidget {
   final Color background;
   final Color textColor;
   final bool isCost;
+  final String salesInLast24Hours ;
 
   @override
   State<DashboardGridItem> createState() => _DashboardGridItemState();
@@ -85,13 +87,46 @@ class _DashboardGridItemState extends State<DashboardGridItem> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            widget.salesInLast24Hours.isEmpty? Text(
                               widget.data,
                               style: GoogleFonts.inter(
                                 fontSize: widget.isCost? 25:35,
                                 fontWeight: FontWeight.bold,
                                 color: widget.textColor,
                               ),
+                            ): Column(
+                              children: [
+                                Text(
+                                  widget.data,
+                                  style: GoogleFonts.inter(
+                                    fontSize: widget.isCost? 20:35,
+                                    fontWeight: FontWeight.bold,
+                                    color: widget.textColor,
+                                  ),
+                                ),
+                                const SizedBox(height: 10,),
+                                Container(
+                                  margin: const EdgeInsets.only(top: 10),
+                                  child: Row(
+                                    children: [
+                                      double.parse(widget.salesInLast24Hours)>0? Icon(Icons.arrow_upward,color: CupertinoColors.activeGreen): const SizedBox.shrink(),
+                                      const SizedBox(width: 5,),
+                                      Tooltip(
+                                        message: 'Sales in last 24 hours',
+                                        child: Text(
+                                          "BDT ${widget.salesInLast24Hours}",
+                                          style: GoogleFonts.inter(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            color: double.parse(widget.salesInLast24Hours)>0?CupertinoColors.activeGreen:Colors.grey,
+                                          ),
+                                        ),
+                                      ),
+
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),

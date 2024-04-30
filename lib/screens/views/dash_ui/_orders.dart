@@ -48,16 +48,22 @@ class _OrdersState extends State<Orders> {
 
       setState(() {
         for (var product in productsList) {
-          List<String> productData = [];
-          productData.add(product['product_id']);
-          productData.add(product['productName']);
-          productData.add(product['variant']);
-          productData.add(product['productionDate']);
-          productData.add(product['expDate']);
-          productData.add(product['unitPerStrips']);
-          productData.add(product['unitPrice']);
-          productData.add(product['quantity']);
-          allProductsList.add(productData);
+          String expDate=product['expDate'];
+
+          if(isProductExpired(expDate)){
+            continue;
+          }else{
+            List<String> productData = [];
+            productData.add(product['product_id']);
+            productData.add(product['productName']);
+            productData.add(product['variant']);
+            productData.add(product['productionDate']);
+            productData.add(product['expDate']);
+            productData.add(product['unitPerStrips']);
+            productData.add(product['unitPrice']);
+            productData.add(product['quantity']);
+            allProductsList.add(productData);
+          }
 
           // print('Product data: $productData');
         }
@@ -87,6 +93,13 @@ class _OrdersState extends State<Orders> {
         }).toList();
       }
     });
+  }
+
+
+  bool isProductExpired(String expiryDateString) {
+    DateTime expiryDate = DateTime.parse(expiryDateString);
+    DateTime currentDate = DateTime.now();
+    return currentDate.isAfter(expiryDate);
   }
 
   @override
@@ -355,9 +368,12 @@ class _OrdersState extends State<Orders> {
                               if (filteredData.isEmpty &&
                                   !isLoading &&
                                   nameController.text.isNotEmpty)
-                                const Text(
-                                  'Product Not Available!',
-                                  style: TextStyle(color: Colors.red),
+                                Container(
+                                  margin: const EdgeInsets.only(bottom: 15 ),
+                                  child: const Text(
+                                    'Product Not Available!',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
                                 ),
 
                               const SizedBox(

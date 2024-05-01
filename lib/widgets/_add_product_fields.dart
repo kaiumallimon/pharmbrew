@@ -17,16 +17,16 @@ class _AddProductFieldsState extends State<AddProductFields> {
   void initState() {
     super.initState();
 
-    if(widget.readOnly){
-      widget.controller.text = widget.initialValue;
-    }
+    // if(widget.readOnly){
+    //   widget.controller.text = widget.initialValue;
+    // }
   }
 
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(right: 10),
+      // margin: const EdgeInsets.only(right: 10),
       child: TextField(
         readOnly: widget.readOnly,
         controller: widget.controller,

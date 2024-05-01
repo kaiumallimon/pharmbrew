@@ -1,7 +1,8 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '_reset_password_dialog.dart';
 
 class RememberAndForgotPassword extends StatefulWidget {
   const RememberAndForgotPassword({
@@ -16,8 +17,7 @@ class RememberAndForgotPassword extends StatefulWidget {
       _RememberAndForgotPasswordState();
 }
 
-class _RememberAndForgotPasswordState
-    extends State<RememberAndForgotPassword> {
+class _RememberAndForgotPasswordState extends State<RememberAndForgotPassword> {
   bool isChecked = false;
   late SharedPreferences preferences;
 
@@ -40,6 +40,7 @@ class _RememberAndForgotPasswordState
     });
     await preferences.setBool("remembered", isChecked);
   }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -51,7 +52,6 @@ class _RememberAndForgotPasswordState
           Row(
             children: [
               Checkbox(
-
                 value: isChecked,
                 onChanged: (bool? value) {
                   setState(() {
@@ -69,7 +69,6 @@ class _RememberAndForgotPasswordState
     );
   }
 }
-
 
 class Forgot_Password extends StatefulWidget {
   const Forgot_Password({Key? key}) : super(key: key);
@@ -89,9 +88,9 @@ class _Forgot_PasswordState extends State<Forgot_Password> {
         const Text(
           'Forgot password?',
           style: TextStyle(
-            // fontWeight: FontWeight.bold,
-            // color: CupertinoColors.activeBlue,
-          ),
+              // fontWeight: FontWeight.bold,
+              // color: CupertinoColors.activeBlue,
+              ),
         ),
         const SizedBox(width: 5),
         MouseRegion(
@@ -105,14 +104,21 @@ class _Forgot_PasswordState extends State<Forgot_Password> {
               _isHovering = false;
             });
           },
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.ease,
-            child: Text(
-              'Reset',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: _isHovering ? Colors.blue.shade200 : CupertinoColors.activeBlue,
+          child: GestureDetector(
+            onTap: () {
+              showDialog(context: context, builder: (context) => const ResetPasswordDialog());
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.ease,
+              child: Text(
+                'Reset',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: _isHovering
+                      ? Colors.blue.shade200
+                      : CupertinoColors.activeBlue,
+                ),
               ),
             ),
           ),

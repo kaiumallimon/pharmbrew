@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:pharmbrew/data/_delete_notification.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/_fetch_employee_data.dart';
 import '../../../data/_update_notification_status.dart';
@@ -155,21 +156,55 @@ class _NotificationState extends State<Notifications> {
                                     ),
                                   ),
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Container(
-                                        margin: const EdgeInsets.only(right: 20),
-                                        child: Text(
-                                          getTime(notifications[index]['created_at']),
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              color: notifications[index]['status']=='unread'?Colors.black:Colors.grey,
-                                              fontWeight: notifications[index]['status']=='unread'? FontWeight.bold:FontWeight.normal),
-                                        ),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.only(right: 20),
+                                            child: Text(
+                                              getTime(notifications[index]['created_at']),
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: notifications[index]['status']=='unread'?Colors.black:Colors.grey,
+                                                  fontWeight: notifications[index]['status']=='unread'? FontWeight.bold:FontWeight.normal),
+                                            ),
+                                          ),
+                                        ],
                                       ),
+
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+
+                                      IconButton(onPressed: (){
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                backgroundColor: Colors.white,
+                                                title: const Text('Delete Notification'),
+                                                content: const Text('Are you sure you want to delete this notification?'),
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: const Text('Cancel')),
+                                                  TextButton(
+                                                      onPressed: () async {
+                                                        await DeleteNotification.delete(notifications[index]['notification_id']);
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: const Text('Delete'))
+                                                ],
+                                              );
+                                            });
+                                      }, icon: const Icon(Icons.delete, color: Colors.red, size: 20,)),
+                                      const SizedBox(width: 10),
                                     ],
-                                  )
+                                  ),
                                 ],
                               ),
                             ),

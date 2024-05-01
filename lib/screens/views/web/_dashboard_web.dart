@@ -231,6 +231,19 @@ class _WebDashboardState extends State<WebDashboard> {
                             },
                           )
                               : const SizedBox.shrink(),
+
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                            label: 'Order Logs',
+                            icon: Icons.shopping_bag_outlined,
+                            controller: inFocus == 22,
+                            onClick: () {
+                              setState(() {
+                                inFocus = 22;
+                              });
+                            },
+                          )
+                              : const SizedBox.shrink(),
                           widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Finance',
@@ -256,31 +269,31 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
-                          widget.isAdministrator
-                              ? SidePanelButton(
-                                  label: 'Analytics',
-                                  icon: Icons.analytics,
-                                  controller: inFocus == 9,
-                                  onClick: () {
-                                    setState(() {
-                                      inFocus = 9;
-                                    });
-                                  },
-                                )
-                              : const SizedBox.shrink(),
+                          // widget.isAdministrator
+                          //     ? SidePanelButton(
+                          //         label: 'Analytics',
+                          //         icon: Icons.analytics,
+                          //         controller: inFocus == 9,
+                          //         onClick: () {
+                          //           setState(() {
+                          //             inFocus = 9;
+                          //           });
+                          //         },
+                          //       )
+                          //     : const SizedBox.shrink(),
 
-                          widget.isAdministrator
-                              ? SidePanelButton(
-                                  label: 'Settings',
-                                  icon: Icons.settings,
-                                  controller: inFocus == 11,
-                                  onClick: () {
-                                    setState(() {
-                                      inFocus = 11;
-                                    });
-                                  },
-                                )
-                              : const SizedBox.shrink(),
+                          // widget.isAdministrator
+                          //     ? SidePanelButton(
+                          //         label: 'Settings',
+                          //         icon: Icons.settings,
+                          //         controller: inFocus == 11,
+                          //         onClick: () {
+                          //           setState(() {
+                          //             inFocus = 11;
+                          //           });
+                          //         },
+                          //       )
+                          //     : const SizedBox.shrink(),
 
                           //employee dashboard
 
@@ -347,10 +360,10 @@ class _WebDashboardState extends State<WebDashboard> {
                               ? SidePanelButton(
                             label: 'Announcements',
                             icon: Icons.event,
-                            controller: inFocus == 19,
+                            controller: inFocus == 20,
                             onClick: () {
                               setState(() {
-                                inFocus = 19;
+                                inFocus = 20;
                               });
                             },
                           )
@@ -362,6 +375,46 @@ class _WebDashboardState extends State<WebDashboard> {
                             onClick: () {
                               setState(() {
                                 inFocus = 17;
+                              });
+                            },
+                          )
+                              : const SizedBox.shrink(),
+
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                            label: 'Products',
+                            icon: Icons.shopping_bag_outlined,
+                            controller: inFocus == 19,
+                            onClick: () {
+                              setState(() {
+                                inFocus =19;
+                              });
+                            },
+                          )
+                              : const SizedBox.shrink(),
+
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                            label: 'Leave Request',
+                            icon: Icons.calendar_today_rounded,
+                            controller: inFocus == 21,
+                            onClick: () {
+                              setState(() {
+                                inFocus =21;
+                              });
+                            },
+                          )
+                              : const SizedBox.shrink(),
+
+
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                            label: 'Order Logs',
+                            icon: Icons.shopping_bag_outlined,
+                            controller: inFocus == 23,
+                            onClick: () {
+                              setState(() {
+                                inFocus = 23;
                               });
                             },
                           )

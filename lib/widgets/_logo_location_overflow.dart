@@ -42,6 +42,7 @@ class _OverflowCheckRowState extends State<OverflowCheckRow> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

@@ -658,7 +658,7 @@ class _AddEmployeeState extends State<Events> {
     DateTime start = DateTime.parse(startingDate);
     DateTime end = DateTime.parse(endingDate);
 
-    if (now.isAfter(start) && now.isBefore(end)) {
+    if ((now.isAfter(start) && now.isBefore(end)) || (startingDate==endingDate && startingDate==now.toString().split(' ')[0])) {
       return 'Ongoing';
     } else if (now.isBefore(start)) {
       return 'Upcoming';

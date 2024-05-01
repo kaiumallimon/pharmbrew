@@ -38,18 +38,23 @@ class _OverflowCheckRowState extends State<OverflowCheckRow> {
   }
 
   Widget _buildOverflowDesign() {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        Column(
           children: [
-            widget.logo,
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            widget.locatedAt,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                widget.logo,
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                widget.locatedAt,
+              ],
+            ),
           ],
         )
       ],

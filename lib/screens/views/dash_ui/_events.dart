@@ -685,7 +685,4 @@ class _AddEmployeeState extends State<Events> {
   late DateTime? selectedDate=null;
   late DateTime? selectedEndingDate=null;
 
-
-
-
 }

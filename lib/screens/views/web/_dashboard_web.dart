@@ -208,8 +208,8 @@ class _WebDashboardState extends State<WebDashboard> {
                               : const SizedBox.shrink(),
                           widget.isAdministrator
                               ? SidePanelButton(
-                            label: 'Queries',
-                            icon: Icons.inbox,
+                            label: 'Messages',
+                            icon: Icons.chat,
                             controller: inFocus == 10,
                             onClick: () {
                               setState(() {
@@ -246,7 +246,7 @@ class _WebDashboardState extends State<WebDashboard> {
                               : const SizedBox.shrink(),
                           widget.isAdministrator
                               ? SidePanelButton(
-                                  label: 'Finance',
+                                  label: 'Payroll',
                                   icon: CupertinoIcons.money_dollar_circle_fill,
                                   controller: inFocus == 6,
                                   onClick: () {

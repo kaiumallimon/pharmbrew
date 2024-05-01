@@ -456,7 +456,14 @@ class _ProductsState extends State<Products> {
                                 ],
                                 rows: [
                                   for (var i = 0; i < filteredData.length; i++)
-                                    DataRow(cells: [
+                                    DataRow(
+
+                                        color: filteredData[i][7]=='0'?MaterialStateColor.resolveWith(
+                                          (states) => Colors.red.shade100,
+                                        ):MaterialStateColor.resolveWith(
+                                          (states) => Colors.white,
+                                        ),
+                                        cells: [
                                       // Start the loop from j = 1 to skip the product ID at index 0
                                       for (var j = 1; j < filteredData[i].length; j++)
                                         DataCell(Text(filteredData[i][j])),

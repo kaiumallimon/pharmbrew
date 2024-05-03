@@ -21,4 +21,5 @@ class GetAttendance{
 
 void main(List<String> args) async {
   List<dynamic> attendance = await GetAttendance.get();
+  print(attendance);
 }

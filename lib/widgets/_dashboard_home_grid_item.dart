@@ -109,7 +109,7 @@ class _DashboardGridItemState extends State<DashboardGridItem> {
                                   margin: const EdgeInsets.only(top: 10),
                                   child: Row(
                                     children: [
-                                      double.parse(widget.salesInLast24Hours)>0? Icon(Icons.arrow_upward,color: CupertinoColors.activeGreen): const SizedBox.shrink(),
+                                      double.parse(widget.salesInLast24Hours)>0? Icon(Icons.arrow_upward,color: CupertinoColors.activeGreen): Icon(Icons.arrow_downward,color: Colors.grey),
                                       const SizedBox(width: 5,),
                                       Tooltip(
                                         message: 'Sales in last 24 hours',

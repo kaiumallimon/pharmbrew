@@ -43,3 +43,7 @@ class FetchEmployee {
     }
   }
 }
+
+void main() async {
+  print(await FetchEmployee.fetchEmployee('rating', "DESC"));
+}

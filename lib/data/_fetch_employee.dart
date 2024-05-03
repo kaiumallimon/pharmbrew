@@ -45,5 +45,6 @@ class FetchEmployee {
 }
 
 void main() async {
-  print(await FetchEmployee.fetchEmployee('rating', "DESC"));
+  DateTime date=DateTime.parse('2022-12-01');
+  print(date.isBefore(DateTime.parse('2022-12-08')));
 }

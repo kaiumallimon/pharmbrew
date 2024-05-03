@@ -26,4 +26,5 @@ class DailyAnalyticsAttendanceFetcher {
 main(List<String> args) async {
   String date=DateTime.now().toString().split(' ')[0];
   var data=await DailyAnalyticsAttendanceFetcher.fetch(date);
+  print(data);
 }

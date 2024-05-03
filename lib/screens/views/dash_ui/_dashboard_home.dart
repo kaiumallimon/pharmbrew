@@ -444,7 +444,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                                                     image: dashboardItems[index]
                                                         ["image"],
                                                     isCost: true,
-                                  salesInLast24Hours: '${salesInLast24h['totalSales']}',
+                                  salesInLast24Hours: '${salesInLast24h['totalSales']??0}',
                                                   );
                               },
                             )),

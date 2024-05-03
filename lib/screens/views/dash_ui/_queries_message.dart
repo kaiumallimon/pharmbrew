@@ -165,7 +165,7 @@ class _QueriesState extends State<Queries> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Queries",
+                      "Messages",
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,

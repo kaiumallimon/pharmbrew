@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pharmbrew/data/_fetch_announcements.dart';
 import 'package:pharmbrew/data/_fetch_orders.dart';
 import 'package:pharmbrew/data/_fetch_top_selling_product.dart';
 import 'package:pharmbrew/data/_openweathermap.dart';
@@ -12,12 +14,15 @@ import 'package:pharmbrew/domain/_get_location.dart';
 import 'package:pharmbrew/widgets/_dashboard_home_grid_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../data/_fetch_daily_analytics_attendance.dart';
 import '../../../data/_fetch_top_customers.dart';
 import '../../../data/_monthly_sales_analytics.dart';
 import '../../../data/_sales_in_last_24h.dart';
 import '../../../data/fetch_notification.dart';
 import '../../../domain/_fetch_products.dart';
+import '../../../utils/_show_dialog.dart';
+import '../../../utils/_show_dialog2.dart';
 
 class DashboardHome extends StatefulWidget {
   const DashboardHome({Key? key}) : super(key: key);
@@ -110,18 +115,22 @@ class _DashboardHomeState extends State<DashboardHome> {
 
     getMonthlySales();
 
-
     Timer.periodic(Duration(milliseconds: 500), (timer) {
       getTopSellingProducts();
-    });Timer.periodic(Duration(milliseconds: 500), (timer) {
+    });
+    Timer.periodic(Duration(milliseconds: 500), (timer) {
       getTopSellingProducts();
     });
     Timer.periodic(Duration(milliseconds: 500), (timer) {
       getTopCustomers();
     });
 
-   Timer.periodic(Duration(milliseconds: 500), (timer) {
+    Timer.periodic(Duration(milliseconds: 500), (timer) {
       getSalesInLast24h();
+    });
+
+    Timer.periodic(Duration(milliseconds: 500), (timer) {
+      fetchAnnouncements();
     });
   }
 
@@ -242,9 +251,10 @@ class _DashboardHomeState extends State<DashboardHome> {
                 width: width * .33,
                 height: 50,
                 child: TextField(
+                  controller: searchController,
                   focusNode: focusNode,
                   decoration: InputDecoration(
-                    hintText: "Search anything",
+                    hintText: "Search anything from google",
                     hintStyle: TextStyle(
                       fontSize: 14,
                       color: Colors.grey.shade500,
@@ -258,21 +268,44 @@ class _DashboardHomeState extends State<DashboardHome> {
                       ),
                     ),
                     suffixIcon: isTextFieldFocused
-                        ? Container(
-                            height: 30,
-                            width: 30,
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            margin: const EdgeInsets.only(right: 5, left: 5),
-                            alignment: Alignment.center,
-                            child: IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                CupertinoIcons.arrow_right,
-                                size: 18,
-                                color: Colors.white,
+                        ? MouseRegion(
+                            onEnter: (event) {
+                              setState(() {
+                                isHoveringSearchButton = true;
+                              });
+                            },
+                            onExit: (event) {
+                              setState(() {
+                                isHoveringSearchButton = false;
+                              });
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                              height: 30,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                color: isHoveringSearchButton
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Colors.black,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              margin: const EdgeInsets.only(right: 5, left: 5),
+                              alignment: Alignment.center,
+                              child: IconButton(
+                                onPressed: () {
+                                  var text = searchController.text.trim();
+                                  if (text.isNotEmpty) {
+                                    _launchURL(
+                                        'https://www.google.com/search?q=$text');
+                                    searchController.clear();
+                                  }
+                                },
+                                icon: const Icon(
+                                  CupertinoIcons.arrow_right,
+                                  size: 18,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           )
@@ -296,6 +329,20 @@ class _DashboardHomeState extends State<DashboardHome> {
                   ),
                 ),
               ),
+
+              // AnimatedContainer(
+              //   duration: Duration(milliseconds: 300),
+              //   curve: Curves.easeInOut,
+              //   child: Row(
+              //     children: [
+              //       Text('Welcome back!',style: GoogleFonts.inter(
+              //         fontSize: 18,
+              //         fontWeight: FontWeight.bold,
+              //       ),)
+              //     ],
+              //   ),
+              // ),
+
               Container(
                 padding: const EdgeInsets.only(right: 20),
                 child: Row(
@@ -444,7 +491,8 @@ class _DashboardHomeState extends State<DashboardHome> {
                                                     image: dashboardItems[index]
                                                         ["image"],
                                                     isCost: true,
-                                  salesInLast24Hours: '${salesInLast24h['totalSales']??0}',
+                                                    salesInLast24Hours:
+                                                        '${salesInLast24h['totalSales'] ?? 0}',
                                                   );
                               },
                             )),
@@ -1059,8 +1107,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                                                       Container(
                                                         width: 200,
                                                         child: Text(
-                                                          topCustomers[
-                                                                  index]
+                                                          topCustomers[index]
                                                               ['customerName'],
                                                           style: GoogleFonts
                                                               .inter(),
@@ -1092,13 +1139,10 @@ class _DashboardHomeState extends State<DashboardHome> {
                                                           MainAxisAlignment
                                                               .center,
                                                       children: [
-
                                                         Container(
                                                           width: 140,
                                                           child: Text(
-                                                            "BDT ${topCustomers[
-                                                                    index][
-                                                                'totalBill']}",
+                                                            "BDT ${topCustomers[index]['totalBill']}",
                                                             maxLines: 2,
                                                             overflow:
                                                                 TextOverflow
@@ -1128,6 +1172,219 @@ class _DashboardHomeState extends State<DashboardHome> {
                     const SizedBox(
                       height: 20,
                     ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      height: 570,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.grey,
+                            blurRadius: 10,
+                            offset: Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      padding: const EdgeInsets.only(top: 20,bottom: 10,left: 10,right: 10),
+
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Latest Announcements',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            ],
+                          ),
+                          Expanded(child:
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: 3,
+                            itemBuilder: (context, index) {
+                              return MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                onEnter: (event) {
+                                  setState(() {
+                                    isHovered = index;
+                                  });
+                                },
+                                onExit: (event) {
+                                  setState(() {
+                                    isHovered = -1;
+                                  });
+                                },
+                                child: AnimatedContainer(
+                                  curve: Curves.easeIn,
+                                  duration:
+                                  Duration(milliseconds: 250),
+                                  color: isHovered == index
+                                      ? Colors.grey.shade300
+                                      : Colors.white,
+                                  height: 150,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 20, horizontal: 20),
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 10,horizontal: 10),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 120,
+                                        child: Row(
+                                          children: [
+                                            Column(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .center,
+                                              children: [
+                                                Text(
+                                                  getFormattedDate(
+                                                      announcements[
+                                                      index][
+                                                      'start_date']),
+                                                  style: GoogleFonts.inter(
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .bold),
+                                                ),
+                                                const SizedBox(
+                                                    height: 5),
+                                                Text(
+                                                  getYear(announcements[
+                                                  index]
+                                                  ['start_date']),
+                                                  style: GoogleFonts.inter(
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .bold),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 20),
+                                      AnimatedContainer(
+                                        curve: Curves.easeIn,
+                                        duration: Duration(
+                                            milliseconds: 250),
+                                        width: isHovered == index
+                                            ? 5
+                                            : 2,
+                                        color: isHovered == index
+                                            ? Colors.grey.shade600
+                                            : Colors.grey.shade300,
+                                        height: null,
+                                      ),
+                                      const SizedBox(width: 30),
+                                      Expanded(
+                                        child: Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .center,
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment
+                                                .start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    announcements[index]
+                                                    ['title'],
+                                                    style: TextStyle(
+                                                        fontSize: 22,
+                                                        fontWeight:
+                                                        FontWeight
+                                                            .bold),
+                                                  ),
+                                                  Container(
+                                                    padding:
+                                                    const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal:
+                                                        10,
+                                                        vertical:
+                                                        5),
+                                                    decoration:
+                                                    BoxDecoration(
+                                                      color: checkStatus(
+                                                          announcements[index][
+                                                          'start_date'],
+                                                          announcements[index][
+                                                          'end_date']) ==
+                                                          'Ongoing'
+                                                          ? Colors
+                                                          .green
+                                                          : checkStatus(announcements[index]['start_date'], announcements[index]['end_date']) ==
+                                                          'Upcoming'
+                                                          ? Colors
+                                                          .blue
+                                                          : Colors
+                                                          .red,
+                                                      borderRadius:
+                                                      BorderRadius
+                                                          .circular(
+                                                          10),
+                                                    ),
+                                                    child: Text(
+                                                      checkStatus(
+                                                          announcements[
+                                                          index]
+                                                          [
+                                                          'start_date'],
+                                                          announcements[
+                                                          index]
+                                                          [
+                                                          'end_date']),
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .white),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                  height: 10),
+                                              Text(
+                                                formatSingleLine(
+                                                    announcements[index][
+                                                    'description']),
+                                                textAlign:
+                                                TextAlign.justify,
+                                                maxLines: 2,
+                                                overflow: TextOverflow
+                                                    .ellipsis,
+                                                style: TextStyle(
+                                                    color:
+                                                    Colors.grey),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    )
                   ],
                 ),
         )
@@ -1213,6 +1470,7 @@ class _DashboardHomeState extends State<DashboardHome> {
   }
 
   List<dynamic> topCustomers = [];
+
   void getTopCustomers() async {
     var data = await TopCustomers.fetch();
     setState(() {
@@ -1220,12 +1478,75 @@ class _DashboardHomeState extends State<DashboardHome> {
     });
   }
 
-  Map<String,dynamic> salesInLast24h = {};
-  void getSalesInLast24h() async{
+  Map<String, dynamic> salesInLast24h = {};
+
+  void getSalesInLast24h() async {
     var data = await SalesInLast24h.fetch();
     setState(() {
       salesInLast24h = data;
     });
+  }
+
+  final TextEditingController searchController = TextEditingController();
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  int isHovered = -1;
+
+  bool isHoveringSearchButton = false;
+
+  List<dynamic> announcements= [];
+
+  void fetchAnnouncements() async {
+    List<dynamic> localAnnouncements = await FetchAnnouncements.fetch();
+    setState(() {
+      announcements = localAnnouncements;
+    });
+  }
+  String formatSingleLine(String text) {
+    return text.replaceAll(RegExp(r'[\n\r\f\v]'), ' ');
+  }
+
+  String getFormattedDate(String date) {
+    List<String> dateParts = date.split('-');
+
+    // Convert the date parts to integers
+    int year = int.parse(dateParts[0]);
+    int month = int.parse(dateParts[1]);
+    int day = int.parse(dateParts[2]);
+
+    // Create a DateTime object
+    DateTime dateTime = DateTime(year, month, day);
+
+    // Format the DateTime object
+    String formattedDate = DateFormat('MMMM d').format(dateTime);
+    return formattedDate;
+  }
+
+  String checkStatus(String startingDate, String endingDate) {
+    DateTime now = DateTime.now();
+    DateTime start = DateTime.parse(startingDate);
+    DateTime end = DateTime.parse(endingDate);
+
+    if ((now.isAfter(start) && now.isBefore(end)) || (startingDate==endingDate && startingDate==now.toString().split(' ')[0])) {
+      return 'Ongoing';
+    } else if (now.isBefore(start)) {
+      return 'Upcoming';
+    } else {
+      return 'Ended';
+    }
+  }
+
+  String getYear(String date) {
+    List<String> dateParts = date.split('-');
+
+    return dateParts[0];
   }
 }
 

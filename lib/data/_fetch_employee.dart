@@ -45,6 +45,6 @@ class FetchEmployee {
 }
 
 void main() async {
-  DateTime date=DateTime.parse('2022-12-01');
-  print(date.isBefore(DateTime.parse('2022-12-08')));
+  List<dynamic> emp = await FetchEmployee.fetchEmployee(null, null);
+  print(emp);
 }

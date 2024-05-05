@@ -176,6 +176,10 @@ class _AddEmployeeState extends State<EmployeeEditProfile> {
                                                 .trim());
 
                                         showCustomSuccessDialog('Password Updated', context);
+
+                                        currentPasswordController.clear();
+                                        newPasswordController.clear();
+                                        confirmNewPasswordController.clear();
                                       } else {
                                         showCustomErrorDialog(
                                             'Password did not matched!',

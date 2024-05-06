@@ -100,7 +100,7 @@ class _EmployeeInboxState extends State<EmployeeInbox> {
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: const Row(
                   children: [
-                    Text('Support',
+                    Text('Messages',
                         style: TextStyle(
                             fontSize: 25.0, fontWeight: FontWeight.bold)),
                   ],

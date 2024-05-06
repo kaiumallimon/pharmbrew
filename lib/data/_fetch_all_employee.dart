@@ -23,6 +23,7 @@ class FetchAllEmployee {
 void main(List<String> args) async {
 
   List<dynamic> emp = await FetchAllEmployee.fetch();
+  print(emp);
 }
 
 

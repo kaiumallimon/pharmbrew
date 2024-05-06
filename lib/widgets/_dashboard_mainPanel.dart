@@ -80,7 +80,9 @@ class DashboardMainPanel extends StatelessWidget {
                                                                                               ? const OrderHistory()
                                                                                               : inFocus == 23
                                                                                                   ? const OrderHistory()
-                                                                                                  : Container(),
+                                                                                                  : inFocus == 24
+                                                                                                      ? EmployeeEditProfile()
+                                                                                                      : Container(),
     );
   }
 }

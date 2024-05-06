@@ -21,7 +21,7 @@ class _WebDashboardState extends State<WebDashboard> {
   late String pp = ''; // Initialize pp with an empty string
   late String name = '';
   late String userRole;
-  late String loggedInUserId='';
+  late String loggedInUserId = '';
 
   void initData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -36,11 +36,9 @@ class _WebDashboardState extends State<WebDashboard> {
     final userId = prefs.getString('loggedInUserId');
     loggedInUserId = userId ?? '';
 
-
     setState(
         () {}); // Update the state after retrieving data from SharedPreferences
   }
-
 
   late Timer timer;
   late Timer timer2;
@@ -50,8 +48,10 @@ class _WebDashboardState extends State<WebDashboard> {
     super.initState();
     initData();
     inFocus = widget.isAdministrator ? 0 : 12;
-    timer=Timer.periodic(const Duration(milliseconds: 500), (Timer t) => _fetchNotification());
-    timer2=Timer.periodic(const Duration(milliseconds: 500), (Timer t) => _fetchNotificationEmployee());
+    timer = Timer.periodic(
+        const Duration(milliseconds: 500), (Timer t) => _fetchNotification());
+    timer2 = Timer.periodic(const Duration(milliseconds: 500),
+        (Timer t) => _fetchNotificationEmployee());
   }
 
   void switchPage(int index) {
@@ -130,16 +130,30 @@ class _WebDashboardState extends State<WebDashboard> {
                               : const SizedBox.shrink(),
                           widget.isAdministrator
                               ? SidePanelButton(
-                                  label: 'Add employee',
-                                  icon: CupertinoIcons.add,
-                                  controller: inFocus == 1,
+                                  label: 'Products',
+                                  icon: Icons.shopping_bag_outlined,
+                                  controller: inFocus == 15,
                                   onClick: () {
                                     setState(() {
-                                      inFocus = 1;
+                                      inFocus = 15;
                                     });
                                   },
                                 )
                               : const SizedBox.shrink(),
+
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Order Logs',
+                                  icon: Icons.shopping_bag_outlined,
+                                  controller: inFocus == 22,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 22;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+
                           widget.isAdministrator
                               ? SidePanelButton(
                                   label: 'Employees',
@@ -152,18 +166,77 @@ class _WebDashboardState extends State<WebDashboard> {
                                   },
                                 )
                               : const SizedBox.shrink(),
+
                           widget.isAdministrator
                               ? SidePanelButton(
-                                  label: 'Products',
-                                  icon: Icons.shopping_bag_outlined,
-                                  controller: inFocus == 15,
+                                  label: 'Attendance',
+                                  icon: Icons.person,
+                                  controller: inFocus == 7,
                                   onClick: () {
                                     setState(() {
-                                      inFocus = 15;
+                                      inFocus = 7;
                                     });
                                   },
                                 )
                               : const SizedBox.shrink(),
+
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Announcement',
+                                  icon: Icons.event,
+                                  controller: inFocus == 8,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 8;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Notifications',
+                                  icon: Icons.notifications,
+                                  controller: inFocus == 4,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 4;
+                                      // notificationsCount = 0;
+                                      print("Logged in user: $loggedInUserId");
+                                      // UpdateNotificationStatus.update(loggedInUserId);
+                                    });
+                                  },
+                                  notificationDot:
+                                      notificationsCount > 0 ? true : false,
+                                )
+                              : const SizedBox.shrink(),
+
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Messages',
+                                  icon: Icons.chat,
+                                  controller: inFocus == 10,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 10;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Add employee',
+                                  icon: CupertinoIcons.add,
+                                  controller: inFocus == 1,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 1;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+
                           // widget.isAdministrator
                           //     ? SidePanelButton(
                           //         label: 'Edit Profile',
@@ -190,85 +263,19 @@ class _WebDashboardState extends State<WebDashboard> {
                                 )
                               : const SizedBox.shrink(),
 
-                          widget.isAdministrator
-                              ? SidePanelButton(
-                                  label: 'Notifications',
-                                  icon: Icons.notifications,
-                                  controller: inFocus == 4,
-                                  onClick: () {
-                                    setState(() {
-                                      inFocus = 4;
-                                      // notificationsCount = 0;
-                                      print("Logged in user: $loggedInUserId");
-                                      // UpdateNotificationStatus.update(loggedInUserId);
-                                    });
-                                  },
-                                  notificationDot: notificationsCount>0?true:false,
-                                )
-                              : const SizedBox.shrink(),
-                          widget.isAdministrator
-                              ? SidePanelButton(
-                            label: 'Messages',
-                            icon: Icons.chat,
-                            controller: inFocus == 10,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 10;
-                              });
-                            },
-                          )
-                              : const SizedBox.shrink(),
+                          // widget.isAdministrator
+                          //     ? SidePanelButton(
+                          //         label: 'Payroll',
+                          //         icon: CupertinoIcons.money_dollar_circle_fill,
+                          //         controller: inFocus == 6,
+                          //         onClick: () {
+                          //           setState(() {
+                          //             inFocus = 6;
+                          //           });
+                          //         },
+                          //       )
+                          //     : const SizedBox.shrink(),
 
-                          widget.isAdministrator
-                              ? SidePanelButton(
-                            label: 'Attendance',
-                            icon: Icons.person,
-                            controller: inFocus == 7,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 7;
-                              });
-                            },
-                          )
-                              : const SizedBox.shrink(),
-
-                          widget.isAdministrator
-                              ? SidePanelButton(
-                            label: 'Order Logs',
-                            icon: Icons.shopping_bag_outlined,
-                            controller: inFocus == 22,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 22;
-                              });
-                            },
-                          )
-                              : const SizedBox.shrink(),
-                          widget.isAdministrator
-                              ? SidePanelButton(
-                                  label: 'Payroll',
-                                  icon: CupertinoIcons.money_dollar_circle_fill,
-                                  controller: inFocus == 6,
-                                  onClick: () {
-                                    setState(() {
-                                      inFocus = 6;
-                                    });
-                                  },
-                                )
-                              : const SizedBox.shrink(),
-
-                          widget.isAdministrator
-                              ? SidePanelButton(
-                                  label: 'Announcement',
-                                  icon: Icons.event,
-                                  controller: inFocus == 8,
-                                  onClick: () {
-                                    setState(() {
-                                      inFocus = 8;
-                                    });
-                                  },
-                                )
-                              : const SizedBox.shrink(),
                           // widget.isAdministrator
                           //     ? SidePanelButton(
                           //         label: 'Analytics',
@@ -295,6 +302,19 @@ class _WebDashboardState extends State<WebDashboard> {
                           //       )
                           //     : const SizedBox.shrink(),
 
+                          widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Profile',
+                                  icon: Icons.person,
+                                  controller: inFocus == 24,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 24;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+
                           //employee dashboard
 
                           //employee home
@@ -311,40 +331,91 @@ class _WebDashboardState extends State<WebDashboard> {
                                 )
                               : const SizedBox.shrink(),
 
-                          //employee edit profile request
-
-
                           !widget.isAdministrator
                               ? SidePanelButton(
-                            label: 'Orders',
-                            icon: Icons.shopping_cart_outlined,
-                            controller: inFocus == 16,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 16;
-                              });
-                            },
-                          )
+                                  label: 'Products',
+                                  icon: Icons.shopping_bag_outlined,
+                                  controller: inFocus == 19,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 19;
+                                    });
+                                  },
+                                )
                               : const SizedBox.shrink(),
 
                           !widget.isAdministrator
                               ? SidePanelButton(
-                            label: 'Notifications',
-                            icon: Icons.notifications,
-                            controller: inFocus == 18,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 18;
-                              });
-                            },
-                            notificationDot: notificationCountEmployee>0?true:false,
-                          )
+                                  label: 'Orders',
+                                  icon: Icons.shopping_cart_outlined,
+                                  controller: inFocus == 16,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 16;
+                                    });
+                                  },
+                                )
                               : const SizedBox.shrink(),
 
                           !widget.isAdministrator
                               ? SidePanelButton(
-                                  label: 'Edit Profile',
-                                  icon: Icons.edit,
+                                  label: 'Order Logs',
+                                  icon: Icons.shopping_bag_outlined,
+                                  controller: inFocus == 23,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 23;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Announcements',
+                                  icon: Icons.event,
+                                  controller: inFocus == 20,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 20;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Notifications',
+                                  icon: Icons.notifications,
+                                  controller: inFocus == 18,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 18;
+                                    });
+                                  },
+                                  notificationDot: notificationCountEmployee > 0
+                                      ? true
+                                      : false,
+                                )
+                              : const SizedBox.shrink(),
+
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Messages',
+                                  icon: Icons.message,
+                                  controller: inFocus == 17,
+                                  onClick: () {
+                                    setState(() {
+                                      inFocus = 17;
+                                    });
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+
+                          !widget.isAdministrator
+                              ? SidePanelButton(
+                                  label: 'Profile',
+                                  icon: Icons.person,
                                   controller: inFocus == 13,
                                   onClick: () {
                                     setState(() {
@@ -354,71 +425,18 @@ class _WebDashboardState extends State<WebDashboard> {
                                 )
                               : const SizedBox.shrink(),
 
-
-
-                          !widget.isAdministrator
-                              ? SidePanelButton(
-                            label: 'Announcements',
-                            icon: Icons.event,
-                            controller: inFocus == 20,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 20;
-                              });
-                            },
-                          )
-                              : const SizedBox.shrink(),!widget.isAdministrator
-                              ? SidePanelButton(
-                            label: 'Support',
-                            icon: Icons.support_agent,
-                            controller: inFocus == 17,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 17;
-                              });
-                            },
-                          )
-                              : const SizedBox.shrink(),
-
-                          !widget.isAdministrator
-                              ? SidePanelButton(
-                            label: 'Products',
-                            icon: Icons.shopping_bag_outlined,
-                            controller: inFocus == 19,
-                            onClick: () {
-                              setState(() {
-                                inFocus =19;
-                              });
-                            },
-                          )
-                              : const SizedBox.shrink(),
-
-                          !widget.isAdministrator
-                              ? SidePanelButton(
-                            label: 'Leave Request',
-                            icon: Icons.calendar_today_rounded,
-                            controller: inFocus == 21,
-                            onClick: () {
-                              setState(() {
-                                inFocus =21;
-                              });
-                            },
-                          )
-                              : const SizedBox.shrink(),
-
-
-                          !widget.isAdministrator
-                              ? SidePanelButton(
-                            label: 'Order Logs',
-                            icon: Icons.shopping_bag_outlined,
-                            controller: inFocus == 23,
-                            onClick: () {
-                              setState(() {
-                                inFocus = 23;
-                              });
-                            },
-                          )
-                              : const SizedBox.shrink(),
+                          // !widget.isAdministrator
+                          //     ? SidePanelButton(
+                          //   label: 'Leave Request',
+                          //   icon: Icons.calendar_today_rounded,
+                          //   controller: inFocus == 21,
+                          //   onClick: () {
+                          //     setState(() {
+                          //       inFocus =21;
+                          //     });
+                          //   },
+                          // )
+                          //     : const SizedBox.shrink(),
                         ],
                       ),
                     ),
@@ -452,13 +470,13 @@ class _WebDashboardState extends State<WebDashboard> {
     for (var notification in notifications) {
       if (notification['status'] == 'unread' &&
           notification['receiver'] == 'hr' &&
-          notification['receiver_id'] == null){
+          notification['receiver_id'] == null) {
         setState(() {
           notificationsCount++;
         });
-      }else if(notification['status'] == 'unread' &&
+      } else if (notification['status'] == 'unread' &&
           notification['receiver'] == 'employee' &&
-          notification['receiver_id'] == loggedInUserId){
+          notification['receiver_id'] == loggedInUserId) {
         setState(() {
           notificationCountEmployee++;
         });
@@ -475,9 +493,9 @@ class _WebDashboardState extends State<WebDashboard> {
     });
     //read the status of notifications:
     for (var notification in notifications) {
-       if(notification['status'] == 'unread' &&
+      if (notification['status'] == 'unread' &&
           notification['receiver'] == 'employee' &&
-          notification['receiver_id'] == loggedInUserId){
+          notification['receiver_id'] == loggedInUserId) {
         setState(() {
           notificationCountEmployee++;
         });

@@ -45,5 +45,6 @@ class FetchEmployee {
 }
 
 void main() async {
-  print(await FetchEmployee.fetchEmployee('rating', "DESC"));
+  List<dynamic> emp = await FetchEmployee.fetchEmployee(null, null);
+  print(emp);
 }

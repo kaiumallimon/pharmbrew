@@ -73,7 +73,7 @@ class _AttendanceState extends State<Attendance> {
     });
 
     timer5 = Timer.periodic(const Duration(milliseconds: 500), (timer) {
-      if(searchController3.text.trim().isEmpty){
+      if (searchController3.text.trim().isEmpty) {
         fetchAllEmployees();
       }
     });
@@ -131,8 +131,10 @@ class _AttendanceState extends State<Attendance> {
       if (query.isNotEmpty) {
         // Filter allEmployees based on the query
         // Assuming 'name' is the key you want to search for
-        allEmployees = allEmployees.where((employee) =>
-            employee['name'].toLowerCase().contains(query.toLowerCase())).toList();
+        allEmployees = allEmployees
+            .where((employee) =>
+                employee['name'].toLowerCase().contains(query.toLowerCase()))
+            .toList();
       } else {
         // If query is empty, show all employees
         // You may fetch the original list from your data source again here
@@ -599,6 +601,9 @@ class _AttendanceState extends State<Attendance> {
                                                       isIndividualEmployeeSelected =
                                                           true;
                                                     });
+
+                                                    print(
+                                                        'Employee: $individualEmployee');
                                                   },
                                                 ),
                                                 Divider(
@@ -685,16 +690,19 @@ class _AttendanceState extends State<Attendance> {
                               selectedDate = value.toString();
                             });
 
-                            selectedDateData = attendanceStatsIndividual.firstWhere((element) => element['month'] == value);
+                            selectedDateData =
+                                attendanceStatsIndividual.firstWhere(
+                                    (element) => element['month'] == value);
 
-                            List<String> absentDates = selectedDateData['absent_dates'].split(', ');
+                            List<String> absentDates =
+                                selectedDateData['absent_dates'].split(', ');
 
                             data.clear();
 
                             setState(() {
-                              data=generateDataSource(absentDates,selectedDateData);
+                              data = generateDataSource(
+                                  absentDates, selectedDateData);
                             });
-
                           },
                         ),
                       ),
@@ -731,102 +739,132 @@ class _AttendanceState extends State<Attendance> {
                       ? Container(
                           height: 720,
                           child: Center(
-                            child: _buildDropdownMenuItems().length==0?Text('Not enough data to show!' ,style: TextStyle(color: Colors.grey[600]),):  Text(
-                              'Please select a month-year to view attendance stats',
-                              style: TextStyle(color: Colors.grey[600]),
-                            ),
+                            child: _buildDropdownMenuItems().length == 0
+                                ? Text(
+                                    'Not enough data to show!',
+                                    style: TextStyle(color: Colors.grey[600]),
+                                  )
+                                : Text(
+                                    'Please select a month-year to view attendance stats',
+                                    style: TextStyle(color: Colors.grey[600]),
+                                  ),
                           ),
                         )
                       : Column(
-                    children: [
-                      Container(
-                        height: 250,
-                        width: double.infinity,
-                        // color: Colors.red,
-                        child: Row(
-                          children:[
-                            Expanded(child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 5,
-                                    blurRadius: 7,
-                                    offset: const Offset(0, 3),
+                          children: [
+                            Container(
+                              height: 250,
+                              width: double.infinity,
+                              // color: Colors.red,
+                              child: Row(children: [
+                                Expanded(
+                                    child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                              padding: const EdgeInsets.all(20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Average Check-In Time', style: TextStyle(color: Colors.grey)),
-                                  Expanded(child: Center(child: Text(formatTimeToAMPM(selectedDateData['avg_checkin_time']),style: GoogleFonts.inter(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                  ),)))
-                                ],
-                              ),
-                            )),
-                            const SizedBox(width: 20),
-                            Expanded(child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 5,
-                                    blurRadius: 7,
-                                    offset: const Offset(0, 3),
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Average Check-In Time',
+                                          style: TextStyle(color: Colors.grey)),
+                                      Expanded(
+                                          child: Center(
+                                              child: Text(
+                                        formatTimeToAMPM(selectedDateData[
+                                            'avg_checkin_time']),
+                                        style: GoogleFonts.inter(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )))
+                                    ],
                                   ),
-                                ],
-                              ),
-                              padding: const EdgeInsets.all(20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Average Check-Out Time', style: TextStyle(color: Colors.grey)),
-                                  Expanded(child: Center(child: Text(formatTimeToAMPM(selectedDateData['avg_checkout_time']),style: GoogleFonts.inter(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                  ),)))
-                                ],
-                              ),
-                            )),
-                            const SizedBox(width: 20),
-                            Expanded(child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 5,
-                                    blurRadius: 7,
-                                    offset: const Offset(0, 3),
+                                )),
+                                const SizedBox(width: 20),
+                                Expanded(
+                                    child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                              padding: const EdgeInsets.all(20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('Average Working Per Day', style: TextStyle(color: Colors.grey)),
-                                  Expanded(child: Center(child: Text(formatTimeDuration(selectedDateData['avg_working_hours']),style: GoogleFonts.inter(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                  ),)))
-                                ],
-                              ),
-                            )),
-                          ]
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Average Check-Out Time',
+                                          style: TextStyle(color: Colors.grey)),
+                                      Expanded(
+                                          child: Center(
+                                              child: Text(
+                                        formatTimeToAMPM(selectedDateData[
+                                            'avg_checkout_time']),
+                                        style: GoogleFonts.inter(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )))
+                                    ],
+                                  ),
+                                )),
+                                const SizedBox(width: 20),
+                                Expanded(
+                                    child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text('Average Working Per Day',
+                                          style: TextStyle(color: Colors.grey)),
+                                      Expanded(
+                                          child: Center(
+                                              child: Text(
+                                        formatTimeDuration(selectedDateData[
+                                            'avg_working_hours']),
+                                        style: GoogleFonts.inter(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )))
+                                    ],
+                                  ),
+                                )),
+                              ]),
+                            )
+                          ],
                         ),
-                      )
-                    ],
-                  ),
                   const SizedBox(height: 20),
                   Container(
                     height: 400,
@@ -842,20 +880,22 @@ class _AttendanceState extends State<Attendance> {
                         ),
                       ],
                     ),
-
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 20),
                     child: Column(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text('Attendance Overview',style: GoogleFonts.inter(
-                              fontWeight: FontWeight.bold,
-                            ),),
+                            Text(
+                              'Attendance Overview',
+                              style: GoogleFonts.inter(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 20),
-
                         SfCartesianChart(
                           // tooltipBehavior: TooltipBehavior(enable: true),
                           // Use category axis for days
@@ -865,21 +905,35 @@ class _AttendanceState extends State<Attendance> {
                           series: [
                             // Render the bar chart
                             ColumnSeries<AttendanceData, String>(
-
                               color: Colors.green,
                               dataSource: data,
                               xValueMapper: (AttendanceData attendance, _) =>
-                              attendance.date.day.toString(),
+                                  attendance.date.day.toString(),
                               yValueMapper: (AttendanceData attendance, _) =>
-                              attendance.status == "Present" ? 1 : 0,
+                                  attendance.status == "Present" ? 1 : 0,
                               // Customize the data labels
                               dataLabelSettings: DataLabelSettings(
                                 isVisible: true,
                                 // Show custom text for present and absent days
-                                builder: (dynamic data, dynamic point,dynamic series,
-                                    int pointIndex, int seriesIndex) {
-                                  final color = data.status == "Present" ? Colors.black : Colors.red;
-                                  return Text(data.status == "Present" ? 'P' : 'A',style: GoogleFonts.inter(color: color,fontWeight: FontWeight.bold));
+                                builder: (dynamic data,
+                                    dynamic point,
+                                    dynamic series,
+                                    int pointIndex,
+                                    int seriesIndex) {
+                                  final color = data.status == "Present"
+                                      ? Colors.black
+                                      :data.status == "Absent"
+                                          ? Colors.red
+                                          : Colors.grey;
+                                  return Text(
+                                      data.status == "Present"
+                                          ? 'P'
+                                          : data.status == 'Absent'
+                                              ? 'A'
+                                              : 'N/A',
+                                      style: GoogleFonts.inter(
+                                          color: color,
+                                          fontWeight: FontWeight.bold));
                                 },
                               ),
                             ),
@@ -888,9 +942,6 @@ class _AttendanceState extends State<Attendance> {
                       ],
                     ),
                   )
-
-
-
                 ],
               ),
             ),
@@ -1030,10 +1081,10 @@ class _AttendanceState extends State<Attendance> {
   List<DropdownMenuItem<String>> _buildDropdownMenuItems() {
     List<String> years = []; // Your dynamic list of years
 
-    String now=DateFormat('yyyy-MM').format(DateTime.now());
+    String now = DateFormat('yyyy-MM').format(DateTime.now());
 
     for (var attendance in attendanceStatsIndividual) {
-      if(attendance['month']!=now){
+      if (attendance['month'] != now) {
         years.add(attendance['month']);
       }
     }
@@ -1153,11 +1204,10 @@ class _AttendanceState extends State<Attendance> {
     return '$day - $year';
   }
 
-  Map<String,dynamic> selectedDateData = {};
+  Map<String, dynamic> selectedDateData = {};
 
   String formatTimeToAMPM(String timeString) {
-
-    if(timeString==null){
+    if (timeString == null) {
       return '-';
     }
     // Parse the time string
@@ -1184,8 +1234,7 @@ class _AttendanceState extends State<Attendance> {
   }
 
   String formatTimeDuration(String durationString) {
-
-    if(durationString==null){
+    if (durationString == null) {
       return '-';
     }
     // Parse the time duration string
@@ -1212,6 +1261,7 @@ class _AttendanceState extends State<Attendance> {
 
     return formattedDuration;
   }
+
   List<AttendanceData> data = [
     // AttendanceData(DateTime(2024, 5, 1), "Present"),
     // AttendanceData(DateTime(2024, 5, 2), "Present"),
@@ -1219,9 +1269,8 @@ class _AttendanceState extends State<Attendance> {
     // Add more data here for the whole month
   ];
 
-
-  List<AttendanceData> generateDataSource(List<String> absentDates, dynamic selectedDateData) {
-
+  List<AttendanceData> generateDataSource(
+      List<String> absentDates, dynamic selectedDateData) {
     absentDates ??= [];
 
     final List<AttendanceData> dataSource = [];
@@ -1232,18 +1281,37 @@ class _AttendanceState extends State<Attendance> {
 
     final List<DateTime> allDates = List<DateTime>.generate(
       DateTime(nowYear, nowMonth + 1, 0).day,
-          (int index) => DateTime(nowYear, nowMonth, index + 1),
+      (int index) => DateTime(nowYear, nowMonth, index + 1),
     );
 
     for (DateTime date in allDates) {
-      final String formattedDate = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
-      if (absentDates.contains(formattedDate)) {
+      final String formattedDate =
+          '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+      if (absentDates.contains(date)) {
         dataSource.add(AttendanceData(date, "Absent"));
       } else {
-        dataSource.add(AttendanceData(date, "Present"));
+        DateTime joiningDate =
+            DateTime.parse(individualEmployee['joiningdate']); // Joining date
+
+        print('Joining Date: $joiningDate');
+        print('Date: $date');
+        print('Status: ${date.isBefore(joiningDate)}');
+        // Check if the date is before the joining date
+        if (date.isBefore(joiningDate)) {
+          dataSource
+              .add(AttendanceData(date, "N/A")); // Employee hasn't joined yet
+        } else {
+          if (absentDates.contains(formattedDate)) {
+            dataSource.add(AttendanceData(date, "Absent"));
+          } else {
+            dataSource.add(AttendanceData(date, "Present"));
+          }
+        }
       }
       // Break loop if the date is today
-      if (date.year == DateTime.now().year && date.month == DateTime.now().month && date.day == DateTime.now().day) {
+      if (date.year == DateTime.now().year &&
+          date.month == DateTime.now().month &&
+          date.day == DateTime.now().day) {
         break;
       }
     }
@@ -1251,8 +1319,8 @@ class _AttendanceState extends State<Attendance> {
   }
 
   TextEditingController searchController3 = TextEditingController();
-
 }
+
 class AttendanceData {
   final DateTime date;
   final String status;

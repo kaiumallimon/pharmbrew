@@ -984,7 +984,7 @@ class _AddEmployeeState extends State<EmployeeHome> {
   String getCheckinTime(){
     for(var attendance in allAttendanceData){
       if(attendance['userId']==userId){
-        return convertTo12HourFormat(attendance['checkInTime']);
+        return attendance['checkInTime']==null?'Absent': convertTo12HourFormat(attendance['checkInTime']);
       }
     }
 
@@ -994,7 +994,7 @@ class _AddEmployeeState extends State<EmployeeHome> {
   String getCheckoutTime(){
     for(var attendance in allAttendanceData){
       if(attendance['userId']==userId){
-        return attendance['checkOutTime']==null?'Yet to check out':convertTo12HourFormat(attendance['checkOutTime']);
+        return attendance['checkOutTime']==null && attendance['checkInTime']==null? 'Absent':attendance['checkOutTime']==null?'Yet to check out':convertTo12HourFormat(attendance['checkOutTime']);
       }
     }
 

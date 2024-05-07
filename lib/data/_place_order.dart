@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class PlaceOrder {
-  static Future<bool> place(dynamic cart, dynamic customerInfo, String userId, String userName) async {
+  static Future<dynamic> place(dynamic cart, dynamic customerInfo, String userId, String userName) async {
     List<dynamic> orderDetails = [];
     for (var item in cart) {
       orderDetails.add({
@@ -36,7 +36,7 @@ class PlaceOrder {
 
       if (response.statusCode == 200) {
         var result= jsonDecode(response.body);
-        return result['success'];
+        return result;
       } else {
         throw Exception('Failed to place order');
       }

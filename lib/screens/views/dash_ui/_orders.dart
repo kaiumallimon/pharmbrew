@@ -747,8 +747,10 @@ class _OrdersState extends State<Orders> {
 
                                     //at first update data in the database
 
-                                    bool isOrderPlaced = await PlaceOrder.place(
+                                    Map<String, dynamic> response=await PlaceOrder.place(
                                         cartItems, customerInfo, userId, name);
+
+                                    bool isOrderPlaced = response['success'];
 
                                     if (isOrderPlaced) {
                                       // then send the mail with attachment
@@ -758,12 +760,23 @@ class _OrdersState extends State<Orders> {
                                         cartItems.clear();
                                         customerInfo.clear();
                                       });
-                                    } else {
-                                      setState(() {
-                                        isLoadingFullScreen = false;
-                                      });
-                                      showCustomErrorDialog(
-                                          'Failed to place order!', context);
+                                    }else {
+
+                                      if(response['message'].toString().contains('Not enough quantity available')){
+                                        setState(() {
+                                          isLoadingFullScreen = false;
+                                        });
+                                        showCustomErrorDialog(
+                                            response['message'].toString(), context);
+                                      }else{
+                                        setState(() {
+                                          isLoadingFullScreen = false;
+                                        });
+                                        showCustomErrorDialog(
+                                            'Failed to place order!', context);
+                                      }
+
+
                                     }
                                   } else {
                                     showCustomErrorDialog(

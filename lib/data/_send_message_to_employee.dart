@@ -4,6 +4,10 @@ import 'dart:convert';
 class SendMessages {
   static Future<List<dynamic>> toEmployee(String senderId, String receiverId, String message) async {
     try {
+      print('senderId: $senderId');
+      print('receiverId: $receiverId');
+      print('message: $message');
+
       final response = await http.post(
           Uri.parse('https://bcrypt.site/scripts/php/message_to_employee.php'),
           body: {

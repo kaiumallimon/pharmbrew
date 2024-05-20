@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pharmbrew/screens/views/dash_ui/_order_history.dart';
+import 'package:pharmbrew/screens/views/dash_ui/_private_files.dart';
 import 'package:pharmbrew/screens/views/dash_ui/_search_employee.dart';
 import 'package:pharmbrew/screens/views/dash_ui/employee/_emp_announcements.dart';
 import 'package:pharmbrew/screens/views/dash_ui/employee/_emp_edit_profile.dart';
@@ -82,7 +83,9 @@ class DashboardMainPanel extends StatelessWidget {
                                                                                                   ? const OrderHistory()
                                                                                                   : inFocus == 24
                                                                                                       ? EmployeeEditProfile()
-                                                                                                      : Container(),
+                                                                                                      : inFocus == 25
+                                                                                                          ? const PrivateFiles()
+                                                                                                          : Container(),
     );
   }
 }

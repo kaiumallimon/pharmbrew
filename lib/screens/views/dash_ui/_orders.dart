@@ -747,37 +747,53 @@ class _OrdersState extends State<Orders> {
 
                                     //at first update data in the database
 
-                                    Map<String, dynamic> response=await PlaceOrder.place(
-                                        cartItems, customerInfo, userId, name);
+                                    try{
+                                      Map<String, dynamic> response=await PlaceOrder.place(
+                                          cartItems, customerInfo, userId, name);
 
-                                    bool isOrderPlaced = response['success'];
 
-                                    if (isOrderPlaced) {
-                                      // then send the mail with attachment
-                                      generatePDF(customerInfo, cartItems);
+                                      bool isOrderPlaced = response['success'];
+
+                                      if (isOrderPlaced) {
+                                        // then send the mail with attachment
+                                        generatePDF(customerInfo, cartItems);
+                                        setState(() {
+                                          isLoadingFullScreen = false;
+                                          cartItems.clear();
+                                          customerInfo.clear();
+                                        });
+                                      }else {
+
+                                        if(response['message'].toString().contains('Not enough quantity available')){
+
+                                          showCustomErrorDialog(
+                                              'Not enough quantity available!', context);
+                                          setState(() {
+                                            isLoadingFullScreen = false;
+                                          });
+
+                                        }else{
+                                          setState(() {
+                                            isLoadingFullScreen = false;
+                                          });
+                                          showCustomErrorDialog(
+                                              'Failed to place order!', context);
+                                        }
+
+
+                                      }
+                                    }catch(e){
+                                      showCustomErrorDialog('Failed to place order!', context);
                                       setState(() {
                                         isLoadingFullScreen = false;
-                                        cartItems.clear();
-                                        customerInfo.clear();
                                       });
-                                    }else {
-
-                                      if(response['message'].toString().contains('Not enough quantity available')){
-                                        setState(() {
-                                          isLoadingFullScreen = false;
-                                        });
-                                        showCustomErrorDialog(
-                                            response['message'].toString(), context);
-                                      }else{
-                                        setState(() {
-                                          isLoadingFullScreen = false;
-                                        });
-                                        showCustomErrorDialog(
-                                            'Failed to place order!', context);
-                                      }
-
-
                                     }
+
+
+
+
+
+
                                   } else {
                                     showCustomErrorDialog(
                                         'Please save customer info!', context);

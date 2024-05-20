@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pharmbrew/data/_delete_private_file_database.dart';
 import 'package:pharmbrew/utils/_show_dialog.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -85,6 +86,12 @@ class _PrivateFilesState extends State<PrivateFiles> {
       fetchDatabaseInfo();
     });
 
+    Future.delayed(const Duration(milliseconds: 500), () {
+      setState(() {
+        isEmpty = false;
+      });
+    });
+
   }
 
   @override
@@ -95,12 +102,13 @@ class _PrivateFilesState extends State<PrivateFiles> {
     timer2.cancel();
     timer3.cancel();
   }
+  bool isEmpty=true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: databaseInfo.isEmpty? Center(child: CircularProgressIndicator(),) : Container(
+      body: isEmpty? Center(child: CircularProgressIndicator(),) : Container(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -368,6 +376,7 @@ class _PrivateFilesState extends State<PrivateFiles> {
                                                                   actions: <Widget>[
                                                                     ElevatedButton(
                                                                       onPressed: () async {
+                                                                        await DeletePrivateFilesDatabase.delete(userId, privateFiles[index]['file_name']);
                                                                         await DeletePrivateFiles.delete(userId, privateFiles[index]['file_name']);
                                                                         Navigator.of(context).pop();
                                                                       },
@@ -396,7 +405,7 @@ class _PrivateFilesState extends State<PrivateFiles> {
 
                                                           },
                                                           icon: const Icon(
-                                                            Icons.delete,
+                                                            Icons.close,
                                                             color: Colors.red,
                                                           )),
                                                     ],

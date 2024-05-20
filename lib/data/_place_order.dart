@@ -36,6 +36,7 @@ class PlaceOrder {
 
       if (response.statusCode == 200) {
         var result= jsonDecode(response.body);
+        print('Order placed: $result');
         return result;
       } else {
         throw Exception('Failed to place order');

@@ -21,4 +21,5 @@ class FetchAnnouncementsView {
 }
 
 main () async {
+  print(await FetchAnnouncementsView.fetch());
 }

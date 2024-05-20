@@ -739,11 +739,11 @@ class _DashboardHomeState extends State<DashboardHome> {
                                         height: 50,
                                         child: Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceAround,
                                           children: [
-                                            const SizedBox(
-                                              width: 20,
-                                            ),
+                                            // const SizedBox(
+                                            //   width: 20,
+                                            // ),
                                             Expanded(
                                                 child: Container(
                                               alignment: Alignment.center,
@@ -757,7 +757,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                                               ),
                                             )),
                                             const SizedBox(
-                                              width: 20,
+                                              width: 50,
                                             ),
                                             Expanded(
                                                 child: Container(
@@ -775,23 +775,24 @@ class _DashboardHomeState extends State<DashboardHome> {
                                               ),
                                             )),
                                             const SizedBox(
-                                              width: 20,
+                                              width: 50,
                                             ),
-                                            Expanded(
-                                                child: Container(
-                                              alignment: Alignment.center,
-                                              width: 220,
-                                              margin: const EdgeInsets.only(
-                                                  right: 30),
-                                              child: Text(
-                                                'Customer Name',
-                                                style: GoogleFonts.inter(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            )),
+                                            // Expanded(
+                                            //     child: Container(
+                                            //   alignment: Alignment.center,
+                                            //   width: 220,
+                                            //   margin: const EdgeInsets.only(
+                                            //       right: 30),
+                                            //   child: Text(
+                                            //     'Customer Name',
+                                            //     style: GoogleFonts.inter(
+                                            //       fontSize: 15,
+                                            //       fontWeight: FontWeight.bold,
+                                            //       color: Colors.white,
+                                            //     ),
+                                            //   ),
+                                            // )
+                                            // ),
                                           ],
                                         ),
                                       ),
@@ -882,55 +883,55 @@ class _DashboardHomeState extends State<DashboardHome> {
                                                   const SizedBox(
                                                     width: 20,
                                                   ),
-                                                  Container(
-                                                    width: 200,
-                                                    alignment: Alignment.center,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Colors
-                                                                .grey.shade200,
-                                                            shape:
-                                                                BoxShape.circle,
-                                                          ),
-                                                          child: CircleAvatar(
-                                                            radius: 20,
-                                                            backgroundColor:
-                                                                Colors.grey
-                                                                    .shade100,
-                                                            backgroundImage:
-                                                                AssetImage(
-                                                              'assets/images/user.png',
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 20,
-                                                        ),
-                                                        Container(
-                                                          width: 140,
-                                                          child: Text(
-                                                            topSellingProducts[
-                                                                    index][
-                                                                'customerName'],
-                                                            maxLines: 2,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            textAlign:
-                                                                TextAlign.start,
-                                                            style: GoogleFonts
-                                                                .inter(),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
+                                                  // Container(
+                                                  //   width: 200,
+                                                  //   alignment: Alignment.center,
+                                                  //   child: Row(
+                                                  //     mainAxisAlignment:
+                                                  //         MainAxisAlignment
+                                                  //             .center,
+                                                  //     children: [
+                                                  //       Container(
+                                                  //         decoration:
+                                                  //             BoxDecoration(
+                                                  //           color: Colors
+                                                  //               .grey.shade200,
+                                                  //           shape:
+                                                  //               BoxShape.circle,
+                                                  //         ),
+                                                  //         child: CircleAvatar(
+                                                  //           radius: 20,
+                                                  //           backgroundColor:
+                                                  //               Colors.grey
+                                                  //                   .shade100,
+                                                  //           backgroundImage:
+                                                  //               AssetImage(
+                                                  //             'assets/images/user.png',
+                                                  //           ),
+                                                  //         ),
+                                                  //       ),
+                                                  //       const SizedBox(
+                                                  //         width: 20,
+                                                  //       ),
+                                                  //       Container(
+                                                  //         width: 140,
+                                                  //         child: Text(
+                                                  //           topSellingProducts[
+                                                  //                   index][
+                                                  //               'customerName'],
+                                                  //           maxLines: 2,
+                                                  //           overflow:
+                                                  //               TextOverflow
+                                                  //                   .ellipsis,
+                                                  //           textAlign:
+                                                  //               TextAlign.start,
+                                                  //           style: GoogleFonts
+                                                  //               .inter(),
+                                                  //         ),
+                                                  //       ),
+                                                  //     ],
+                                                  //   ),
+                                                  // )
                                                 ],
                                               ),
                                             );

@@ -425,6 +425,19 @@ class _WebDashboardState extends State<WebDashboard> {
                                 )
                               : const SizedBox.shrink(),
 
+
+                          SidePanelButton(
+                            label: 'Private Files',
+                            icon: Icons.file_copy_rounded,
+                            controller: inFocus == 25,
+                            onClick: () {
+                              setState(() {
+                                inFocus = 25;
+                              });
+                            },
+                          )
+
+
                           // !widget.isAdministrator
                           //     ? SidePanelButton(
                           //   label: 'Leave Request',

@@ -393,7 +393,7 @@ class _PrivateFilesState extends State<PrivateFiles> {
                                                                 "${getSize(privateFiles[index]['file_name'])} MB",
                                                                 style: const TextStyle(
                                                                     color: Colors
-                                                          git              .black),
+                                                                        .black),
                                                               ),
                                                             )),
                                                             Expanded(

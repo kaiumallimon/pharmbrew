@@ -34,6 +34,7 @@ class _PrivateFilesState extends State<PrivateFiles> {
   int length = 5;
   bool isUploading = false;
   late String userId = '';
+  bool isInitialOpen=true;
 
   late double size;
 
@@ -59,7 +60,7 @@ class _PrivateFilesState extends State<PrivateFiles> {
     });
   }
 
-  bool isNull = true;
+  // bool isNull = true;
 
   dynamic privateFiles;
 
@@ -67,7 +68,7 @@ class _PrivateFilesState extends State<PrivateFiles> {
     var data = await FetchPrivateFiles.getPrivateFile(userId);
     setState(() {
       privateFiles = data['files'];
-      isNull = data['files'] == null;
+      // isNull = data['files'] == null;
     });
   }
 
@@ -79,9 +80,9 @@ class _PrivateFilesState extends State<PrivateFiles> {
     super.initState();
     initData();
 
-    timer2 = Timer.periodic(const Duration(seconds: 400), (timer) {
-      isNull = false;
-    });
+    // timer2 = Timer.periodic(const Duration(seconds: 400), (timer) {
+    //   isNull = false;
+    // });
 
     timer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
       fetchPrivateFiles();
@@ -96,6 +97,10 @@ class _PrivateFilesState extends State<PrivateFiles> {
         isEmpty = false;
       });
     });
+
+    Future.delayed(const Duration(milliseconds: 500),(){setState(() {
+      isInitialOpen=false;
+    });});
   }
 
   @override
@@ -139,7 +144,7 @@ class _PrivateFilesState extends State<PrivateFiles> {
                                 ? Colors.red.shade300
                                 : Colors.green.shade300,
                             borderRadius: BorderRadius.circular(10)),
-                        child: Text(
+                        child: Text( 
                           'Limit: ${calculateTotalLimit()}/50MB',
                           style: GoogleFonts.inter(
                               fontSize: 16, fontWeight: FontWeight.bold),
@@ -212,7 +217,9 @@ class _PrivateFilesState extends State<PrivateFiles> {
                   const SizedBox(height: 30),
                   selectedIndex == 0
                       ? Expanded(
-                          child: Column(
+                          child: isInitialOpen? Center(
+                            child: CircularProgressIndicator(),
+                          ) : Column(
                           children: [
                             Container(
                               color: Theme.of(context).colorScheme.primary,
@@ -268,15 +275,7 @@ class _PrivateFilesState extends State<PrivateFiles> {
                                 ],
                               ),
                             ),
-                            isNull
-                                ? const Expanded(
-                                    child: Center(
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          CupertinoColors.activeGreen),
-                                    ),
-                                  ))
-                                : privateFiles.length == 0
+                            privateFiles is Map?
                                     ? Expanded(
                                         child: Container(
                                           width: double.infinity,

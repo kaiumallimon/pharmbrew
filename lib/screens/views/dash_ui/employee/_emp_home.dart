@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:pharmbrew/data/_fetch_leave_requests.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
 import '../../../../data/_fetch_all_attendance.dart';
 import '../../../../data/_fetch_announcements.dart';
@@ -38,7 +40,7 @@ class _AddEmployeeState extends State<EmployeeHome> {
   late String? region = "";
   late String? weather = "";
 
-  late Timer timer, timer2;
+  late Timer timer, timer2,timer3;
   late List<SalesData> _salesData = [];
 
   void getMonthlySales() async {
@@ -101,7 +103,6 @@ class _AddEmployeeState extends State<EmployeeHome> {
     });
 
     fetchAttendanceDataCurrentMonth();
-
   }
 
   void getSalesInLast24h() async {
@@ -191,6 +192,8 @@ class _AddEmployeeState extends State<EmployeeHome> {
       isTextFieldFocused = focusNode.hasFocus;
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -387,453 +390,458 @@ class _AddEmployeeState extends State<EmployeeHome> {
               child: const Center(
                 child: CircularProgressIndicator(),
               ))
-              : ListView(
+              : WebSmoothScroll(
             controller: _scrollController,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Padding(
+                animationDuration: 400,
+                child: ListView(
+                            physics: NeverScrollableScrollPhysics(),
+                            controller: _scrollController,
+                            children: [
+                Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: SizedBox(
-                      height: 250,
-                      width: double.infinity,
-                      child: GridView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 5,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          mainAxisExtent: 250,
-                        ),
-                        itemCount: 5,
-                        itemBuilder: (context, index) {
-                          return index == 0
-                              ? DashboardGridItem(
-                            background: Colors.white,
-                            textColor: Colors.black,
-                            title: dashboardItems[index]["title"],
-                            data: products.toString(),
-                            image: dashboardItems[index]["image"],
-                          )
-                              : index == 1
-                              ? DashboardGridItem(
-                            background: Colors.white,
-                            textColor: Colors.black,
-                            title: dashboardItems[index]
-                            ["title"],
-                            data:
-                            orderDetails.length.toString(),
-                            image: dashboardItems[index]
-                            ["image"],
-                          )
-                              : index == 2
-                              ? DashboardGridItem(
-                            background: Colors.white,
-                            textColor: Colors.black,
-                            title: dashboardItems[index]
-                            ["title"],
-                            data: getCheckinTime(),
-                            image: dashboardItems[index]
-                            ["image"],
-                            isCost: true,
-                          )
-                              : index == 3
-                              ? DashboardGridItem(
-                            background: Colors.white,
-                            textColor: Colors.black,
-                            title: dashboardItems[index]
-                            ["title"],
-                            data: getCheckoutTime(),
-                            image: dashboardItems[index]
-                            ["image"],
-                            isCost: true,
-                          )
-                              : DashboardGridItem(
-                            background: Colors.white,
-                            textColor: Colors.black,
-                            title: dashboardItems[index]
-                            ["title"],
-                            data:
-                            "BDT ${salesInLast24h['totalSales'] ?? 0}",
-                            image: dashboardItems[index]
-                            ["image"],
-                            isCost: true,
-                          );
-                        },
-                      )),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                height: 400,
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 10,
-                                offset: Offset(0, 5),
-                              ),
-                            ],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: SizedBox(
+                        height: 250,
+                        width: double.infinity,
+                        child: GridView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 5,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                            mainAxisExtent: 250,
                           ),
-                          child: Column(
-                            children: [
-                              Text('Sales In Current Month (BDT)',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                padding: const EdgeInsets.all(10.0),
-                                child: SfCartesianChart(
-                                    enableAxisAnimation: true,
-                                    primaryXAxis: const CategoryAxis(),
-                                    series: [
-                                      LineSeries<SalesData, String>(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        dataSource: _salesData,
-                                        xValueMapper: (SalesData sales, _) =>
-                                        sales.day,
-                                        yValueMapper: (SalesData sales, _) =>
-                                        sales.amount,
-                                        // dataLabelSettings: const DataLabelSettings(
-                                        //   isVisible: true,
-                                        // ),
-                                        width: 5,
-
-                                        enableTooltip: true,
-                                        markerSettings: MarkerSettings(
-                                          isVisible: true,
-                                          color: Colors.black,
-                                          shape: DataMarkerType.circle,
-                                        ),
-                                      ),
-                                    ],
-                                    tooltipBehavior: TooltipBehavior(
-                                      enable: true,
-                                      canShowMarker: true,
-                                      // header: '',
-                                      // format: 'point.x : point.y',
-                                    )),
-                              ),
-                            ],
-                          ),
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return index == 0
+                                ? DashboardGridItem(
+                              background: Colors.white,
+                              textColor: Colors.black,
+                              title: dashboardItems[index]["title"],
+                              data: products.toString(),
+                              image: dashboardItems[index]["image"],
+                            )
+                                : index == 1
+                                ? DashboardGridItem(
+                              background: Colors.white,
+                              textColor: Colors.black,
+                              title: dashboardItems[index]
+                              ["title"],
+                              data:
+                              orderDetails.length.toString(),
+                              image: dashboardItems[index]
+                              ["image"],
+                            )
+                                : index == 2
+                                ? DashboardGridItem(
+                              background: Colors.white,
+                              textColor: Colors.black,
+                              title: dashboardItems[index]
+                              ["title"],
+                              data: getCheckinTime(),
+                              image: dashboardItems[index]
+                              ["image"],
+                              isCost: true,
+                            )
+                                : index == 3
+                                ? DashboardGridItem(
+                              background: Colors.white,
+                              textColor: Colors.black,
+                              title: dashboardItems[index]
+                              ["title"],
+                              data: getCheckoutTime(),
+                              image: dashboardItems[index]
+                              ["image"],
+                              isCost: true,
+                            )
+                                : DashboardGridItem(
+                              background: Colors.white,
+                              textColor: Colors.black,
+                              title: dashboardItems[index]
+                              ["title"],
+                              data:
+                              "BDT ${salesInLast24h['totalSales'] ?? 0}",
+                              image: dashboardItems[index]
+                              ["image"],
+                              isCost: true,
+                            );
+                          },
                         )),
-
-                    const SizedBox(
-                      width: 10,
-                    ),
-
-                    Expanded(child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.grey,
-                            blurRadius: 10,
-                            offset: Offset(0, 5),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Attendance Overview',
-                                style: GoogleFonts.inter(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          SfCartesianChart(
-                            // tooltipBehavior: TooltipBehavior(enable: true),
-                            // Use category axis for days
-                            primaryXAxis: CategoryAxis(),
-                            // Use numeric axis for presence/absence
-                            primaryYAxis: NumericAxis(),
-                            series: [
-                              // Render the bar chart
-                              ColumnSeries<AttendanceData, String>(
-                                color: Colors.green,
-                                dataSource: data,
-                                xValueMapper: (AttendanceData attendance, _) =>
-                                    attendance.date.day.toString(),
-                                yValueMapper: (AttendanceData attendance, _) =>
-                                attendance.status == "Present" ? 1 : 0,
-                                // Customize the data labels
-                                dataLabelSettings: DataLabelSettings(
-                                  isVisible: true,
-                                  // Show custom text for present and absent days
-                                  builder: (dynamic data,
-                                      dynamic point,
-                                      dynamic series,
-                                      int pointIndex,
-                                      int seriesIndex) {
-                                    final color = data.status == "Present"
-                                        ? Colors.black
-                                        :data.status == "Absent"
-                                        ? Colors.red
-                                        : Colors.grey;
-                                    return Text(
-                                        data.status == "Present"
-                                            ? 'P'
-                                            : data.status == 'Absent'
-                                            ? 'A'
-                                            : '-',
-                                        style: GoogleFonts.inter(
-                                            color: color,
-                                            fontWeight: FontWeight.bold));
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ))
-                  ],
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                height: 570,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 10,
-                      offset: Offset(0, 5),
-                    ),
-                  ],
+                const SizedBox(
+                  height: 10,
                 ),
-                padding: const EdgeInsets.only(top: 20,bottom: 10,left: 10,right: 10),
-
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Latest Announcements',
-                            style: GoogleFonts.inter(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            )),
-                      ],
-                    ),
-                    Expanded(child:
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: 3,
-                      itemBuilder: (context, index) {
-                        return MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          onEnter: (event) {
-                            setState(() {
-                              isHovered = index;
-                            });
-                          },
-                          onExit: (event) {
-                            setState(() {
-                              isHovered = -1;
-                            });
-                          },
-                          child: AnimatedContainer(
-                            curve: Curves.easeIn,
-                            duration:
-                            Duration(milliseconds: 250),
-                            color: isHovered == index
-                                ? Colors.grey.shade300
-                                : Colors.white,
-                            height: 150,
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 20, horizontal: 20),
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 10,horizontal: 10),
-                            child: Row(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.center,
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  height: 400,
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 10,
+                                  offset: Offset(0, 5),
+                                ),
+                              ],
+                            ),
+                            child: Column(
                               children: [
+                                Text('Sales In Current Month (BDT)',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                                const SizedBox(
+                                  height: 10,
+                                ),
                                 Container(
-                                  width: 120,
-                                  child: Row(
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .center,
-                                        children: [
-                                          Text(
-                                            getFormattedDate(
-                                                announcements[
-                                                index][
-                                                'start_date']),
-                                            style: GoogleFonts.inter(
-                                                fontWeight:
-                                                FontWeight
-                                                    .bold),
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: SfCartesianChart(
+                                      enableAxisAnimation: true,
+                                      primaryXAxis: const CategoryAxis(),
+                                      series: [
+                                        LineSeries<SalesData, String>(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          dataSource: _salesData,
+                                          xValueMapper: (SalesData sales, _) =>
+                                          sales.day,
+                                          yValueMapper: (SalesData sales, _) =>
+                                          sales.amount,
+                                          // dataLabelSettings: const DataLabelSettings(
+                                          //   isVisible: true,
+                                          // ),
+                                          width: 5,
+
+                                          enableTooltip: true,
+                                          markerSettings: MarkerSettings(
+                                            isVisible: true,
+                                            color: Colors.black,
+                                            shape: DataMarkerType.circle,
                                           ),
-                                          const SizedBox(
-                                              height: 5),
-                                          Text(
-                                            getYear(announcements[
-                                            index]
-                                            ['start_date']),
-                                            style: GoogleFonts.inter(
-                                                fontWeight:
-                                                FontWeight
-                                                    .bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                AnimatedContainer(
-                                  curve: Curves.easeIn,
-                                  duration: Duration(
-                                      milliseconds: 250),
-                                  width: isHovered == index
-                                      ? 5
-                                      : 2,
-                                  color: isHovered == index
-                                      ? Colors.grey.shade600
-                                      : Colors.grey.shade300,
-                                  height: null,
-                                ),
-                                const SizedBox(width: 30),
-                                Expanded(
-                                  child: Container(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .center,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment
-                                          .start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .spaceBetween,
-                                          children: [
-                                            Text(
-                                              announcements[index]
-                                              ['title'],
-                                              style: TextStyle(
-                                                  fontSize: 22,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .bold),
-                                            ),
-                                            Container(
-                                              padding:
-                                              const EdgeInsets
-                                                  .symmetric(
-                                                  horizontal:
-                                                  10,
-                                                  vertical:
-                                                  5),
-                                              decoration:
-                                              BoxDecoration(
-                                                color: checkStatus(
-                                                    announcements[index][
-                                                    'start_date'],
-                                                    announcements[index][
-                                                    'end_date']) ==
-                                                    'Ongoing'
-                                                    ? Colors
-                                                    .green
-                                                    : checkStatus(announcements[index]['start_date'], announcements[index]['end_date']) ==
-                                                    'Upcoming'
-                                                    ? Colors
-                                                    .blue
-                                                    : Colors
-                                                    .red,
-                                                borderRadius:
-                                                BorderRadius
-                                                    .circular(
-                                                    10),
-                                              ),
-                                              child: Text(
-                                                checkStatus(
-                                                    announcements[
-                                                    index]
-                                                    [
-                                                    'start_date'],
-                                                    announcements[
-                                                    index]
-                                                    [
-                                                    'end_date']),
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .white),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                            height: 10),
-                                        Text(
-                                          formatSingleLine(
-                                              announcements[index][
-                                              'description']),
-                                          textAlign:
-                                          TextAlign.justify,
-                                          maxLines: 2,
-                                          overflow: TextOverflow
-                                              .ellipsis,
-                                          style: TextStyle(
-                                              color:
-                                              Colors.grey),
                                         ),
                                       ],
-                                    ),
+                                      tooltipBehavior: TooltipBehavior(
+                                        enable: true,
+                                        canShowMarker: true,
+                                        // header: '',
+                                        // format: 'point.x : point.y',
+                                      )),
+                                ),
+                              ],
+                            ),
+                          )),
+
+                      const SizedBox(
+                        width: 10,
+                      ),
+
+                      Expanded(child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.grey,
+                              blurRadius: 10,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Attendance Overview',
+                                  style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                        );
-                      },
-                    )
-                    )
-                  ],
+                            const SizedBox(height: 20),
+                            SfCartesianChart(
+                              // tooltipBehavior: TooltipBehavior(enable: true),
+                              // Use category axis for days
+                              primaryXAxis: CategoryAxis(),
+                              // Use numeric axis for presence/absence
+                              primaryYAxis: NumericAxis(),
+                              series: [
+                                // Render the bar chart
+                                ColumnSeries<AttendanceData, String>(
+                                  color: Colors.green,
+                                  dataSource: data,
+                                  xValueMapper: (AttendanceData attendance, _) =>
+                                      attendance.date.day.toString(),
+                                  yValueMapper: (AttendanceData attendance, _) =>
+                                  attendance.status == "Present" ? 1 : 0,
+                                  // Customize the data labels
+                                  dataLabelSettings: DataLabelSettings(
+                                    isVisible: true,
+                                    // Show custom text for present and absent days
+                                    builder: (dynamic data,
+                                        dynamic point,
+                                        dynamic series,
+                                        int pointIndex,
+                                        int seriesIndex) {
+                                      final color = data.status == "Present"
+                                          ? Colors.black
+                                          :data.status == "Absent"
+                                          ? Colors.red
+                                          : Colors.grey;
+                                      return Text(
+                                          data.status == "Present"
+                                              ? 'P'
+                                              : data.status == 'Absent'
+                                              ? 'A'
+                                              : '-',
+                                          style: GoogleFonts.inter(
+                                              color: color,
+                                              fontWeight: FontWeight.bold));
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ))
+                    ],
+                  ),
                 ),
+                const SizedBox(
+                  height: 10,
+                ),
+
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  height: 570,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.grey,
+                        blurRadius: 10,
+                        offset: Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.only(top: 20,bottom: 10,left: 10,right: 10),
+
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Latest Announcements',
+                              style: GoogleFonts.inter(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ],
+                      ),
+                      Expanded(child:
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: 3,
+                        itemBuilder: (context, index) {
+                          return MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            onEnter: (event) {
+                              setState(() {
+                                isHovered = index;
+                              });
+                            },
+                            onExit: (event) {
+                              setState(() {
+                                isHovered = -1;
+                              });
+                            },
+                            child: AnimatedContainer(
+                              curve: Curves.easeIn,
+                              duration:
+                              Duration(milliseconds: 250),
+                              color: isHovered == index
+                                  ? Colors.grey.shade300
+                                  : Colors.white,
+                              height: 150,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 20),
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 10,horizontal: 10),
+                              child: Row(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 120,
+                                    child: Row(
+                                      children: [
+                                        Column(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment
+                                              .center,
+                                          children: [
+                                            Text(
+                                              getFormattedDate(
+                                                  announcements[
+                                                  index][
+                                                  'start_date']),
+                                              style: GoogleFonts.inter(
+                                                  fontWeight:
+                                                  FontWeight
+                                                      .bold),
+                                            ),
+                                            const SizedBox(
+                                                height: 5),
+                                            Text(
+                                              getYear(announcements[
+                                              index]
+                                              ['start_date']),
+                                              style: GoogleFonts.inter(
+                                                  fontWeight:
+                                                  FontWeight
+                                                      .bold),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  AnimatedContainer(
+                                    curve: Curves.easeIn,
+                                    duration: Duration(
+                                        milliseconds: 250),
+                                    width: isHovered == index
+                                        ? 5
+                                        : 2,
+                                    color: isHovered == index
+                                        ? Colors.grey.shade600
+                                        : Colors.grey.shade300,
+                                    height: null,
+                                  ),
+                                  const SizedBox(width: 30),
+                                  Expanded(
+                                    child: Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment
+                                            .center,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment
+                                            .start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                            children: [
+                                              Text(
+                                                announcements[index]
+                                                ['title'],
+                                                style: TextStyle(
+                                                    fontSize: 22,
+                                                    fontWeight:
+                                                    FontWeight
+                                                        .bold),
+                                              ),
+                                              Container(
+                                                padding:
+                                                const EdgeInsets
+                                                    .symmetric(
+                                                    horizontal:
+                                                    10,
+                                                    vertical:
+                                                    5),
+                                                decoration:
+                                                BoxDecoration(
+                                                  color: checkStatus(
+                                                      announcements[index][
+                                                      'start_date'],
+                                                      announcements[index][
+                                                      'end_date']) ==
+                                                      'Ongoing'
+                                                      ? Colors
+                                                      .green
+                                                      : checkStatus(announcements[index]['start_date'], announcements[index]['end_date']) ==
+                                                      'Upcoming'
+                                                      ? Colors
+                                                      .blue
+                                                      : Colors
+                                                      .red,
+                                                  borderRadius:
+                                                  BorderRadius
+                                                      .circular(
+                                                      10),
+                                                ),
+                                                child: Text(
+                                                  checkStatus(
+                                                      announcements[
+                                                      index]
+                                                      [
+                                                      'start_date'],
+                                                      announcements[
+                                                      index]
+                                                      [
+                                                      'end_date']),
+                                                  style: TextStyle(
+                                                      color: Colors
+                                                          .white),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                              height: 10),
+                                          Text(
+                                            formatSingleLine(
+                                                announcements[index][
+                                                'description']),
+                                            textAlign:
+                                            TextAlign.justify,
+                                            maxLines: 2,
+                                            overflow: TextOverflow
+                                                .ellipsis,
+                                            style: TextStyle(
+                                                color:
+                                                Colors.grey),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                )
+                            ],
+                          ),
               ),
-              const SizedBox(
-                height: 20,
-              )
-            ],
-          ),
         )
       ],
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pharmbrew/screens/views/dash_ui/_leave_requests.dart';
 import 'package:pharmbrew/screens/views/dash_ui/_order_history.dart';
 import 'package:pharmbrew/screens/views/dash_ui/_private_files.dart';
 import 'package:pharmbrew/screens/views/dash_ui/_search_employee.dart';
@@ -84,7 +85,8 @@ class DashboardMainPanel extends StatelessWidget {
                                                                                                   : inFocus == 24
                                                                                                       ? EmployeeEditProfile()
                                                                                                       : inFocus == 25
-                                                                                                          ? const PrivateFiles()
+                                                                                                          ? const PrivateFiles(): inFocus == 26
+                                                                                                              ? const LeaveRequests()
                                                                                                           : Container(),
     );
   }

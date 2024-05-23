@@ -20,3 +20,8 @@ class FetchPrivateFiles{
     }
   }
 }
+
+void main()async{
+  var data= await FetchPrivateFiles.getPrivateFile('EMP20240421155706');
+  print(data);
+}

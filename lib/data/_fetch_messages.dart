@@ -26,6 +26,5 @@ class FetchMessages {
 
 
 void main() async{
-  dynamic senders = await FetchMessages.fetch('EMP20240319055204');
 
 }

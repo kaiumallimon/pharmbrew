@@ -627,6 +627,20 @@ class _AttendanceState extends State<Attendance> {
         : Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
+              leading: IconButton(
+                onPressed: () {
+                  setState(() {
+                    isIndividualEmployeeSelected = false;
+                  });
+
+                  setState(() {
+                    selectedDateData.clear();
+                    selectedDate = '';
+                    data.clear();
+                  });
+                },
+                icon: Icon(Icons.arrow_back),
+              ),
               toolbarHeight: 100,
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -645,22 +659,22 @@ class _AttendanceState extends State<Attendance> {
                   ),
                 ],
               ),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      isIndividualEmployeeSelected = false;
-                    });
-
-                    setState(() {
-                      selectedDateData.clear();
-                      selectedDate = '';
-                      data.clear();
-                    });
-                  },
-                  icon: Icon(Icons.close),
-                )
-              ],
+              // actions: [
+              //   IconButton(
+              //     onPressed: () {
+              //       setState(() {
+              //         isIndividualEmployeeSelected = false;
+              //       });
+              //
+              //       setState(() {
+              //         selectedDateData.clear();
+              //         selectedDate = '';
+              //         data.clear();
+              //       });
+              //     },
+              //     icon: Icon(Icons.close),
+              //   )
+              // ],
               backgroundColor: Theme.of(context).colorScheme.primary,
               foregroundColor: Colors.white,
             ),

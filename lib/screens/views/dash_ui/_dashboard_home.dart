@@ -15,6 +15,7 @@ import 'package:pharmbrew/widgets/_dashboard_home_grid_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 import '../../../data/_fetch_daily_analytics_attendance.dart';
 import '../../../data/_fetch_top_customers.dart';
 import '../../../data/_monthly_sales_analytics.dart';
@@ -419,975 +420,961 @@ class _DashboardHomeState extends State<DashboardHome> {
                   child: const Center(
                   child: CircularProgressIndicator(),
                 ))
-              : ListView(
-                  controller: _scrollController,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Padding(
+              : WebSmoothScroll(
+            controller: _scrollController,
+                animationDuration: 400,
+                child: ListView(
+                            physics: NeverScrollableScrollPhysics(),
+                    controller: _scrollController,
+                    children: [
+                      Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: SizedBox(
-                            height: 250,
-                            width: double.infinity,
-                            child: GridView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 5,
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 10,
-                                mainAxisExtent: 250,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: SizedBox(
+                              height: 250,
+                              width: double.infinity,
+                              child: GridView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 5,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                  mainAxisExtent: 250,
+                                ),
+                                itemCount: 5,
+                                itemBuilder: (context, index) {
+                                  return index == 0
+                                      ? DashboardGridItem(
+                                          background: Colors.white,
+                                          textColor: Colors.black,
+                                          title: dashboardItems[index]["title"],
+                                          data: products.toString(),
+                                          image: dashboardItems[index]["image"],
+                                        )
+                                      : index == 1
+                                          ? DashboardGridItem(
+                                              background: Colors.white,
+                                              textColor: Colors.black,
+                                              title: dashboardItems[index]
+                                                  ["title"],
+                                              data:
+                                                  orderDetails.length.toString(),
+                                              image: dashboardItems[index]
+                                                  ["image"],
+                                            )
+                                          : index == 2
+                                              ? DashboardGridItem(
+                                                  background: Colors.white,
+                                                  textColor: Colors.black,
+                                                  title: dashboardItems[index]
+                                                      ["title"],
+                                                  data: getTotalEmployees()
+                                                      .toString(),
+                                                  image: dashboardItems[index]
+                                                      ["image"],
+                                                )
+                                              : index == 3
+                                                  ? DashboardGridItem(
+                                                      background: Colors.white,
+                                                      textColor: Colors.black,
+                                                      title: dashboardItems[index]
+                                                          ["title"],
+                                                      data: attendanceStats[
+                                                          'present_today'],
+                                                      image: dashboardItems[index]
+                                                          ["image"],
+                                                    )
+                                                  : DashboardGridItem(
+                                                      background: Colors.white,
+                                                      textColor: Colors.black,
+                                                      title: dashboardItems[index]
+                                                          ["title"],
+                                                      data:
+                                                          "BDT ${earnings.toString()}",
+                                                      image: dashboardItems[index]
+                                                          ["image"],
+                                                      isCost: true,
+                                                      salesInLast24Hours:
+                                                          '${salesInLast24h['totalSales'] ?? 0}',
+                                                    );
+                                },
+                              )),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        height: 400,
+                        child: Row(
+                          children: [
+                            Expanded(
+                                child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    blurRadius: 10,
+                                    offset: Offset(0, 5),
+                                  ),
+                                ],
                               ),
-                              itemCount: 5,
-                              itemBuilder: (context, index) {
-                                return index == 0
-                                    ? DashboardGridItem(
-                                        background: Colors.white,
-                                        textColor: Colors.black,
-                                        title: dashboardItems[index]["title"],
-                                        data: products.toString(),
-                                        image: dashboardItems[index]["image"],
-                                      )
-                                    : index == 1
-                                        ? DashboardGridItem(
-                                            background: Colors.white,
-                                            textColor: Colors.black,
-                                            title: dashboardItems[index]
-                                                ["title"],
-                                            data:
-                                                orderDetails.length.toString(),
-                                            image: dashboardItems[index]
-                                                ["image"],
-                                          )
-                                        : index == 2
-                                            ? DashboardGridItem(
-                                                background: Colors.white,
-                                                textColor: Colors.black,
-                                                title: dashboardItems[index]
-                                                    ["title"],
-                                                data: getTotalEmployees()
-                                                    .toString(),
-                                                image: dashboardItems[index]
-                                                    ["image"],
-                                              )
-                                            : index == 3
-                                                ? DashboardGridItem(
-                                                    background: Colors.white,
-                                                    textColor: Colors.black,
-                                                    title: dashboardItems[index]
-                                                        ["title"],
-                                                    data: attendanceStats[
-                                                        'present_today'],
-                                                    image: dashboardItems[index]
-                                                        ["image"],
-                                                  )
-                                                : DashboardGridItem(
-                                                    background: Colors.white,
-                                                    textColor: Colors.black,
-                                                    title: dashboardItems[index]
-                                                        ["title"],
-                                                    data:
-                                                        "BDT ${earnings.toString()}",
-                                                    image: dashboardItems[index]
-                                                        ["image"],
-                                                    isCost: true,
-                                                    salesInLast24Hours:
-                                                        '${salesInLast24h['totalSales'] ?? 0}',
-                                                  );
-                              },
-                            )),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      height: 400,
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 10,
-                                  offset: Offset(0, 5),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              children: [
-                                Text('Sales In Current Month (BDT)',
-                                    style: GoogleFonts.inter(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: SfCartesianChart(
-                                      enableAxisAnimation: true,
-                                      primaryXAxis: const CategoryAxis(),
-                                      series: [
-                                        LineSeries<SalesData, String>(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                          dataSource: _salesData,
-                                          xValueMapper: (SalesData sales, _) =>
-                                              sales.day,
-                                          yValueMapper: (SalesData sales, _) =>
-                                              sales.amount,
-                                          // dataLabelSettings: const DataLabelSettings(
-                                          //   isVisible: true,
-                                          // ),
-                                          width: 5,
-
-                                          enableTooltip: true,
-                                          markerSettings: MarkerSettings(
-                                            isVisible: true,
-                                            color: Colors.black,
-                                            shape: DataMarkerType.circle,
-                                          ),
-                                        ),
-                                      ],
-                                      tooltipBehavior: TooltipBehavior(
-                                        enable: true,
-                                        canShowMarker: true,
-                                        // header: '',
-                                        // format: 'point.x : point.y',
-                                      )),
-                                ),
-                              ],
-                            ),
-                          )),
-
-                          const SizedBox(
-                            width: 10,
-                          ),
-
-                          //attendance pie chart
-                          Expanded(
-                              child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 10,
-                                  offset: Offset(0, 5),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              children: [
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Attendance Chart',
+                              child: Column(
+                                children: [
+                                  Text('Sales In Current Month (BDT)',
                                       style: GoogleFonts.inter(
-                                        fontSize: 18,
+                                        fontSize: 15,
                                         fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                attendanceStats.isNotEmpty
-                                    ? // Modify the SfCircularChart widget
-                                    Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20),
-                                        child: SfCircularChart(
-                                          tooltipBehavior: TooltipBehavior(
-                                            enable: true,
-                                            canShowMarker: true,
-                                            // header: '',
-                                            // format: 'point.x : point.y',
-                                          ),
-                                          legend: const Legend(
-                                              position: LegendPosition.bottom,
-                                              isVisible: true,
-                                              overflowMode:
-                                                  LegendItemOverflowMode.wrap),
-                                          series: <CircularSeries>[
-                                            PieSeries<PieChartData, String>(
-                                              animationDuration: 0,
-                                              // animationDelay: 0,
-                                              dataSource: <PieChartData>[
-                                                PieChartData(
-                                                    'Present',
-                                                    double.parse(
-                                                        attendanceStats[
-                                                            'present_today'])),
-                                                PieChartData(
-                                                    'Absent',
-                                                    double.parse(
-                                                        attendanceStats[
-                                                            'absent_today'])),
-                                                PieChartData(
-                                                    "Didn't CheckedIn",
-                                                    double.parse(
-                                                        attendanceStats[
-                                                            'not_checked_in'])),
-                                              ],
-                                              xValueMapper:
-                                                  (PieChartData data, _) =>
-                                                      data.category,
-                                              yValueMapper:
-                                                  (PieChartData data, _) =>
-                                                      data.value,
-                                              dataLabelMapper: (PieChartData
-                                                          data,
-                                                      _) =>
-                                                  '${data.category}: ${data.value}',
-                                              explode: true,
-                                              explodeIndex: getMaxedIndex(),
-                                              explodeOffset: '10%',
+                                      )),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: SfCartesianChart(
+                                        enableAxisAnimation: true,
+                                        primaryXAxis: const CategoryAxis(),
+                                        series: [
+                                          LineSeries<SalesData, String>(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            dataSource: _salesData,
+                                            xValueMapper: (SalesData sales, _) =>
+                                                sales.day,
+                                            yValueMapper: (SalesData sales, _) =>
+                                                sales.amount,
+                                            // dataLabelSettings: const DataLabelSettings(
+                                            //   isVisible: true,
+                                            // ),
+                                            width: 5,
 
-                                              dataLabelSettings:
-                                                  DataLabelSettings(
-                                                isVisible: true,
-                                                textStyle: GoogleFonts.inter(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                labelPosition:
-                                                    ChartDataLabelPosition
-                                                        .outside,
-                                                labelIntersectAction:
-                                                    LabelIntersectAction.shift,
-                                                connectorLineSettings:
-                                                    const ConnectorLineSettings(
-                                                  type: ConnectorType.line,
-                                                  length: '20%',
-                                                  color: Colors.black,
-                                                  width: 1,
-                                                ),
-                                              ),
+                                            enableTooltip: true,
+                                            markerSettings: MarkerSettings(
+                                              isVisible: true,
+                                              color: Colors.black,
+                                              shape: DataMarkerType.circle,
                                             ),
-                                          ],
-                                        ),
-                                      )
-                                    : const CircularProgressIndicator(),
-                              ],
+                                          ),
+                                        ],
+                                        tooltipBehavior: TooltipBehavior(
+                                          enable: true,
+                                          canShowMarker: true,
+                                          // header: '',
+                                          // format: 'point.x : point.y',
+                                        )),
+                                  ),
+                                ],
+                              ),
+                            )),
+
+                            const SizedBox(
+                              width: 10,
                             ),
-                          ))
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            height: 600,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 10,
-                                  offset: Offset(0, 5),
-                                ),
-                              ],
-                            ),
-                            margin: const EdgeInsets.only(left: 20),
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              children: [
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text('Top Selling Products',
-                                    style: GoogleFonts.inter(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                                const SizedBox(
-                                  height: 50,
-                                ),
-                                Expanded(
-                                    child: Container(
-                                  child: Column(
+
+                            //attendance pie chart
+                            Expanded(
+                                child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    blurRadius: 10,
+                                    offset: Offset(0, 5),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Container(
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        decoration: BoxDecoration(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                          // border: Border.all(color: Colors.grey.shade200,width: 3),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        height: 50,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            // const SizedBox(
-                                            //   width: 20,
-                                            // ),
-                                            Expanded(
-                                                child: Container(
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                'Product Name',
-                                                style: GoogleFonts.inter(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            )),
-                                            const SizedBox(
-                                              width: 50,
-                                            ),
-                                            Expanded(
-                                                child: Container(
-                                              alignment: Alignment.center,
-                                              margin: const EdgeInsets.only(
-                                                  left: 30),
-                                              width: 100,
-                                              child: Text(
-                                                'Quantity',
-                                                style: GoogleFonts.inter(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            )),
-                                            const SizedBox(
-                                              width: 50,
-                                            ),
-                                            // Expanded(
-                                            //     child: Container(
-                                            //   alignment: Alignment.center,
-                                            //   width: 220,
-                                            //   margin: const EdgeInsets.only(
-                                            //       right: 30),
-                                            //   child: Text(
-                                            //     'Customer Name',
-                                            //     style: GoogleFonts.inter(
-                                            //       fontSize: 15,
-                                            //       fontWeight: FontWeight.bold,
-                                            //       color: Colors.white,
-                                            //     ),
-                                            //   ),
-                                            // )
-                                            // ),
-                                          ],
+                                      Text(
+                                        'Attendance Chart',
+                                        style: GoogleFonts.inter(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      ListView.builder(
-                                          shrinkWrap: true,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemCount: 5,
-                                          itemBuilder: (context, index) {
-                                            return Container(
-                                              height: 70,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                border: Border.all(
-                                                    color: Colors.grey.shade200,
-                                                    width: 3),
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 20, vertical: 10),
-                                              margin: const EdgeInsets.only(
-                                                  bottom: 15,
-                                                  left: 10,
-                                                  right: 10),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Container(
-                                                        height: 50,
-                                                        width: 50,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          color: Colors
-                                                              .grey.shade200,
-                                                        ),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(5),
-                                                        child:
-                                                            LottieBuilder.asset(
-                                                          'assets/animations/capsule_med.json',
-                                                          height: 50,
-                                                          width: 50,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Container(
-                                                        width: 200,
-                                                        child: Text(
-                                                          topSellingProducts[
-                                                                  index]
-                                                              ['productName'],
-                                                          style: GoogleFonts
-                                                              .inter(),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 20,
-                                                  ),
-                                                  Container(
-                                                    alignment: Alignment.center,
-                                                    width: 100,
-                                                    child: Text(
-                                                      topSellingProducts[index]
-                                                          ['quantity'],
-                                                      style:
-                                                          GoogleFonts.inter(),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 20,
-                                                  ),
-                                                  // Container(
-                                                  //   width: 200,
-                                                  //   alignment: Alignment.center,
-                                                  //   child: Row(
-                                                  //     mainAxisAlignment:
-                                                  //         MainAxisAlignment
-                                                  //             .center,
-                                                  //     children: [
-                                                  //       Container(
-                                                  //         decoration:
-                                                  //             BoxDecoration(
-                                                  //           color: Colors
-                                                  //               .grey.shade200,
-                                                  //           shape:
-                                                  //               BoxShape.circle,
-                                                  //         ),
-                                                  //         child: CircleAvatar(
-                                                  //           radius: 20,
-                                                  //           backgroundColor:
-                                                  //               Colors.grey
-                                                  //                   .shade100,
-                                                  //           backgroundImage:
-                                                  //               AssetImage(
-                                                  //             'assets/images/user.png',
-                                                  //           ),
-                                                  //         ),
-                                                  //       ),
-                                                  //       const SizedBox(
-                                                  //         width: 20,
-                                                  //       ),
-                                                  //       Container(
-                                                  //         width: 140,
-                                                  //         child: Text(
-                                                  //           topSellingProducts[
-                                                  //                   index][
-                                                  //               'customerName'],
-                                                  //           maxLines: 2,
-                                                  //           overflow:
-                                                  //               TextOverflow
-                                                  //                   .ellipsis,
-                                                  //           textAlign:
-                                                  //               TextAlign.start,
-                                                  //           style: GoogleFonts
-                                                  //               .inter(),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ],
-                                                  //   ),
-                                                  // )
-                                                ],
-                                              ),
-                                            );
-                                          }),
                                     ],
                                   ),
-                                ))
-                              ],
-                            ),
-                          ),
+                                  attendanceStats.isNotEmpty
+                                      ? // Modify the SfCircularChart widget
+                                      Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20),
+                                          child: SfCircularChart(
+                                            tooltipBehavior: TooltipBehavior(
+                                              enable: true,
+                                              canShowMarker: true,
+                                              // header: '',
+                                              // format: 'point.x : point.y',
+                                            ),
+                                            legend: const Legend(
+                                                position: LegendPosition.bottom,
+                                                isVisible: true,
+                                                overflowMode:
+                                                    LegendItemOverflowMode.wrap),
+                                            series: <CircularSeries>[
+                                              PieSeries<PieChartData, String>(
+                                                animationDuration: 0,
+                                                // animationDelay: 0,
+                                                dataSource: <PieChartData>[
+                                                  PieChartData(
+                                                      'Present',
+                                                      double.parse(
+                                                          attendanceStats[
+                                                              'present_today'])),
+                                                  PieChartData(
+                                                      'Absent',
+                                                      double.parse(
+                                                          attendanceStats[
+                                                              'absent_today'])),
+                                                  PieChartData(
+                                                      "Didn't CheckedIn",
+                                                      double.parse(
+                                                          attendanceStats[
+                                                              'not_checked_in'])),
+                                                ],
+                                                xValueMapper:
+                                                    (PieChartData data, _) =>
+                                                        data.category,
+                                                yValueMapper:
+                                                    (PieChartData data, _) =>
+                                                        data.value,
+                                                dataLabelMapper: (PieChartData
+                                                            data,
+                                                        _) =>
+                                                    '${data.category}: ${data.value}',
+                                                explode: true,
+                                                explodeIndex: getMaxedIndex(),
+                                                explodeOffset: '10%',
+
+                                                dataLabelSettings:
+                                                    DataLabelSettings(
+                                                  isVisible: true,
+                                                  textStyle: GoogleFonts.inter(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  labelPosition:
+                                                      ChartDataLabelPosition
+                                                          .outside,
+                                                  labelIntersectAction:
+                                                      LabelIntersectAction.shift,
+                                                  connectorLineSettings:
+                                                      const ConnectorLineSettings(
+                                                    type: ConnectorType.line,
+                                                    length: '20%',
+                                                    color: Colors.black,
+                                                    width: 1,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : const CircularProgressIndicator(),
+                                ],
+                              ),
+                            ))
+                          ],
                         ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Container(
-                            height: 600,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 10,
-                                  offset: Offset(0, 5),
-                                ),
-                              ],
-                            ),
-                            margin: const EdgeInsets.only(right: 20),
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              children: [
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text('Our Beloved Customers',
-                                    style: GoogleFonts.inter(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                                const SizedBox(
-                                  height: 50,
-                                ),
-                                Expanded(
-                                    child: Container(
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        decoration: BoxDecoration(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                          // border: Border.all(color: Colors.grey.shade200,width: 3),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: 600,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    blurRadius: 10,
+                                    offset: Offset(0, 5),
+                                  ),
+                                ],
+                              ),
+                              margin: const EdgeInsets.only(left: 20),
+                              padding: const EdgeInsets.all(10),
+                              child: Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text('Top Selling Products',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                  const SizedBox(
+                                    height: 50,
+                                  ),
+                                  Expanded(
+                                      child: Container(
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            // border: Border.all(color: Colors.grey.shade200,width: 3),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          height: 50,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              // const SizedBox(
+                                              //   width: 20,
+                                              // ),
+                                              Expanded(
+                                                  child: Container(
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  'Product Name',
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              )),
+                                              const SizedBox(
+                                                width: 50,
+                                              ),
+                                              Expanded(
+                                                  child: Container(
+                                                alignment: Alignment.center,
+                                                margin: const EdgeInsets.only(
+                                                    left: 30),
+                                                width: 100,
+                                                child: Text(
+                                                  'Quantity',
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              )),
+                                              const SizedBox(
+                                                width: 50,
+                                              ),
+                                              // Expanded(
+                                              //     child: Container(
+                                              //   alignment: Alignment.center,
+                                              //   width: 220,
+                                              //   margin: const EdgeInsets.only(
+                                              //       right: 30),
+                                              //   child: Text(
+                                              //     'Customer Name',
+                                              //     style: GoogleFonts.inter(
+                                              //       fontSize: 15,
+                                              //       fontWeight: FontWeight.bold,
+                                              //       color: Colors.white,
+                                              //     ),
+                                              //   ),
+                                              // )
+                                              // ),
+                                            ],
+                                          ),
                                         ),
-                                        height: 50,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            const SizedBox(
-                                              width: 20,
-                                            ),
-                                            Expanded(
-                                                child: Container(
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                'Customer Name',
-                                                style: GoogleFonts.inter(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            )),
-                                            const SizedBox(
-                                              width: 20,
-                                            ),
-                                            Expanded(
-                                                child: Container(
-                                              alignment: Alignment.center,
-                                              margin: const EdgeInsets.only(
-                                                  left: 30),
-                                              width: 100,
-                                              child: Text(
-                                                'Total Orders',
-                                                style: GoogleFonts.inter(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            )),
-                                            const SizedBox(
-                                              width: 20,
-                                            ),
-                                            Expanded(
-                                                child: Container(
-                                              alignment: Alignment.center,
-                                              width: 220,
-                                              margin: const EdgeInsets.only(
-                                                  right: 30),
-                                              child: Text(
-                                                'Total Spent',
-                                                style: GoogleFonts.inter(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            )),
-                                          ],
+                                        const SizedBox(
+                                          height: 20,
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      ListView.builder(
-                                          shrinkWrap: true,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemCount: 5,
-                                          itemBuilder: (context, index) {
-                                            return Container(
-                                              height: 70,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                border: Border.all(
-                                                    color: Colors.grey.shade200,
-                                                    width: 3),
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 20, vertical: 10),
-                                              margin: const EdgeInsets.only(
-                                                  bottom: 15,
-                                                  left: 10,
-                                                  right: 10),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors
-                                                              .grey.shade200,
-                                                          shape:
-                                                              BoxShape.circle,
-                                                        ),
-                                                        child: CircleAvatar(
-                                                          radius: 20,
-                                                          backgroundColor:
-                                                              Colors.grey
-                                                                  .shade100,
-                                                          backgroundImage:
-                                                              AssetImage(
-                                                            'assets/images/user.png',
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Container(
-                                                        width: 200,
-                                                        child: Text(
-                                                          topCustomers[index]
-                                                              ['customerName'],
-                                                          style: GoogleFonts
-                                                              .inter(),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 20,
-                                                  ),
-                                                  Container(
-                                                    alignment: Alignment.center,
-                                                    width: 100,
-                                                    child: Text(
-                                                      topCustomers[index]
-                                                          ['totalOrders'],
-                                                      style:
-                                                          GoogleFonts.inter(),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 20,
-                                                  ),
-                                                  Container(
-                                                    width: 200,
-                                                    alignment: Alignment.center,
-                                                    child: Row(
+                                        ListView.builder(
+                                            shrinkWrap: true,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemCount: 5,
+                                            itemBuilder: (context, index) {
+                                              return Container(
+                                                height: 70,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  border: Border.all(
+                                                      color: Colors.grey.shade200,
+                                                      width: 3),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 20, vertical: 10),
+                                                margin: const EdgeInsets.only(
+                                                    bottom: 15,
+                                                    left: 10,
+                                                    right: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Row(
                                                       mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
+                                                          MainAxisAlignment.start,
                                                       children: [
                                                         Container(
-                                                          width: 140,
+                                                          height: 50,
+                                                          width: 50,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(10),
+                                                            color: Colors
+                                                                .grey.shade200,
+                                                          ),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(5),
+                                                          child:
+                                                              LottieBuilder.asset(
+                                                            'assets/animations/capsule_med.json',
+                                                            height: 50,
+                                                            width: 50,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Container(
+                                                          width: 200,
                                                           child: Text(
-                                                            "BDT ${topCustomers[index]['totalBill']}",
-                                                            maxLines: 2,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            textAlign:
-                                                                TextAlign.start,
+                                                            topSellingProducts[
+                                                                    index]
+                                                                ['productName'],
                                                             style: GoogleFonts
                                                                 .inter(),
                                                           ),
                                                         ),
                                                       ],
                                                     ),
-                                                  )
-                                                ],
-                                              ),
-                                            );
-                                          }),
-                                    ],
-                                  ),
-                                ))
-                              ],
+                                                    const SizedBox(
+                                                      width: 20,
+                                                    ),
+                                                    Container(
+                                                      alignment: Alignment.center,
+                                                      width: 100,
+                                                      child: Text(
+                                                        topSellingProducts[index]
+                                                            ['quantity'],
+                                                        style:
+                                                            GoogleFonts.inter(),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 20,
+                                                    ),
+                                                    // Container(
+                                                    //   width: 200,
+                                                    //   alignment: Alignment.center,
+                                                    //   child: Row(
+                                                    //     mainAxisAlignment:
+                                                    //         MainAxisAlignment
+                                                    //             .center,
+                                                    //     children: [
+                                                    //       Container(
+                                                    //         decoration:
+                                                    //             BoxDecoration(
+                                                    //           color: Colors
+                                                    //               .grey.shade200,
+                                                    //           shape:
+                                                    //               BoxShape.circle,
+                                                    //         ),
+                                                    //         child: CircleAvatar(
+                                                    //           radius: 20,
+                                                    //           backgroundColor:
+                                                    //               Colors.grey
+                                                    //                   .shade100,
+                                                    //           backgroundImage:
+                                                    //               AssetImage(
+                                                    //             'assets/images/user.png',
+                                                    //           ),
+                                                    //         ),
+                                                    //       ),
+                                                    //       const SizedBox(
+                                                    //         width: 20,
+                                                    //       ),
+                                                    //       Container(
+                                                    //         width: 140,
+                                                    //         child: Text(
+                                                    //           topSellingProducts[
+                                                    //                   index][
+                                                    //               'customerName'],
+                                                    //           maxLines: 2,
+                                                    //           overflow:
+                                                    //               TextOverflow
+                                                    //                   .ellipsis,
+                                                    //           textAlign:
+                                                    //               TextAlign.start,
+                                                    //           style: GoogleFonts
+                                                    //               .inter(),
+                                                    //         ),
+                                                    //       ),
+                                                    //     ],
+                                                    //   ),
+                                                    // )
+                                                  ],
+                                                ),
+                                              );
+                                            }),
+                                      ],
+                                    ),
+                                  ))
+                                ],
+                              ),
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      height: 570,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.grey,
-                            blurRadius: 10,
-                            offset: Offset(0, 5),
+                          const SizedBox(
+                            width: 10,
                           ),
+                          Expanded(
+                            child: Container(
+                              height: 600,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    blurRadius: 10,
+                                    offset: Offset(0, 5),
+                                  ),
+                                ],
+                              ),
+                              margin: const EdgeInsets.only(right: 20),
+                              padding: const EdgeInsets.all(10),
+                              child: Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text('Our Beloved Customers',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                  const SizedBox(
+                                    height: 50,
+                                  ),
+                                  Expanded(
+                                      child: Container(
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            // border: Border.all(color: Colors.grey.shade200,width: 3),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          height: 50,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const SizedBox(
+                                                width: 20,
+                                              ),
+                                              Expanded(
+                                                  child: Container(
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  'Customer Name',
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              )),
+                                              const SizedBox(
+                                                width: 20,
+                                              ),
+                                              Expanded(
+                                                  child: Container(
+                                                alignment: Alignment.center,
+                                                margin: const EdgeInsets.only(
+                                                    left: 30),
+                                                width: 100,
+                                                child: Text(
+                                                  'Total Orders',
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              )),
+                                              const SizedBox(
+                                                width: 20,
+                                              ),
+                                              Expanded(
+                                                  child: Container(
+                                                alignment: Alignment.center,
+                                                width: 220,
+                                                margin: const EdgeInsets.only(
+                                                    right: 30),
+                                                child: Text(
+                                                  'Total Spent',
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              )),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        ListView.builder(
+                                            shrinkWrap: true,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemCount: 5,
+                                            itemBuilder: (context, index) {
+                                              return Container(
+                                                height: 70,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  border: Border.all(
+                                                      color: Colors.grey.shade200,
+                                                      width: 3),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 20, vertical: 10),
+                                                margin: const EdgeInsets.only(
+                                                    bottom: 15,
+                                                    left: 10,
+                                                    right: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.start,
+                                                      children: [
+                                                        Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors
+                                                                .grey.shade200,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          child: CircleAvatar(
+                                                            radius: 20,
+                                                            backgroundColor:
+                                                                Colors.grey
+                                                                    .shade100,
+                                                            backgroundImage:
+                                                                AssetImage(
+                                                              'assets/images/user.png',
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Container(
+                                                          width: 200,
+                                                          child: Text(
+                                                            topCustomers[index]
+                                                                ['customerName'],
+                                                            style: GoogleFonts
+                                                                .inter(),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 20,
+                                                    ),
+                                                    Container(
+                                                      alignment: Alignment.center,
+                                                      width: 100,
+                                                      child: Text(
+                                                        topCustomers[index]
+                                                            ['totalOrders'],
+                                                        style:
+                                                            GoogleFonts.inter(),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 20,
+                                                    ),
+                                                    Container(
+                                                      width: 200,
+                                                      alignment: Alignment.center,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Container(
+                                                            width: 140,
+                                                            child: Text(
+                                                              "BDT ${topCustomers[index]['totalBill']}",
+                                                              maxLines: 2,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              textAlign:
+                                                                  TextAlign.start,
+                                                              style: GoogleFonts
+                                                                  .inter(),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              );
+                                            }),
+                                      ],
+                                    ),
+                                  ))
+                                ],
+                              ),
+                            ),
+                          )
                         ],
                       ),
-                      padding: const EdgeInsets.only(top: 20,bottom: 10,left: 10,right: 10),
-
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Latest Announcements',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                            ],
-                          ),
-                          Expanded(child:
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: 3,
-                            itemBuilder: (context, index) {
-                              return MouseRegion(
-                                cursor: SystemMouseCursors.click,
-                                onEnter: (event) {
-                                  setState(() {
-                                    isHovered = index;
-                                  });
-                                },
-                                onExit: (event) {
-                                  setState(() {
-                                    isHovered = -1;
-                                  });
-                                },
-                                child: AnimatedContainer(
-                                  curve: Curves.easeIn,
-                                  duration:
-                                  Duration(milliseconds: 250),
-                                  color: isHovered == index
-                                      ? Colors.grey.shade300
-                                      : Colors.white,
-                                  height: 150,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 20, horizontal: 20),
-                                  margin: const EdgeInsets.symmetric(
-                                      vertical: 10,horizontal: 10),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: 120,
-                                        child: Row(
-                                          children: [
-                                            Column(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .center,
-                                              children: [
-                                                Text(
-                                                  getFormattedDate(
-                                                      announcements[
-                                                      index][
-                                                      'start_date']),
-                                                  style: GoogleFonts.inter(
-                                                      fontWeight:
-                                                      FontWeight
-                                                          .bold),
-                                                ),
-                                                const SizedBox(
-                                                    height: 5),
-                                                Text(
-                                                  getYear(announcements[
-                                                  index]
-                                                  ['start_date']),
-                                                  style: GoogleFonts.inter(
-                                                      fontWeight:
-                                                      FontWeight
-                                                          .bold),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(width: 20),
-                                      AnimatedContainer(
-                                        curve: Curves.easeIn,
-                                        duration: Duration(
-                                            milliseconds: 250),
-                                        width: isHovered == index
-                                            ? 5
-                                            : 2,
-                                        color: isHovered == index
-                                            ? Colors.grey.shade600
-                                            : Colors.grey.shade300,
-                                        height: null,
-                                      ),
-                                      const SizedBox(width: 30),
-                                      Expanded(
-                                        child: Container(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .center,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        height: 570,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.grey,
+                              blurRadius: 10,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.only(
+                            top: 20, bottom: 10, left: 10, right: 10),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Latest Announcements',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                              ],
+                            ),
+                            Expanded(
+                                child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: 3,
+                              itemBuilder: (context, index) {
+                                return MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  onEnter: (event) {
+                                    setState(() {
+                                      isHovered = index;
+                                    });
+                                  },
+                                  onExit: (event) {
+                                    setState(() {
+                                      isHovered = -1;
+                                    });
+                                  },
+                                  child: AnimatedContainer(
+                                    curve: Curves.easeIn,
+                                    duration: Duration(milliseconds: 250),
+                                    color: isHovered == index
+                                        ? Colors.grey.shade300
+                                        : Colors.white,
+                                    height: 150,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20, horizontal: 20),
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 10),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          width: 120,
+                                          child: Row(
                                             children: [
-                                              Row(
+                                              Column(
                                                 mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
+                                                    MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    announcements[index]
-                                                    ['title'],
-                                                    style: TextStyle(
-                                                        fontSize: 22,
+                                                    getFormattedDate(
+                                                        announcements[index]
+                                                            ['start_date']),
+                                                    style: GoogleFonts.inter(
                                                         fontWeight:
-                                                        FontWeight
-                                                            .bold),
+                                                            FontWeight.bold),
                                                   ),
-                                                  Container(
-                                                    padding:
-                                                    const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal:
-                                                        10,
-                                                        vertical:
-                                                        5),
-                                                    decoration:
-                                                    BoxDecoration(
-                                                      color: checkStatus(
-                                                          announcements[index][
-                                                          'start_date'],
-                                                          announcements[index][
-                                                          'end_date']) ==
-                                                          'Ongoing'
-                                                          ? Colors
-                                                          .green
-                                                          : checkStatus(announcements[index]['start_date'], announcements[index]['end_date']) ==
-                                                          'Upcoming'
-                                                          ? Colors
-                                                          .blue
-                                                          : Colors
-                                                          .red,
-                                                      borderRadius:
-                                                      BorderRadius
-                                                          .circular(
-                                                          10),
-                                                    ),
-                                                    child: Text(
-                                                      checkStatus(
-                                                          announcements[
-                                                          index]
-                                                          [
-                                                          'start_date'],
-                                                          announcements[
-                                                          index]
-                                                          [
-                                                          'end_date']),
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .white),
-                                                    ),
-                                                  )
+                                                  const SizedBox(height: 5),
+                                                  Text(
+                                                    getYear(announcements[index]
+                                                        ['start_date']),
+                                                    style: GoogleFonts.inter(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
                                                 ],
-                                              ),
-                                              const SizedBox(
-                                                  height: 10),
-                                              Text(
-                                                formatSingleLine(
-                                                    announcements[index][
-                                                    'description']),
-                                                textAlign:
-                                                TextAlign.justify,
-                                                maxLines: 2,
-                                                overflow: TextOverflow
-                                                    .ellipsis,
-                                                style: TextStyle(
-                                                    color:
-                                                    Colors.grey),
                                               ),
                                             ],
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                        const SizedBox(width: 20),
+                                        AnimatedContainer(
+                                          curve: Curves.easeIn,
+                                          duration: Duration(milliseconds: 250),
+                                          width: isHovered == index ? 5 : 2,
+                                          color: isHovered == index
+                                              ? Colors.grey.shade600
+                                              : Colors.grey.shade300,
+                                          height: null,
+                                        ),
+                                        const SizedBox(width: 30),
+                                        Expanded(
+                                          child: Container(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      announcements[index]
+                                                          ['title'],
+                                                      style: TextStyle(
+                                                          fontSize: 22,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    Container(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 10,
+                                                          vertical: 5),
+                                                      decoration: BoxDecoration(
+                                                        color: checkStatus(
+                                                                    announcements[
+                                                                            index]
+                                                                        [
+                                                                        'start_date'],
+                                                                    announcements[
+                                                                            index]
+                                                                        [
+                                                                        'end_date']) ==
+                                                                'Ongoing'
+                                                            ? Colors.green
+                                                            : checkStatus(
+                                                                        announcements[
+                                                                                index]
+                                                                            [
+                                                                            'start_date'],
+                                                                        announcements[
+                                                                                index]
+                                                                            [
+                                                                            'end_date']) ==
+                                                                    'Upcoming'
+                                                                ? Colors.blue
+                                                                : Colors.red,
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                10),
+                                                      ),
+                                                      child: Text(
+                                                        checkStatus(
+                                                            announcements[index]
+                                                                ['start_date'],
+                                                            announcements[index]
+                                                                ['end_date']),
+                                                        style: TextStyle(
+                                                            color: Colors.white),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                                const SizedBox(height: 10),
+                                                Text(
+                                                  formatSingleLine(
+                                                      announcements[index]
+                                                          ['description']),
+                                                  textAlign: TextAlign.justify,
+                                                  maxLines: 2,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      color: Colors.grey),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                          )
-                          )
-                        ],
+                                );
+                              },
+                            ))
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    )
-                  ],
-                ),
+                      const SizedBox(
+                        height: 20,
+                      )
+                    ],
+                  ),
+              ),
         )
       ],
     );
@@ -1502,7 +1489,7 @@ class _DashboardHomeState extends State<DashboardHome> {
 
   bool isHoveringSearchButton = false;
 
-  List<dynamic> announcements= [];
+  List<dynamic> announcements = [];
 
   void fetchAnnouncements() async {
     List<dynamic> localAnnouncements = await FetchAnnouncements.fetch();
@@ -1510,6 +1497,7 @@ class _DashboardHomeState extends State<DashboardHome> {
       announcements = localAnnouncements;
     });
   }
+
   String formatSingleLine(String text) {
     return text.replaceAll(RegExp(r'[\n\r\f\v]'), ' ');
   }
@@ -1535,7 +1523,9 @@ class _DashboardHomeState extends State<DashboardHome> {
     DateTime start = DateTime.parse(startingDate);
     DateTime end = DateTime.parse(endingDate);
 
-    if ((now.isAfter(start) && now.isBefore(end)) || (startingDate==endingDate && startingDate==now.toString().split(' ')[0])) {
+    if ((now.isAfter(start) && now.isBefore(end)) ||
+        (startingDate == endingDate &&
+            startingDate == now.toString().split(' ')[0])) {
       return 'Ongoing';
     } else if (now.isBefore(start)) {
       return 'Upcoming';

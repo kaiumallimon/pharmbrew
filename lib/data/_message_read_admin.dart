@@ -25,7 +25,6 @@ class ReadMessageAdmin {
 }
 
 void main(List<String> args) async {
-  Map<String,dynamic> status=await ReadMessageAdmin.fetch('EMP20240414170416');
 }
 
 

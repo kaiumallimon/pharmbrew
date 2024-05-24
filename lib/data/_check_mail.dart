@@ -24,5 +24,4 @@ class CheckMail {
 }
 
 void main(List<String> args) async {
-  bool result = await CheckMail.check('rvivy41@gmail.com');
 }

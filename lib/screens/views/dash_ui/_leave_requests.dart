@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pharmbrew/data/_approve_leave_request.dart';
 import 'package:pharmbrew/data/_fetch_leave_requests.dart';
@@ -175,12 +176,12 @@ class _LeaveRequestsState extends State<LeaveRequests> {
               selectedOption == 0
                   ? Expanded(
                       child: isInitialOpening
-                          ? Center(
+                          ? const Center(
                               child: CircularProgressIndicator(),
                             )
                           : Container(
                               child: allPendingRequests.isEmpty
-                                  ? Center(
+                                  ? const Center(
                                       child: Text("No pending requests found!"),
                                     )
                                   : ListView.builder(
@@ -198,107 +199,292 @@ class _LeaveRequestsState extends State<LeaveRequests> {
                                             });
                                           },
                                           child: AnimatedContainer(
-                                            duration:
-                                                Duration(milliseconds: 300),
-                                            curve: Curves.easeInOut,
-                                            decoration: BoxDecoration(
-                                                color: hoveredRequest == index
-                                                    ? Colors.grey.shade300
-                                                    : Colors.white,
-                                                border: Border.all(
-                                                    color: Colors.grey.shade300,
-                                                    width: 2)),
-                                            margin: EdgeInsets.only(bottom: 20),
-                                            padding: EdgeInsets.only(
-                                                left: 10, right: 10, top: 10),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Tooltip(
-                                                        textStyle: TextStyle(
-                                                            color:
-                                                                Colors.black),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                        ),
-                                                        message:
-                                                            allPendingRequests[
-                                                                index]['name'],
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          imageUrl: getImageLink(
-                                                              allPendingRequests[
-                                                                      index][
-                                                                  'profile_pic']),
-                                                          fit: BoxFit.cover,
-                                                          width: 100,
-                                                          height: 100,
-                                                        )),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 300),
-                                                      curve: Curves.easeInOut,
-                                                      height: 100,
-                                                      width: hoveredRequest ==
-                                                              index
-                                                          ? 4
-                                                          : 2,
-                                                      color: hoveredRequest ==
-                                                              index
-                                                          ? Colors.grey.shade700
-                                                          : Colors
-                                                              .grey.shade300,
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Container(
-                                                      width: 100,
-                                                      height: 100,
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text(
+                                              duration: const Duration(
+                                                  milliseconds: 300),
+                                              curve: Curves.easeInOut,
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 20),
+                                              decoration: BoxDecoration(
+                                                  color: hoveredRequest == index
+                                                      ? Colors.grey.shade200
+                                                      : Colors.white,
+                                                  border: Border.all(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                      width: 2)),
+                                              padding: const EdgeInsets.only(
+                                                  left: 10,
+                                                  right: 10,
+                                                  top: 10,
+                                                  bottom: 10),
+                                              child: Row(
+                                                children: [
+                                                  CachedNetworkImage(
+                                                    imageUrl: getImageLink(
                                                         allPendingRequests[
-                                                            index]['name'],
-                                                        style:
-                                                            GoogleFonts.inter(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                      ),
+                                                                index]
+                                                            ['profile_pic']),
+                                                    fit: BoxFit.cover,
+                                                    width: 100,
+                                                    height: 100,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    // duration: Duration(milliseconds: 300),
+                                                    // curve: Curves.easeInOut,
+                                                    height: 100,
+                                                    width: 2,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    width: 100,
+                                                    height: 100,
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      allPendingRequests[index]
+                                                          ['name'],
+                                                      style: GoogleFonts.inter(
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     ),
-                                                    const SizedBox(
-                                                      width: 10,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    // duration: Duration(milliseconds: 300),
+                                                    // curve: Curves.easeInOut,
+                                                    height: 100,
+                                                    width: 2,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    width: 100,
+                                                    height: 100,
+                                                    // alignment: Alignment.center,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          'Requested on',
+                                                          style: TextStyle(
+                                                              fontSize: 11,
+                                                              color:
+                                                                  Colors.grey),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          allPendingRequests[
+                                                                      index][
+                                                                  'request_date']
+                                                              .toString()
+                                                              .split(" ")[0],
+                                                          style:
+                                                              GoogleFonts.inter(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 300),
-                                                      curve: Curves.easeInOut,
-                                                      height: 100,
-                                                      width: hoveredRequest ==
-                                                              index
-                                                          ? 4
-                                                          : 2,
-                                                      color: hoveredRequest ==
-                                                              index
-                                                          ? Colors.grey.shade700
-                                                          : Colors
-                                                              .grey.shade300,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    // duration: Duration(milliseconds: 300),
+                                                    // curve: Curves.easeInOut,
+                                                    height: 100,
+                                                    width: 2,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    width: 100,
+                                                    height: 100,
+                                                    // alignment: Alignment.center,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          'Leave Type',
+                                                          style: TextStyle(
+                                                              fontSize: 11,
+                                                              color:
+                                                                  Colors.grey),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          allPendingRequests[
+                                                                  index]
+                                                              ['leave_type'],
+                                                          style:
+                                                              GoogleFonts.inter(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    const SizedBox(
-                                                      width: 10,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    // duration: Duration(milliseconds: 300),
+                                                    // curve: Curves.easeInOut,
+                                                    height: 100,
+                                                    width: 2,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    width: 150,
+                                                    height: 100,
+                                                    // alignment: Alignment.center,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              "${countDaysBetween(DateTime.parse(allPendingRequests[index]['start_date']), DateTime.parse(allPendingRequests[index]['end_date'])) + 1}",
+                                                              style: GoogleFonts.inter(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 15),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 5,
+                                                            ),
+                                                            Text(
+                                                              "Day(s)",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  fontSize: 13),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
                                                     ),
-                                                    Container(
-                                                      width: 100,
-                                                      height: 100,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    // duration: Duration(milliseconds: 300),
+                                                    // curve: Curves.easeInOut,
+                                                    height: 100,
+                                                    width: 2,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  Container(
+                                                    width: 200,
+                                                    height: 100,
+                                                    // alignment: Alignment.center,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          allPendingRequests[
+                                                                          index]
+                                                                      [
+                                                                      'start_date'] ==
+                                                                  allPendingRequests[
+                                                                          index]
+                                                                      [
+                                                                      'end_date']
+                                                              ? "Leave date"
+                                                              : 'Leave period',
+                                                          style: TextStyle(
+                                                              fontSize: 11,
+                                                              color:
+                                                                  Colors.grey),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          allPendingRequests[
+                                                                          index]
+                                                                      [
+                                                                      'start_date'] ==
+                                                                  allPendingRequests[
+                                                                          index]
+                                                                      [
+                                                                      'end_date']
+                                                              ? "${allPendingRequests[index]['start_date']}"
+                                                              : "${allPendingRequests[index]['start_date']} to ${allPendingRequests[index]['end_date']}",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    // duration: Duration(milliseconds: 300),
+                                                    // curve: Curves.easeInOut,
+                                                    height: 100,
+                                                    width: 2,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                    child: Container(
+                                                      // width: 100,
+                                                      // height: 100,
                                                       // alignment: Alignment.center,
                                                       child: Column(
                                                         mainAxisAlignment:
@@ -309,7 +495,7 @@ class _LeaveRequestsState extends State<LeaveRequests> {
                                                                 .center,
                                                         children: [
                                                           Text(
-                                                            'Requested on',
+                                                            'Leave reason',
                                                             style: TextStyle(
                                                                 fontSize: 11,
                                                                 color: Colors
@@ -318,415 +504,202 @@ class _LeaveRequestsState extends State<LeaveRequests> {
                                                           const SizedBox(
                                                             height: 5,
                                                           ),
-                                                          Text(
-                                                            allPendingRequests[
-                                                                        index][
-                                                                    'request_date']
-                                                                .toString()
-                                                                .split(" ")[0],
-                                                            style: GoogleFonts.inter(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 300),
-                                                      curve: Curves.easeInOut,
-                                                      height: 100,
-                                                      width: hoveredRequest ==
-                                                              index
-                                                          ? 4
-                                                          : 2,
-                                                      color: hoveredRequest ==
-                                                              index
-                                                          ? Colors.grey.shade700
-                                                          : Colors
-                                                              .grey.shade300,
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Expanded(
-                                                        child: Row(
-                                                      children: [
-                                                        Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                Container(
-                                                                  width: 150,
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: CupertinoColors
-                                                                        .activeOrange
-                                                                        .withOpacity(
-                                                                            0.3),
-                                                                    // borderRadius: BorderRadius.circular(10)
-                                                                  ),
-                                                                  padding: EdgeInsets
+                                                          Container(
+                                                              alignment: Alignment
+                                                                  .center,
+                                                              width: 200,
+                                                              child: Tooltip(
+                                                                  decoration: BoxDecoration(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10)),
+                                                                  textStyle: TextStyle(
+                                                                      color: Colors
+                                                                          .white),
+                                                                  padding: EdgeInsets.symmetric(
+                                                                      horizontal:
+                                                                          30,
+                                                                      vertical:
+                                                                          20),
+                                                                  margin: EdgeInsets
                                                                       .symmetric(
                                                                           horizontal:
-                                                                              10,
-                                                                          vertical:
-                                                                              8),
+                                                                              400),
+                                                                  message: allPendingRequests[
+                                                                          index]
+                                                                      [
+                                                                      'reason'],
                                                                   child: Text(
                                                                     allPendingRequests[
                                                                             index]
                                                                         [
-                                                                        'leave_type'],
+                                                                        'reason'],
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
                                                                     style: GoogleFonts.inter(
                                                                         fontWeight:
                                                                             FontWeight.bold),
-                                                                  ),
-                                                                ),
-                                                                const SizedBox(
-                                                                  width: 20,
-                                                                ),
-                                                                Container(
-                                                                  // width: 150,
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: CupertinoColors
-                                                                        .activeBlue
-                                                                        .withOpacity(
-                                                                            0.3),
-                                                                    // borderRadius: BorderRadius.circular(10)
-                                                                  ),
-                                                                  padding: const EdgeInsets
-                                                                      .symmetric(
-                                                                      vertical:
-                                                                          8,
-                                                                      horizontal:
-                                                                          30),
-                                                                  child: Text(
-                                                                    allPendingRequests[index]['start_date'] ==
-                                                                            allPendingRequests[index]['end_date']
-                                                                        ? "Leave Date: ${allPendingRequests[index]['start_date']}"
-                                                                        : "Leave Period: ${allPendingRequests[index]['start_date']} to ${allPendingRequests[index]['end_date']}",
-                                                                    style: const TextStyle(
-                                                                        color: Colors
-                                                                            .black),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 10,
-                                                            ),
-                                                            Row(children: [
-                                                              Container(
-                                                                width: 150,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: CupertinoColors
-                                                                      .systemPurple,
-                                                                ),
-                                                                padding: const EdgeInsets
-                                                                    .symmetric(
-                                                                    vertical: 8,
-                                                                    horizontal:
-                                                                        30),
-                                                                child: Text(
-                                                                  "${countDaysBetween(DateTime.parse(allPendingRequests[index]['start_date']), DateTime.parse(allPendingRequests[index]['end_date'])) + 1} Day (s)",
-                                                                  style: const TextStyle(
-                                                                      color: Colors
-                                                                          .white),
-                                                                ),
-                                                              ),
-                                                              const SizedBox(
-                                                                width: 20,
-                                                              ),
-                                                              Container(
-                                                                constraints:
-                                                                    BoxConstraints(
-                                                                        maxWidth:
-                                                                            300),
-                                                                child: Flexible(
-                                                                    child: Tooltip(
-                                                                        margin: EdgeInsets.symmetric(horizontal: 400),
-                                                                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                                                                        decoration: BoxDecoration(
-                                                                          color:
-                                                                              Colors.black,
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(10),
-                                                                        ),
-                                                                        textStyle: TextStyle(color: Colors.white),
-                                                                        message: allPendingRequests[index]['reason'],
-                                                                        child: Text(
-                                                                          'Reason: ${allPendingRequests[index]['reason']}',
-                                                                          maxLines:
-                                                                              1,
-                                                                          overflow:
-                                                                              TextOverflow.ellipsis,
-                                                                          style:
-                                                                              TextStyle(color: Colors.black),
-                                                                        ))),
-                                                              ),
-                                                            ])
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    )),
-                                                    Expanded(
-                                                        child: Container(
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .end,
-                                                        children: [
-                                                          Column(
-                                                            children: [
-                                                              MouseRegion(
-                                                                onEnter: (_) {
-                                                                  setState(() {
-                                                                    approveHoveredIndex =
-                                                                        index;
-                                                                  });
-                                                                },
-                                                                onExit: (_) {
-                                                                  setState(() {
-                                                                    approveHoveredIndex =
-                                                                        -1;
-                                                                  });
-                                                                },
-                                                                cursor:
-                                                                    SystemMouseCursors
-                                                                        .click,
-                                                                child:
-                                                                    GestureDetector(
-                                                                  onTap:
-                                                                      () async {
-                                                                    setState(
-                                                                        () {
-                                                                      isInitialOpening =
-                                                                          true;
-                                                                    });
-                                                                    bool result = await ApproveLeaveRequest.approve(
-                                                                        "Accepted",
-                                                                        userId,
-                                                                        DateTime.now()
-                                                                            .toString(),
-                                                                        allPendingRequests[index]['requestId']
-                                                                            .toString());
-
-                                                                    if (result) {
-                                                                      setState(
-                                                                          () {
-                                                                        isInitialOpening =
-                                                                            false;
-                                                                      });
-                                                                      showCustomSuccessDialog(
-                                                                          'Request accepted successfully!',
-                                                                          context);
-                                                                    } else {
-                                                                      setState(
-                                                                          () {
-                                                                        isInitialOpening =
-                                                                            false;
-                                                                      });
-                                                                      showCustomErrorDialog(
-                                                                          'Failed to accept request!',
-                                                                          context);
-                                                                    }
-                                                                  },
-                                                                  child:
-                                                                      AnimatedContainer(
-                                                                    width: 150,
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    duration: Duration(
-                                                                        milliseconds:
-                                                                            300),
-                                                                    curve: Curves
-                                                                        .easeInOut,
-                                                                    padding: EdgeInsets.symmetric(
-                                                                        horizontal:
-                                                                            20,
-                                                                        vertical:
-                                                                            10),
-                                                                    decoration: BoxDecoration(
-                                                                        color: approveHoveredIndex ==
-                                                                                index
-                                                                            ? CupertinoColors.activeGreen.withOpacity(
-                                                                                0.4)
-                                                                            : CupertinoColors
-                                                                                .activeGreen,
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(5)),
-                                                                    child: Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Icon(
-                                                                          Icons
-                                                                              .check,
-                                                                          color: approveHoveredIndex == index
-                                                                              ? Colors.black
-                                                                              : Colors.white,
-                                                                          size:
-                                                                              20,
-                                                                        ),
-                                                                        const SizedBox(
-                                                                          width:
-                                                                              5,
-                                                                        ),
-                                                                        Text(
-                                                                          'Approve',
-                                                                          style:
-                                                                              TextStyle(color: approveHoveredIndex == index ? Colors.black : Colors.white),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 10,
-                                                              ),
-                                                              MouseRegion(
-                                                                onEnter: (_) {
-                                                                  setState(() {
-                                                                    rejectHoveredIndex =
-                                                                        index;
-                                                                  });
-                                                                },
-                                                                onExit: (_) {
-                                                                  setState(() {
-                                                                    rejectHoveredIndex =
-                                                                        -1;
-                                                                  });
-                                                                },
-                                                                cursor:
-                                                                    SystemMouseCursors
-                                                                        .click,
-                                                                child:
-                                                                    GestureDetector(
-                                                                  onTap:
-                                                                      () async {
-                                                                    setState(
-                                                                        () {
-                                                                      isInitialOpening =
-                                                                          true;
-                                                                    });
-                                                                    bool result = await ApproveLeaveRequest.approve(
-                                                                        "Rejected",
-                                                                        userId,
-                                                                        DateTime.now()
-                                                                            .toString(),
-                                                                        allPendingRequests[index]['requestId']
-                                                                            .toString());
-
-                                                                    if (result) {
-                                                                      setState(
-                                                                          () {
-                                                                        isInitialOpening =
-                                                                            false;
-                                                                      });
-                                                                      showCustomSuccessDialog(
-                                                                          'Request rejected successfully!',
-                                                                          context);
-                                                                    } else {
-                                                                      setState(
-                                                                          () {
-                                                                        isInitialOpening =
-                                                                            false;
-                                                                      });
-                                                                      showCustomErrorDialog(
-                                                                          'Failed to reject request!',
-                                                                          context);
-                                                                    }
-                                                                  },
-                                                                  child:
-                                                                      AnimatedContainer(
-                                                                    width: 150,
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    duration: Duration(
-                                                                        milliseconds:
-                                                                            300),
-                                                                    curve: Curves
-                                                                        .easeInOut,
-                                                                    padding: EdgeInsets.symmetric(
-                                                                        horizontal:
-                                                                            20,
-                                                                        vertical:
-                                                                            10),
-                                                                    decoration: BoxDecoration(
-                                                                        color: rejectHoveredIndex ==
-                                                                                index
-                                                                            ? Colors.red.withOpacity(
-                                                                                0.4)
-                                                                            : Colors
-                                                                                .red,
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(5)),
-                                                                    child: Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Icon(
-                                                                          Icons
-                                                                              .close,
-                                                                          color: rejectHoveredIndex == index
-                                                                              ? Colors.black
-                                                                              : Colors.white,
-                                                                          size:
-                                                                              20,
-                                                                        ),
-                                                                        const SizedBox(
-                                                                          width:
-                                                                              5,
-                                                                        ),
-                                                                        Text(
-                                                                          'Reject',
-                                                                          style:
-                                                                              TextStyle(color: rejectHoveredIndex == index ? Colors.black : Colors.white),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          )
+                                                                  ))),
                                                         ],
                                                       ),
-                                                    ))
-                                                  ],
-                                                ),
-                                                const SizedBox(
-                                                  height: 10,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    // duration: Duration(milliseconds: 300),
+                                                    // curve: Curves.easeInOut,
+                                                    height: 100,
+                                                    width: 2,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    width: 200,
+                                                    child: Column(
+                                                      children: [
+                                                        Container(
+                                                          width: 150,
+                                                          child: ElevatedButton(
+                                                              onPressed:
+                                                                  () async {
+                                                                setState(
+                                                                        () {
+                                                                      isInitialOpening =
+                                                                      true;
+                                                                    });
+                                                                bool result = await ApproveLeaveRequest.approve(
+                                                                    "Approved",
+                                                                    userId,
+                                                                    DateTime.now()
+                                                                        .toString(),
+                                                                    allPendingRequests[index]['requestId']
+                                                                        .toString());
+
+                                                                if (result) {
+                                                                  setState(
+                                                                          () {
+                                                                        isInitialOpening =
+                                                                        false;
+                                                                      });
+                                                                  showCustomSuccessDialog(
+                                                                      'Request accepted successfully!',
+                                                                      context);
+                                                                } else {
+                                                                  setState(
+                                                                          () {
+                                                                        isInitialOpening =
+                                                                        false;
+                                                                      });
+                                                                  showCustomErrorDialog(
+                                                                      'Failed to accept request!',
+                                                                      context);
+                                                                }
+                                                              },
+                                                              style: ElevatedButton.styleFrom(
+                                                                  backgroundColor:
+                                                                      CupertinoColors
+                                                                          .activeGreen,
+                                                                  foregroundColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  shape: RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10))),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Icon(Icons
+                                                                      .check),
+                                                                  const SizedBox(
+                                                                    width: 5,
+                                                                  ),
+                                                                  Text(
+                                                                      'Approve'),
+                                                                ],
+                                                              )),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                        Container(
+                                                          width: 150,
+                                                          child: ElevatedButton(
+                                                              onPressed:
+                                                                  () async {
+                                                                setState(
+                                                                        () {
+                                                                      isInitialOpening =
+                                                                      true;
+                                                                    });
+                                                                bool result = await ApproveLeaveRequest.approve(
+                                                                    "Rejected",
+                                                                    userId,
+                                                                    DateTime.now()
+                                                                        .toString(),
+                                                                    allPendingRequests[index]['requestId']
+                                                                        .toString());
+
+                                                                if (result) {
+                                                                  setState(
+                                                                          () {
+                                                                        isInitialOpening =
+                                                                        false;
+                                                                      });
+                                                                  showCustomSuccessDialog(
+                                                                      'Request rejected successfully!',
+                                                                      context);
+                                                                } else {
+                                                                  setState(
+                                                                          () {
+                                                                        isInitialOpening =
+                                                                        false;
+                                                                      });
+                                                                  showCustomErrorDialog(
+                                                                      'Failed to reject request, Please try again later!',
+                                                                      context);
+                                                                }
+                                                              },
+                                                              style: ElevatedButton.styleFrom(
+                                                                  backgroundColor:
+                                                                      CupertinoColors
+                                                                          .systemRed,
+                                                                  foregroundColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  shape: RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10))),
+                                                              child: const Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Icon(Icons
+                                                                      .close),
+                                                                  SizedBox(
+                                                                    width: 5,
+                                                                  ),
+                                                                  Text(
+                                                                      'Reject'),
+                                                                ],
+                                                              )),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              )),
                                         );
                                       },
                                     )))
@@ -756,486 +729,433 @@ class _LeaveRequestsState extends State<LeaveRequests> {
                                             });
                                           },
                                           child: AnimatedContainer(
-                                            duration:
-                                                Duration(milliseconds: 300),
-                                            curve: Curves.easeInOut,
-                                            decoration: BoxDecoration(
-                                                color: hoveredRequest2 == index
-                                                    ? Colors.grey.shade300
-                                                    : Colors.white,
-                                                border: Border.all(
-                                                    color: Colors.grey.shade300,
-                                                    width: 2)),
-                                            margin: EdgeInsets.only(bottom: 20),
-                                            padding: EdgeInsets.only(
-                                                left: 10, right: 10, top: 10),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Tooltip(
-                                                        textStyle: TextStyle(
-                                                            color:
-                                                                Colors.black),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                        ),
-                                                        message:
-                                                            approvedPendingRequests[
-                                                                index]['name'],
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          imageUrl: getImageLink(
-                                                              approvedPendingRequests[
-                                                                      index][
-                                                                  'profile_pic']),
-                                                          fit: BoxFit.cover,
-                                                          width: 100,
-                                                          height: 100,
-                                                        )),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 300),
-                                                      curve: Curves.easeInOut,
-                                                      height: 100,
-                                                      width: hoveredRequest2 ==
-                                                              index
-                                                          ? 4
-                                                          : 2,
-                                                      color: hoveredRequest2 ==
-                                                              index
-                                                          ? Colors.grey.shade700
-                                                          : Colors
-                                                              .grey.shade300,
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Container(
-                                                      width: 100,
-                                                      height: 100,
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text(
+                                              duration: const Duration(
+                                                  milliseconds: 300),
+                                              curve: Curves.easeInOut,
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 20),
+                                              decoration: BoxDecoration(
+                                                  color:
+                                                      hoveredRequest2 == index
+                                                          ? Colors.grey.shade200
+                                                          : Colors.white,
+                                                  border: Border.all(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                      width: 2)),
+                                              padding: const EdgeInsets.only(
+                                                  left: 10,
+                                                  right: 10,
+                                                  top: 10,
+                                                  bottom: 10),
+                                              child: Row(
+                                                children: [
+                                                  CachedNetworkImage(
+                                                    imageUrl: getImageLink(
                                                         approvedPendingRequests[
-                                                            index]['name'],
-                                                        style:
-                                                            GoogleFonts.inter(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                      ),
+                                                                index]
+                                                            ['profile_pic']),
+                                                    fit: BoxFit.cover,
+                                                    width: 100,
+                                                    height: 100,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    // duration: Duration(milliseconds: 300),
+                                                    // curve: Curves.easeInOut,
+                                                    height: 100,
+                                                    width: 2,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    width: 100,
+                                                    height: 100,
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      approvedPendingRequests[
+                                                          index]['name'],
+                                                      style: GoogleFonts.inter(
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 300),
-                                                      curve: Curves.easeInOut,
-                                                      height: 100,
-                                                      width: hoveredRequest2 ==
-                                                              index
-                                                          ? 4
-                                                          : 2,
-                                                      color: hoveredRequest2 ==
-                                                              index
-                                                          ? Colors.grey.shade700
-                                                          : Colors
-                                                              .grey.shade300,
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Container(
-                                                      width: 100,
-                                                      height: 100,
-                                                      // alignment: Alignment.center,
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
-                                                            'Requested on',
-                                                            style: TextStyle(
-                                                                fontSize: 11,
-                                                                color: Colors
-                                                                    .grey),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Text(
-                                                            approvedPendingRequests[
-                                                                        index][
-                                                                    'request_date']
-                                                                .toString()
-                                                                .split(" ")[0],
-                                                            style: GoogleFonts.inter(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 300),
-                                                      curve: Curves.easeInOut,
-                                                      height: 100,
-                                                      width: hoveredRequest2 ==
-                                                              index
-                                                          ? 4
-                                                          : 2,
-                                                      color: hoveredRequest2 ==
-                                                              index
-                                                          ? Colors.grey.shade700
-                                                          : Colors
-                                                              .grey.shade300,
-                                                    ),
-                                                    Container(
-                                                      width: 200,
-                                                      height: 100,
-                                                      // alignment: Alignment.center,
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
-                                                            'Approved on',
-                                                            style: TextStyle(
-                                                                fontSize: 11,
-                                                                color: Colors
-                                                                    .grey),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Text(
-                                                            "${convertTo12HourFormat(approvedPendingRequests[index]['approval_date'].toString().split(' ')[1]).toString().trim()}, ${approvedPendingRequests[index]['approval_date'].toString().split(" ")[0]}",
-                                                            style: GoogleFonts.inter(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 300),
-                                                      curve: Curves.easeInOut,
-                                                      height: 100,
-                                                      width: hoveredRequest2 ==
-                                                              index
-                                                          ? 4
-                                                          : 2,
-                                                      color: hoveredRequest2 ==
-                                                              index
-                                                          ? Colors.grey.shade700
-                                                          : Colors
-                                                              .grey.shade300,
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Container(
-                                                      width: 150,
-                                                      height: 100,
-                                                      // alignment: Alignment.center,
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
-                                                            'Checked by',
-                                                            style: TextStyle(
-                                                                fontSize: 11,
-                                                                color: Colors
-                                                                    .grey),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text(
-                                                                approvedPendingRequests[
-                                                                        index][
-                                                                    'approved_by_name'],
-                                                                style: GoogleFonts.inter(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 300),
-                                                      curve: Curves.easeInOut,
-                                                      height: 100,
-                                                      width: hoveredRequest2 ==
-                                                              index
-                                                          ? 4
-                                                          : 2,
-                                                      color: hoveredRequest2 ==
-                                                              index
-                                                          ? Colors.grey.shade700
-                                                          : Colors
-                                                              .grey.shade300,
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Container(
-                                                      width: 150,
-                                                      height: 100,
-                                                      // alignment: Alignment.center,
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
-                                                            'Status',
-                                                            style: TextStyle(
-                                                                fontSize: 11,
-                                                                color: Colors
-                                                                    .grey),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text(
-                                                                approvedPendingRequests[
-                                                                        index]
-                                                                    ['STATUS'],
-                                                                style: GoogleFonts.inter(
-                                                                    color: approvedPendingRequests[index]['STATUS'] ==
-                                                                            'Approved'
-                                                                        ? CupertinoColors
-                                                                            .activeGreen
-                                                                        : Colors
-                                                                            .red,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 300),
-                                                      curve: Curves.easeInOut,
-                                                      height: 100,
-                                                      width: hoveredRequest2 ==
-                                                              index
-                                                          ? 4
-                                                          : 2,
-                                                      color: hoveredRequest2 ==
-                                                              index
-                                                          ? Colors.grey.shade700
-                                                          : Colors
-                                                              .grey.shade300,
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Expanded(
-                                                        child: Row(
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    // duration: Duration(milliseconds: 300),
+                                                    // curve: Curves.easeInOut,
+                                                    height: 100,
+                                                    width: 2,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    width: 100,
+                                                    height: 100,
+                                                    // alignment: Alignment.center,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
                                                       children: [
-                                                        Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                Container(
-                                                                  width: 150,
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: CupertinoColors
-                                                                        .activeOrange
-                                                                        .withOpacity(
-                                                                            0.3),
-                                                                    // borderRadius: BorderRadius.circular(10)
-                                                                  ),
-                                                                  padding: EdgeInsets
+                                                        Text(
+                                                          'Requested on',
+                                                          style: TextStyle(
+                                                              fontSize: 11,
+                                                              color:
+                                                                  Colors.grey),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          approvedPendingRequests[
+                                                                      index][
+                                                                  'request_date']
+                                                              .toString()
+                                                              .split(" ")[0],
+                                                          style:
+                                                              GoogleFonts.inter(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    // duration: Duration(milliseconds: 300),
+                                                    // curve: Curves.easeInOut,
+                                                    height: 100,
+                                                    width: 2,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    width: 100,
+                                                    height: 100,
+                                                    // alignment: Alignment.center,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          'Leave Type',
+                                                          style: TextStyle(
+                                                              fontSize: 11,
+                                                              color:
+                                                                  Colors.grey),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          approvedPendingRequests[
+                                                                  index]
+                                                              ['leave_type'],
+                                                          style:
+                                                              GoogleFonts.inter(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    // duration: Duration(milliseconds: 300),
+                                                    // curve: Curves.easeInOut,
+                                                    height: 100,
+                                                    width: 2,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    width: 150,
+                                                    height: 100,
+                                                    // alignment: Alignment.center,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          'Checked on',
+                                                          style: TextStyle(
+                                                              fontSize: 11,
+                                                              color:
+                                                                  Colors.grey),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          approvedPendingRequests[
+                                                                      index][
+                                                                  'approval_date']
+                                                              .toString()
+                                                              .split(" ")[0],
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    // duration: Duration(milliseconds: 300),
+                                                    // curve: Curves.easeInOut,
+                                                    height: 100,
+                                                    width: 2,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  Container(
+                                                    width: 150,
+                                                    height: 100,
+                                                    // alignment: Alignment.center,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          'Checked by',
+                                                          style: TextStyle(
+                                                              fontSize: 11,
+                                                              color:
+                                                                  Colors.grey),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          approvedPendingRequests[
+                                                                  index][
+                                                              'approved_by_name'],
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    // duration: Duration(milliseconds: 300),
+                                                    // curve: Curves.easeInOut,
+                                                    height: 100,
+                                                    width: 2,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  Container(
+                                                    width: 200,
+                                                    height: 100,
+                                                    // alignment: Alignment.center,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          approvedPendingRequests[
+                                                                          index]
+                                                                      [
+                                                                      'start_date'] ==
+                                                                  approvedPendingRequests[
+                                                                          index]
+                                                                      [
+                                                                      'end_date']
+                                                              ? "Leave date"
+                                                              : 'Leave period',
+                                                          style: TextStyle(
+                                                              fontSize: 11,
+                                                              color:
+                                                                  Colors.grey),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          approvedPendingRequests[
+                                                                          index]
+                                                                      [
+                                                                      'start_date'] ==
+                                                                  approvedPendingRequests[
+                                                                          index]
+                                                                      [
+                                                                      'end_date']
+                                                              ? "${approvedPendingRequests[index]['start_date']}"
+                                                              : "${approvedPendingRequests[index]['start_date']} to ${approvedPendingRequests[index]['end_date']}",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    // duration: Duration(milliseconds: 300),
+                                                    // curve: Curves.easeInOut,
+                                                    height: 100,
+                                                    width: 2,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                    child: Container(
+                                                      // width: 100,
+                                                      // height: 100,
+                                                      // alignment: Alignment.center,
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            'Leave reason',
+                                                            style: TextStyle(
+                                                                fontSize: 11,
+                                                                color: Colors
+                                                                    .grey),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Container(
+                                                              alignment: Alignment
+                                                                  .center,
+                                                              width: 200,
+                                                              child: Tooltip(
+                                                                  decoration: BoxDecoration(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10)),
+                                                                  textStyle: TextStyle(
+                                                                      color: Colors
+                                                                          .white),
+                                                                  padding: EdgeInsets.symmetric(
+                                                                      horizontal:
+                                                                          30,
+                                                                      vertical:
+                                                                          20),
+                                                                  margin: EdgeInsets
                                                                       .symmetric(
                                                                           horizontal:
-                                                                              10,
-                                                                          vertical:
-                                                                              8),
+                                                                              400),
+                                                                  message: approvedPendingRequests[
+                                                                          index]
+                                                                      [
+                                                                      'reason'],
                                                                   child: Text(
                                                                     approvedPendingRequests[
                                                                             index]
                                                                         [
-                                                                        'leave_type'],
+                                                                        'reason'],
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
                                                                     style: GoogleFonts.inter(
                                                                         fontWeight:
                                                                             FontWeight.bold),
-                                                                  ),
-                                                                ),
-                                                                const SizedBox(
-                                                                  width: 20,
-                                                                ),
-                                                                Container(
-                                                                  // width: 150,
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: CupertinoColors
-                                                                        .activeBlue
-                                                                        .withOpacity(
-                                                                            0.3),
-                                                                    // borderRadius: BorderRadius.circular(10)
-                                                                  ),
-                                                                  padding: const EdgeInsets
-                                                                      .symmetric(
-                                                                      vertical:
-                                                                          8,
-                                                                      horizontal:
-                                                                          30),
-                                                                  child: Text(
-                                                                    approvedPendingRequests[index]['start_date'] ==
-                                                                            approvedPendingRequests[index]['end_date']
-                                                                        ? "Leave Date: ${approvedPendingRequests[index]['start_date']}"
-                                                                        : "Leave Period: ${approvedPendingRequests[index]['start_date']} to ${approvedPendingRequests[index]['end_date']}",
-                                                                    style: const TextStyle(
-                                                                        color: Colors
-                                                                            .black),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 10,
-                                                            ),
-                                                            Row(children: [
-                                                              Container(
-                                                                width: 150,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: CupertinoColors
-                                                                      .systemPurple,
-                                                                ),
-                                                                padding: const EdgeInsets
-                                                                    .symmetric(
-                                                                    vertical: 8,
-                                                                    horizontal:
-                                                                        30),
-                                                                child: Text(
-                                                                  "${countDaysBetween(DateTime.parse(approvedPendingRequests[index]['start_date']), DateTime.parse(approvedPendingRequests[index]['end_date'])) + 1} Day (s)",
-                                                                  style: const TextStyle(
-                                                                      color: Colors
-                                                                          .white),
-                                                                ),
-                                                              ),
-                                                              const SizedBox(
-                                                                width: 20,
-                                                              ),
-                                                              Container(
-                                                                constraints:
-                                                                    BoxConstraints(
-                                                                        maxWidth:
-                                                                            300),
-                                                                child: Flexible(
-                                                                    child: Tooltip(
-                                                                        margin: EdgeInsets.symmetric(horizontal: 400),
-                                                                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                                                                        decoration: BoxDecoration(
-                                                                          color:
-                                                                              Colors.black,
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(10),
-                                                                        ),
-                                                                        textStyle: TextStyle(color: Colors.white),
-                                                                        message: approvedPendingRequests[index]['reason'],
-                                                                        child: Text(
-                                                                          'Reason: ${approvedPendingRequests[index]['reason']}',
-                                                                          maxLines:
-                                                                              1,
-                                                                          overflow:
-                                                                              TextOverflow.ellipsis,
-                                                                          style:
-                                                                              TextStyle(color: Colors.black),
-                                                                        ))),
-                                                              ),
-                                                            ])
-                                                          ],
+                                                                  ))),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    // duration: Duration(milliseconds: 300),
+                                                    // curve: Curves.easeInOut,
+                                                    height: 100,
+                                                    width: 2,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    width: 100,
+                                                    child: Column(
+                                                      children: [
+                                                        Text(
+                                                          'Status',
+                                                          style: TextStyle(
+                                                              fontSize: 11,
+                                                              color:
+                                                                  Colors.grey),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          approvedPendingRequests[
+                                                              index]['STATUS'],
+                                                          style: TextStyle(
+                                                            fontWeight: FontWeight.bold,
+                                                              color: approvedPendingRequests[
+                                                                              index]
+                                                                          [
+                                                                          'STATUS'] ==
+                                                                      "Approved"
+                                                                  ? CupertinoColors.activeGreen
+                                                                  : Colors.red),
                                                         ),
                                                       ],
-                                                    )),
-                                                  ],
-                                                ),
-                                                const SizedBox(
-                                                  height: 10,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                                    ),
+                                                  )
+                                                ],
+                                              )),
                                         );
                                       },
                                     ),

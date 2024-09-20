@@ -69,18 +69,6 @@ The primary objective of PharmBrew is to develop a robust database management sy
    - Clone the PharmBrew repository and run `flutter pub get` to install dependencies.
    - Use `flutter run` to start the application.
 
-## Usage
-
-1. **Accessing the System**:
-   - Open the web application in a browser or the mobile app on your device.
-   - Log in with your credentials to access the system based on your role.
-
-2. **Navigating the Modules**:
-   - Use the navigation menu to access various modules such as Procurement, Inventory, Production, and more.
-
-3. **Generating Reports**:
-   - Go to the Reports section to create and view customized reports based on your needs.
-
 ## License
 
 This project is licensed under the MIT License.

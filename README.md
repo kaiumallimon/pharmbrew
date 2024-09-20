@@ -54,21 +54,6 @@ The primary objective of PharmBrew is to develop a robust database management sy
 - **Backend**: [PHP](https://www.php.net) - A server-side scripting language ideal for web development, interacting with MySQL databases to build dynamic web applications.
 - **Frontend**: [Flutter](https://flutter.dev) - A UI toolkit developed by Google for building natively compiled applications for mobile, web, and desktop from a single codebase using Dart.
 
-## Installation
-
-1. **Database Setup**:
-   - Install MySQL and create a database for PharmBrew.
-   - Import the provided SQL schema to set up the necessary tables and relationships.
-
-2. **Backend Setup**:
-   - Install PHP and configure your server environment.
-   - Place the PHP files in your server's web directory and configure the database connection settings.
-
-3. **Frontend Setup**:
-   - Install Flutter SDK and set up your development environment.
-   - Clone the PharmBrew repository and run `flutter pub get` to install dependencies.
-   - Use `flutter run` to start the application.
-
 ## License
 
 This project is licensed under the MIT License.
